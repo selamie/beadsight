@@ -5,7 +5,7 @@ import datetime
 
 FRAME_WIDTH = 640
 FRAME_HEIGHT = 512
-cap = cv2.VideoCapture(0) 
+cap = cv2.VideoCapture(36) 
 
 cap.set(cv2.CAP_PROP_FRAME_WIDTH, FRAME_WIDTH)
 cap.set(cv2.CAP_PROP_FRAME_HEIGHT, FRAME_HEIGHT)

@@ -2,6 +2,7 @@ import cv2
 import time
 from defisheye import Defisheye
 
+DEVICENUM = 36 # beadsight is at /dev/video[devicenum]
 
 class BeadSight():
 
@@ -18,7 +19,7 @@ class BeadSight():
 
         self.width = FRAME_WIDTH
         self.height = FRAME_HEIGHT
-        self.cap = cv2.VideoCapture(0) 
+        self.cap = cv2.VideoCapture(DEVICENUM) 
 
         self.cap.set(cv2.CAP_PROP_FRAME_WIDTH, FRAME_WIDTH)
         self.cap.set(cv2.CAP_PROP_FRAME_HEIGHT, FRAME_HEIGHT)
@@ -33,7 +34,7 @@ class BeadSight():
 
         unwarped = self.defish.unwarp(frame)
 
-        return ret, unwarped, frame
+        return ret, unwarped
 
 def test1():
     
@@ -41,7 +42,7 @@ def test1():
     while(True):
         time.sleep(0.1) 
         start_time = time.time()
-        r,im,og = beadcam.get_frame()
+        r,im = beadcam.get_frame()
         print(time.time()-start_time)
         # input()        
         # without sleep--0.035
@@ -53,7 +54,7 @@ if __name__ == '__main__':
 
     beadcam = BeadSight()
     while(True):
-        r, im, og = beadcam.get_frame()
+        r, im = beadcam.get_frame()
         if r:
             # cv2.imshow('og',og)
             cv2.imshow('unwarped',im)
