@@ -258,6 +258,7 @@ class SaveVideosMultiprocessed():
             self.shared_memory_arrays.append(shared_memory)
             self.frame_info_queues.append(frame_info_queue)
     
+        self.closed = False
 
     @staticmethod
     def _run(file_name,
@@ -298,10 +299,13 @@ class SaveVideosMultiprocessed():
         self.frame_number += 1
     
     def close(self):
+        if self.closed:
+            return
         for queue in self.frame_info_queues:
             queue.put(-1)
         for worker in self.workers:
             worker.join()
+        self.closed = True
     
     def __del__(self):
         self.close()

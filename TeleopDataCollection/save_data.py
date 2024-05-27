@@ -87,7 +87,7 @@ class DataRecorder:
                  velocity_dim=7, 
                  overwrite=False,
                  beadsight_size = (480, 480),
-                 max_time_steps=1000,
+                 max_time_steps=10000,
                  fps = 30):
                             
         self.max_time_steps = max_time_steps
@@ -123,6 +123,8 @@ class DataRecorder:
         self.velocity_dim = velocity_dim
         
         self.episode_index = -1
+
+        self.closed = False
 
         self.reset_episode()
         
@@ -208,9 +210,14 @@ class DataRecorder:
         # clear the episode data
         self.reset_episode()
 
+    def close(self):
+        if not self.closed:
+            self.cameras.close()
+            self.save_images.close()
+            self.closed = True
+
     def __del__(self):
-        self.cameras.close()
-        self.save_images.close()
+        self.close()
 
 def main():
     # Simple video record test
