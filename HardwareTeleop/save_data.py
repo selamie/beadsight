@@ -10,6 +10,7 @@ from tqdm import tqdm
 from multiprocessing import Pool
 from typing import List, Tuple, Dict, Union
 import threading
+import datetime
 
 CROP_PARAMS = {
     1: {'i': 0, 'j': 312, 'h': 1080, 'w': 1296, 'size': (1080, 1920), 'fliplr': False, 'flipud': False},
@@ -124,6 +125,7 @@ class DataRecorder:
         
         self.episode_index = -1
 
+        self.current_times = [] #times in UTC seconds for later analysis
         self.reset_episode()
         
     def reset_episode(self, delete_last_episode = False):
@@ -164,6 +166,8 @@ class DataRecorder:
         self.velocity[-1].setflags(write=False)
         self.goal_position[-1].setflags(write=False)
 
+        self.current_times.append(datetime.datetime.now().timestamp())
+
         # # Save the camera data
         frames = self.cameras.get_next_frames()
         self.save_images(list(frames.values()))
@@ -171,6 +175,7 @@ class DataRecorder:
         monitor_cameras(frames)
         
         self.time_steps += 1
+  
         # print(f"record time: {time.time() - start_time:.3f} secs")
         
     def write_to_file(self):
@@ -182,6 +187,7 @@ class DataRecorder:
             # root.attrs['use_gelsight'] = self.use_gelsight
             root.attrs['camera_names'] = self.camera_names
             root.attrs['num_timesteps'] = self.time_steps
+            root.attrs['realtimes'] = self.current_times
             root.attrs['position_dim'] = self.position_dim
             root.attrs['velocity_dim'] = self.velocity_dim
             root.attrs['image_sizes'] = self.camera_sizes
