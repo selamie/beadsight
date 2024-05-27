@@ -3,7 +3,7 @@ import cv2
 import numpy as np
 from typing import List, Tuple, Dict
 from multiprocessed_cameras import SaveVideosMultiprocessed
-from beadsight_realtime import BeadSight
+from beadsight_controller.beadsight_realtime import BeadSight
 import time
 
 CAM_SERIALS = {
@@ -37,8 +37,8 @@ class CamerasAndBeadSight:
 
         self.frame_num = 0 # keep track of the frame number
         self.cameras = cameras
-        self.beadsight = BeadSight()
-
+        self.beadsight = BeadSight(36) #36 was devicenum on robot pc
+ 
     def get_next_frames(self) -> Dict[str, np.ndarray]:
         all_frames = {}
         for i, cam in enumerate(self.cameras):

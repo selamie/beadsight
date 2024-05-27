@@ -10,6 +10,7 @@ from tqdm import tqdm
 from multiprocessing import Pool
 from typing import List, Tuple, Dict, Union
 import threading
+import datetime
 
 CROP_PARAMS = {
     1: {'i': 0, 'j': 312, 'h': 1080, 'w': 1296, 'size': (1080, 1920), 'fliplr': False, 'flipud': False},
@@ -87,7 +88,7 @@ class DataRecorder:
                  velocity_dim=7, 
                  overwrite=False,
                  beadsight_size = (480, 480),
-                 max_time_steps=10000,
+                 max_time_steps=1000,
                  fps = 30):
                             
         self.max_time_steps = max_time_steps
@@ -124,7 +125,7 @@ class DataRecorder:
         
         self.episode_index = -1
 
-        self.closed = False
+        self.current_times = [] #times in UTC seconds for later analysis
 
         self.reset_episode()
         
@@ -166,6 +167,9 @@ class DataRecorder:
         self.velocity[-1].setflags(write=False)
         self.goal_position[-1].setflags(write=False)
 
+        self.current_times.append(datetime.datetime.now().timestamp())
+
+
         # # Save the camera data
         frames = self.cameras.get_next_frames()
         self.save_images(list(frames.values()))
@@ -184,6 +188,7 @@ class DataRecorder:
             # root.attrs['use_gelsight'] = self.use_gelsight
             root.attrs['camera_names'] = self.camera_names
             root.attrs['num_timesteps'] = self.time_steps
+            root.attrs['realtimes'] = self.current_times
             root.attrs['position_dim'] = self.position_dim
             root.attrs['velocity_dim'] = self.velocity_dim
             root.attrs['image_sizes'] = self.camera_sizes
@@ -210,14 +215,9 @@ class DataRecorder:
         # clear the episode data
         self.reset_episode()
 
-    def close(self):
-        if not self.closed:
-            self.cameras.close()
-            self.save_images.close()
-            self.closed = True
-
     def __del__(self):
-        self.close()
+        self.cameras.close()
+        self.save_images.close()
 
 def main():
     # Simple video record test
