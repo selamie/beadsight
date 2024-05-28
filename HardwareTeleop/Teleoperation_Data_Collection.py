@@ -14,7 +14,7 @@ import rospy
 import cv2
 
 
-SAVE_DIR = '/home/selamg/beadsight/data/ssd/first_dataset/'
+SAVE_DIR = '/home/selamg/beadsight/data/ssd/full_dataset/'
 FOLDER_NAME = 'run/'   
 
 cv2_dispay.start()
@@ -299,7 +299,7 @@ class Teleoperation:
 		# self.PoseController.stop()
 		self.data_recorder.close()
 		self.running = False
-		self.data_recorder
+		self.data_recorder #TODO: what is this lol 
 		self.thread.join()
 		print('Stoped Teleoperation')
 

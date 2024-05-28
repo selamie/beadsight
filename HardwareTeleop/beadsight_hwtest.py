@@ -7,7 +7,7 @@ if __name__ == '__main__':
 
     # test1()
 
-    beadcam = BeadSight(0)
+    beadcam = BeadSight(36)
     while(True):
         r, im = beadcam.get_frame()
         if r:

@@ -154,9 +154,12 @@ if __name__ == "__main__":
     image_size = [400, 480]
     masks = make_masks(image_size, MASK_VERTICIES)
 
-    source_folders = ['/media/selamg/DATA/beadsight/data/test_datacollection_run/']
-    
-    save_folder = '/media/selamg/DATA/beadsight/data/processed_data/'
+    # source_folders = ['/media/selamg/DATA/beadsight/data/test_datacollection_run/']
+    # save_folder = '/media/selamg/DATA/beadsight/data/processed_data/'
+
+    source_folders = ['/home/selamg/beadsight/data/ssd/full_dataset']
+    save_folder = '/home/selamg/beadsight/data/ssd/processed_data'
+
 
     process_folder(source_folders, save_folder, image_size, masks)
     #might be slow (10 minutes) 
