@@ -33,7 +33,7 @@ def make_masks(image_size, verticies):
         masks[cam] = mask
     return masks
         
-def uncompress_data(source_folder, save_path, image_size = [400, 480], masks: Dict[str, np.ndarray] = {}, use_rot = False, gelsight_delay = 2):
+def uncompress_data(source_folder, save_path, image_size = [400, 480], masks: Dict[str, np.ndarray] = {}, use_rot = False):
     # First, copy the hdf files to the save_path
     # Find the hdf5 files in the source folder
     h5py_files = []
@@ -52,12 +52,12 @@ def uncompress_data(source_folder, save_path, image_size = [400, 480], masks: Di
             new.attrs['image_height'] = image_size[0]
             new.attrs['image_width'] = image_size[1]
 
-            new.attrs['num_timesteps'] = old.attrs['num_timesteps'] - gelsight_delay
+            new.attrs['num_timesteps'] = old.attrs['num_timesteps']
             new.attrs['sim'] = old.attrs['sim']
 
-            position = old['observations/position'][:-gelsight_delay]
-            velocity = old['observations/velocity'][:-gelsight_delay]
-            action = old['goal_position'][:-gelsight_delay]
+            position = old['observations/position']
+            velocity = old['observations/velocity']
+            action = old['goal_position']
             if not use_rot:
                 new.attrs['position_dim'] = 4
                 new.attrs['velocity_dim'] = 4
@@ -122,7 +122,7 @@ def uncompress_data(source_folder, save_path, image_size = [400, 480], masks: Di
                 # save the images in the hdf5 file
                 image_group.create_dataset(name=f'{cam_name}', dtype='uint8', 
                                         chunks=(1, image_size[0], image_size[1], 3),
-                                        data=images[:-gelsight_delay])       
+                                        data=images)       
 
             
 def process_folder(source_folders, save_folder, image_size = [400, 480], masks = {}):
@@ -154,7 +154,7 @@ if __name__ == "__main__":
     image_size = [400, 480]
     masks = make_masks(image_size, MASK_VERTICIES)
 
-    source_folders = ['/media/selamg/DATA/beadsight/data/test_datacollection_run/']
+    source_folders = ['/media/selamg/DATA/beadsight/data/full_dataset']
     
     save_folder = '/media/selamg/DATA/beadsight/data/processed_data/'
 
