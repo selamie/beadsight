@@ -14,7 +14,7 @@ import rospy
 import cv2
 
 
-SAVE_DIR = '/home/selamg/beadsight/data/ssd/testdir/'
+SAVE_DIR = '/home/selamg/beadsight/data/ssd/full_dataset/'
 FOLDER_NAME = 'run/'   
 
 cv2_dispay.start()
@@ -33,7 +33,7 @@ class Teleoperation:
 				 girpper_offset = [0, 0, 0], 
 				 scaleing_factor = 1, #scaling factor to apply to motions
 				 scaleing_center =[0.5, 0, 0], # location to scale about (m, in franka frame)
-				 min_gripper_width = 0.00375,
+				 min_gripper_width = 0.007,
 				 record_data=True,
 				 Hz = 10,
 				 print_pos = False) -> None:
@@ -181,7 +181,7 @@ class Teleoperation:
 			current_pose = robo_data['pose']*self.fa._tool_delta_pose
 			cur_joints = robo_data['joints']
 			cur_vel = robo_data['joint_velocities']
-			finger_width = robo_data['gripper_width']
+			finger_width = fa.get_gripper_width()
 			jacobian = self.fa.get_jacobian(cur_joints)
 
 			# current_pose = self.fa.get_pose() # get the current pose of the hand.
@@ -234,7 +234,7 @@ class Teleoperation:
 					goal_pose = deepcopy(self.manual_pose)
 				
 				if self.print_pos:
-					print("p", np.round(current_pose.translation, 3))
+					print("starting position:", np.round(current_pose.translation, 3))
 
 				# print('goal_pose: ', goal_pose.translation)
 
@@ -297,7 +297,9 @@ class Teleoperation:
 		# stop runing the thread by setting the 'running' flag to false, then waiting for 
 		# the tread to terminate. Finally, stop any ongoing skill.
 		# self.PoseController.stop()
+		self.data_recorder.close()
 		self.running = False
+		self.data_recorder #TODO: what is this lol 
 		self.thread.join()
 		print('Stoped Teleoperation')
 
@@ -484,7 +486,7 @@ class SinusoidalMotion:
 		return position, rotation, width
 
 FRANKA_IP = "172.26.89.208"
-OCULUS_IP = "172.26.6.15"
+OCULUS_IP = "172.26.24.38"
 cam_nums = [1, 2, 3, 4, 5, 6]
 cam_sizes = [(1080, 1920), (1080, 1920), (1080, 1920), (1080, 1920), (1080, 1920), (800, 1280)]
 
@@ -492,7 +494,7 @@ cam_sizes = [(1080, 1920), (1080, 1920), (1080, 1920), (1080, 1920), (1080, 1920
 if __name__ == "__main__":
 	# with RemoteInputHost() as remote_io:
 	# Reset Franka
-	FAKE = True # Set to True if the oculus isn't being used (testing).
+	FAKE = False # Set to True if the oculus isn't being used (testing).
 	fa = FrankaArm()
 	fa.reset_joints()
 	fa.close_gripper()
@@ -525,7 +527,7 @@ if __name__ == "__main__":
 		if input("Press enter to take control, or q to quit") == 'q':
 			break
 		TeleopController.end_manual_control()
-		TeleopController.print_pos = True
+		TeleopController.print_pos = False
 		if input("Press enter to start recording, or q to quit") == 'q':
 			break
 		TeleopController.print_pos = False
@@ -575,3 +577,5 @@ if __name__ == "__main__":
 	TeleopController.stop()
 	cv2_dispay.stop()
 	cv2_dispay.join()
+
+	print('stopped')

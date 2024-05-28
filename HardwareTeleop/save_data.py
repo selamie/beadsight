@@ -88,7 +88,7 @@ class DataRecorder:
                  velocity_dim=7, 
                  overwrite=False,
                  beadsight_size = (480, 480),
-                 max_time_steps=1000,
+                 max_time_steps=10000,
                  fps = 30):
                             
         self.max_time_steps = max_time_steps
@@ -126,6 +126,8 @@ class DataRecorder:
         self.episode_index = -1
 
         self.current_times = [] #times in UTC seconds for later analysis
+        self.closed = False
+
         self.reset_episode()
         
     def reset_episode(self, delete_last_episode = False):
@@ -168,6 +170,7 @@ class DataRecorder:
 
         self.current_times.append(datetime.datetime.now().timestamp())
 
+
         # # Save the camera data
         frames = self.cameras.get_next_frames()
         self.save_images(list(frames.values()))
@@ -175,7 +178,6 @@ class DataRecorder:
         monitor_cameras(frames)
         
         self.time_steps += 1
-  
         # print(f"record time: {time.time() - start_time:.3f} secs")
         
     def write_to_file(self):
@@ -214,9 +216,14 @@ class DataRecorder:
         # clear the episode data
         self.reset_episode()
 
+    def close(self):
+        if not self.closed:
+            self.cameras.close()
+            self.save_images.close()
+            self.closed = True
+
     def __del__(self):
-        self.cameras.close()
-        self.save_images.close()
+        self.close()
 
 def main():
     # Simple video record test
