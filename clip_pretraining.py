@@ -93,14 +93,14 @@ class ClipProjectionHead(nn.Module):
 
         return x
 
-def modified_resnet18(weights=None, features_per_group=16) -> nn.Module:
+def modified_resnet18(features_per_group=16) -> nn.Module:
     """
     Get a resnet18 model with all BatchNorm layers replaced with GroupNorm.
     weights: The weights to load into the model. If None, uses default pretraiend weights.
     features_per_group: The number of features per group in the GroupNorm layer.
     return: The modified resnet18 model."""
     # get a resnet18 model
-    resnet18 = getattr(torchvision.models, 'resnet18')(weights=weights)
+    resnet18 = getattr(torchvision.models, 'resnet18')()
 
     # remove the final fully connected layer and average pooling
     resnet18 = nn.Sequential(*list(resnet18.children())[:-2])
@@ -108,8 +108,8 @@ def modified_resnet18(weights=None, features_per_group=16) -> nn.Module:
     # replace all BatchNorm with GroupNorm
     resnet18 = replace_bn_with_gn(resnet18, features_per_group=features_per_group)
     return resnet18    
-def get_beadsight_clip(weights=None, features_per_group=16):
-    beadsight_encoder = modified_resnet18(weights=weights, features_per_group=features_per_group)
+def get_beadsight_clip(features_per_group=16):
+    beadsight_encoder = modified_resnet18(features_per_group=features_per_group)
     beadsight_encoder = nn.Sequential(nn.Conv2d(15,3,3),beadsight_encoder)
     return beadsight_encoder
 
@@ -381,13 +381,13 @@ def clip_pretraining(train_loader: DataLoader,
 
     # get resnet models for each camera
     # get a resnet18 model
-    vision_encoder = modified_resnet18(weights=None, features_per_group=features_per_group).to(device)
+    vision_encoder = modified_resnet18().to(device)
 
     # create a projection head
     vision_projection = ClipProjectionHead(out_dim=clip_dim).to(device)
 
     # get a resnet18 model for beadsight
-    beadsight_encoder = get_beadsight_clip(weights=None, features_per_group=features_per_group).to(device)
+    beadsight_encoder = get_beadsight_clip().to(device)
 
     # create a projection head, conditioned on state
     beadsight_projection = ClipProjectionHead(out_dim=clip_dim, conditioning_dim=state_size).to(device)
