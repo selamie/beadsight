@@ -543,7 +543,7 @@ def clip_pretraining(train_loader: DataLoader,
             torch.save(beadsight_projection.state_dict(), f'{save_dir}/epoch_{epoch}_beadsight_projection.pth')
    
 
-def run_clip_pretraining(n_epochs):
+def run_clip_pretraining(n_epochs, device):
     from utils import get_norm_stats
     num_episodes = 106 #TODO: Change
     dataset_dir = "/home/selamg/processed_data"
@@ -554,7 +554,7 @@ def run_clip_pretraining(n_epochs):
     batch_size_test = 2
     n_clip_images = 7
     min_distance = 10
-    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    # device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
     # obtain train test split
     train_ratio = 0.8
@@ -634,7 +634,7 @@ def replot_loss_graph(training_losses, testing_losses):
 
 
 if __name__ == "__main__":
-    run_clip_pretraining(1501)
+    run_clip_pretraining(1501, device='cuda:0')
     
     # training_losses = np.load('/home/aigeorge/research/TactileACT/data/camera_cage_new_mount/clip_models/11/epoch1450-training_losses.npy')[:1450]
     # testing_losses = np.load('/home/aigeorge/research/TactileACT/data/camera_cage_new_mount/clip_models/11/epoch1450-testing_losses.npy')[:1450]
