@@ -547,7 +547,7 @@ def run_clip_pretraining(n_epochs, device):
     from utils import get_norm_stats
     num_episodes = 106 #TODO: Change
     dataset_dir = "/home/selamg/processed_data"
-    save_dir = "/media/selamg/clipmodels"
+    save_dir = "/home/selamg/clipmodels"
     camera_names = ['1', '2', '3', '4', '5', '6', 'beadsight']
     norm_stats = get_norm_stats(dataset_dir, num_episodes, use_existing=True)
     batch_size_train = 2
