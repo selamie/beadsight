@@ -227,7 +227,7 @@ class ClipDataset(torch.utils.data.Dataset):
                                 image = self.image_normalize(image)
                                 beadframes.append(image)
 
-                        beadcat = torch.concatenate(beadframes, axis=0)
+                        beadcat = torch.concat(beadframes, axis=0)
                                                       
 
                     else:
