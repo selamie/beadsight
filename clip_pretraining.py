@@ -536,7 +536,6 @@ def clip_pretraining(train_loader: DataLoader,
         np.save(f'testing_losses.npy', testing_losses)
 
         # save the models
-        #TODO: add +1
         if (epoch+1) % save_freq == 0:
             torch.save(vision_encoder.state_dict(), f'{save_dir}/epoch_{epoch}_vision_encoder.pth')
             torch.save(vision_projection.state_dict(), f'{save_dir}/epoch_{epoch}_vision_projection.pth')
@@ -546,9 +545,9 @@ def clip_pretraining(train_loader: DataLoader,
 
 def run_clip_pretraining(n_epochs):
     from utils import get_norm_stats
-    num_episodes = 13 #TODO: Change
-    dataset_dir = "/media/selamg/DATA/beadsight/data/processed_data"
-    save_dir = "/media/selamg/DATA/beadsight/data/clipmodels"
+    num_episodes = 106 #TODO: Change
+    dataset_dir = "/home/selamg/processed_data"
+    save_dir = "/media/selamg/clipmodels"
     camera_names = ['1', '2', '3', '4', '5', '6', 'beadsight']
     norm_stats = get_norm_stats(dataset_dir, num_episodes, use_existing=True)
     batch_size_train = 2

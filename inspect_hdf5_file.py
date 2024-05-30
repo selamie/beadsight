@@ -55,14 +55,11 @@ def show_images_in_hdf5_file(filename):
             # grid = np.zeros([2*image_size[0] + gelsight_size[0], 3*image_size[1], 3], dtype=np.uint8)
             grid = np.zeros([(2*image_size[0]+BEAD_SIZE[0]), 3*image_size[1], 3], dtype=np.uint8) #hacky and bad but image_size 1 matches beadisght sizes
 
-            print("GRIDSHAPE",grid.shape)
-            
-            print("SIZE",image_size)
+
             for i, key in enumerate(f['observations/images'].keys()):
                 image_data = f['observations/images'][key][idx, :, :, :]
                 # grid[(i//3)*image_size[0], (i%3)*image_size[1], :] = image_data
 
-                print(key,image_data.shape)
                 
                 if key == 'beadsight':
                      #HARDCODED
@@ -99,7 +96,7 @@ def save_images_from_hdf5_file(source_file, save_folder):
 
 import os
 if __name__ == "__main__":
-    filename = "/media/selamg/DATA/beadsight/data/processed_data/episode_0.hdf5"
+    filename = "/media/selamg/DATA/beadsight/data/processed_data/"
 
     folder = "/media/selamg/DATA/beadsight/data/processed_data"
 
@@ -110,6 +107,7 @@ if __name__ == "__main__":
 
     all_files.sort()
     for filename in all_files:
+        print(filename)
         print_hdf5_file(os.path.join(folder, filename))
         show_images_in_hdf5_file(os.path.join(folder, filename))
     exit()
