@@ -5,7 +5,7 @@ import os
 START_TIME = datetime.now()
 
 #CLUSTER:
-DATA_TYPE = "INITIAL_TEST"
+DATA_TYPE = ""
 CKPT_DIR = '/home/selamg/beadsight_data/checkpoints/'
 #for pretrained clip head
 BEADSIGHT_WEIGHTS_PATH = '/home/selamg/model_weights/epoch_1499_beadsight_encoder.pth'
@@ -21,8 +21,8 @@ BEAD_ONLY = False
 
 #SAVING RATE
 #TODO:
-EPOCHS = 10 #3500
-VAL_EVERY = 2 #10
+EPOCHS = 3000 #3500
+VAL_EVERY = 10 #10
 
 # REMEMBER TO EDIT TRAINING PARAMS(!!)
 
