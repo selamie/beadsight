@@ -5,16 +5,14 @@ import os
 START_TIME = datetime.now()
 
 #CLUSTER:
-
-# FIXED 
-DATA_TYPE = ""
-CKPT_DIR = '/media/selamg/DATA/beadsight/data/checkpoints/'
+DATA_TYPE = "INITIAL_TEST"
+CKPT_DIR = '/home/selamg/beadsight_data/checkpoints/'
 #for pretrained clip head
-BEADSIGHT_WEIGHTS_PATH = '/media/selamg/DATA/beadsight/data/clipmodels/test_ref/1/epoch_0_beadsight_encoder.pth'
-IMAGE_WEIGHTS_PATH = '/media/selamg/DATA/beadsight/data/clipmodels/test_ref/1/epoch_0_vision_encoder.pth'
-DATA_DIR = "/media/selamg/DATA/beadsight/data/processed_data"
-CODE_START_DIR = '/media/selamg/DATA/beadsight/HardwareTeleop' #temp fix for testing -- pc is a recursive directory lol 
-ENC_TYPE = 'clip'  # weights above not actually used here
+BEADSIGHT_WEIGHTS_PATH = '/home/selamg/model_weights/epoch_1499_beadsight_encoder.pth'
+IMAGE_WEIGHTS_PATH = '/home/selamg/model_weights/epoch_1499_vision_encoder.pth'
+DATA_DIR = "/home/selamg/processed_data/"
+CODE_START_DIR = '/home/selamg/beadsight' 
+ENC_TYPE = 'clip' 
 DEVICE_STR = 'cuda:0'
 PRED_HORIZON = 20
 ABLATE_BEAD = False 
@@ -22,6 +20,7 @@ BEAD_ONLY = False
 
 
 #SAVING RATE
+#TODO:
 EPOCHS = 10 #3500
 VAL_EVERY = 2 #10
 

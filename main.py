@@ -28,8 +28,7 @@ thisfile_name = os.path.basename(__file__)
 #shutil.copytree('/home/selam/diffusion_plugging', code_dir+'/diffusion_plugging')
 shutil.copyfile(thisfile, CODE_DIR+'/'+thisfile_name)
 
-#TODO: EDIT MEEEE
-num_episodes = 13
+num_episodes = 105
 
 cams = [1,2,3,4,5,6,'beadsight']
 

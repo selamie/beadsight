@@ -152,6 +152,7 @@ class ClipDataset(torch.utils.data.Dataset):
                                          std=[0.229, 0.224, 0.225])
 
         self.beadsight_horizon = beadsight_horizon
+    
 
         # get the length of each episode
         self.episode_lengths = []
@@ -257,6 +258,40 @@ class ClipDataset(torch.utils.data.Dataset):
         return torch.stack(all_cam_images, axis=0), torch.stack(beadsight_images,axis=0), torch.stack(all_positions, axis=0)
     
     # Create helper get functions for evaluation
+    def get_beadsight(self, episode_idx, timestep, cam_name):
+        dataset_path = os.path.join(self.dataset_dir, f'episode_{episode_idx}.hdf5')
+        with h5py.File(dataset_path, 'r') as root:
+            beadframes = []
+            if timestep < (self.beadsight_horizon+1):
+                for i in range(self.beadsight_horizon-timestep):
+                    image = root[f'/observations/images/{cam_name}'][timestep]
+                    # convert to tensor
+                    image = torch.tensor(image, dtype=torch.float32)/255.0
+                    image = torch.einsum('h w c -> c h w', image) # change to c h w
+                    # normalize image
+                    image = self.image_normalize(image)
+                    beadframes.append(image)
+                for i in range(timestep):
+                    image = root[f'/observations/images/{cam_name}'][i]
+                    # convert to tensor
+                    image = torch.tensor(image, dtype=torch.float32)/255.0
+                    image = torch.einsum('h w c -> c h w', image) # change to c h w
+                    # normalize image
+                    image = self.image_normalize(image)
+                    beadframes.append(image) 
+            else:
+                for i in range((timestep-self.beadsight_horizon)+1,timestep+1):
+                    image = root[f'/observations/images/{cam_name}'][i]
+                    # normalize image # ?? do we actually wanna?
+                    image = torch.tensor(image, dtype=torch.float32)/255.0
+                    image = torch.einsum('h w c -> c h w', image) # change to c h w
+                    image = self.image_normalize(image)
+                    beadframes.append(image)
+
+            beadcat = torch.concat(beadframes, axis=0)
+
+        return beadcat
+
     def get_image(self, episode_idx, timestep, cam_name):
         # get an image from the hdf5 file and preprocess it.
         dataset_path = os.path.join(self.dataset_dir, f'episode_{episode_idx}.hdf5')
