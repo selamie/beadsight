@@ -139,7 +139,7 @@ class EpisodicDataset(torch.utils.data.Dataset):
                             beadframes.append(image)
 
 
-                    beadcat = torch.concatenate(beadframes,axis=0)
+                    beadcat = torch.concat(beadframes,axis=0)
                     #3N x H x W where N is num vid frames
                     #this is input format to encoder
                     all_cam_images.append(beadcat)
