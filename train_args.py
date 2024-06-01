@@ -19,7 +19,7 @@ START_TIME = datetime.now()
 # BEAD_ONLY = False
 
 # #NODE 3 clip:
-DATA_TYPE = "_ablateBeadtest"
+DATA_TYPE = "_ablateBead3500"
 CKPT_DIR = '/home/selam/beadsight_data/checkpoints/'
 #for pretrained clip head
 BEADSIGHT_WEIGHTS_PATH = '/home/selam/model_weights/epoch_1499_beadsight_encoder.pth'
@@ -50,8 +50,8 @@ BEAD_ONLY = False
 
 #SAVING RATE
 #TODO:
-EPOCHS = 10 #3500
-VAL_EVERY = 2 #10
+EPOCHS = 3500 #3500
+VAL_EVERY = 10
 
 # REMEMBER TO EDIT TRAINING PARAMS(!!)
 
