@@ -5,7 +5,7 @@ import os
 START_TIME = datetime.now()
 
 #NODE 6 CLIP:
-DATA_TYPE = ""
+DATA_TYPE = "_visionOnlyresnet"
 CKPT_DIR = '/home/selamg/beadsight_data/checkpoints/'
 #for pretrained clip head
 BEADSIGHT_WEIGHTS_PATH = '/home/selamg/model_weights/epoch_1499_beadsight_encoder.pth'
@@ -13,9 +13,9 @@ IMAGE_WEIGHTS_PATH = '/home/selamg/model_weights/epoch_1499_vision_encoder.pth'
 DATA_DIR = "/home/selamg/processed_data/"
 CODE_START_DIR = '/home/selamg/beadsight' 
 ENC_TYPE = 'resnet18' 
-DEVICE_STR = 'cuda:1'
+DEVICE_STR = 'cuda:2'
 PRED_HORIZON = 20
-ABLATE_BEAD = False 
+ABLATE_BEAD = True 
 BEAD_ONLY = False
 
 # #NODE 3 clip:
