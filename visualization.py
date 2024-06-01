@@ -54,7 +54,8 @@ def visualize(images, qpos, actions, ground_truth=None):
     # Create a figure and axes
     fig = plt.figure(figsize=(15, 15), layout='tight')
     gs = fig.add_gridspec(15,15,wspace=0.01)
-    axs_left = fig.add_subfigure(gs[0:13,0:7]).subplots(len(images)-1,1)
+    #TODO: this is a bad, hardcoded hack:
+    axs_left = fig.add_subfigure(gs[0:13,0:7]).subplots(6,1)
     # axs_left = subfigs_top[0].subplots(len(images), 1)
 
     if len(images)>1:

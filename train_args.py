@@ -18,7 +18,7 @@ START_TIME = datetime.now()
 # ABLATE_BEAD = False 
 # BEAD_ONLY = False
 
-# #NODE 3 RESNET:
+# #NODE 3 clip:
 DATA_TYPE = "_ablateBeadtest"
 CKPT_DIR = '/home/selam/beadsight_data/checkpoints/'
 #for pretrained clip head
@@ -32,8 +32,20 @@ PRED_HORIZON = 20
 ABLATE_BEAD = True 
 BEAD_ONLY = False
 
-# ablate bead, ablate 
-
+# # ablate bead 
+# # local testing:
+# DATA_TYPE = "_ablateBeadtest"
+# CKPT_DIR = '/media/selamg/DATA/beadsight/data'
+# #for pretrained clip head
+# BEADSIGHT_WEIGHTS_PATH = '/media/selamg/DATA/beadsight/data/clipmodels/epoch_1499_beadsight_encoder.pth'
+# IMAGE_WEIGHTS_PATH = '/media/selamg/DATA/beadsight/data/clipmodels/epoch_1499_vision_encoder.pth'
+# DATA_DIR = "/media/selamg/DATA/beadsight/data/processed_data"
+# CODE_START_DIR = '/media/selamg/DATA/beadsight/HardwareTeleop' #throwaway 
+# ENC_TYPE = 'clip' 
+# DEVICE_STR = 'cuda:0'
+# PRED_HORIZON = 20
+# ABLATE_BEAD = True 
+# BEAD_ONLY = False
 
 
 #SAVING RATE
