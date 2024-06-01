@@ -32,6 +32,8 @@ PRED_HORIZON = 20
 ABLATE_BEAD = False 
 BEAD_ONLY = False
 
+# ablate bead, ablate 
+
 
 
 #SAVING RATE
