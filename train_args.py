@@ -4,33 +4,33 @@ import os
 
 START_TIME = datetime.now()
 
-# #NODE 6 CLIP:
-# DATA_TYPE = ""
-# CKPT_DIR = '/home/selamg/beadsight_data/checkpoints/'
-# #for pretrained clip head
-# BEADSIGHT_WEIGHTS_PATH = '/home/selamg/model_weights/epoch_1499_beadsight_encoder.pth'
-# IMAGE_WEIGHTS_PATH = '/home/selamg/model_weights/epoch_1499_vision_encoder.pth'
-# DATA_DIR = "/home/selamg/processed_data/"
-# CODE_START_DIR = '/home/selamg/beadsight' 
-# ENC_TYPE = 'clip' 
-# DEVICE_STR = 'cuda:0'
-# PRED_HORIZON = 20
-# ABLATE_BEAD = False 
-# BEAD_ONLY = False
-
-# #NODE 3 clip:
-DATA_TYPE = "_ablateBead3500"
-CKPT_DIR = '/home/selam/beadsight_data/checkpoints/'
+#NODE 6 CLIP:
+DATA_TYPE = ""
+CKPT_DIR = '/home/selamg/beadsight_data/checkpoints/'
 #for pretrained clip head
-BEADSIGHT_WEIGHTS_PATH = '/home/selam/model_weights/epoch_1499_beadsight_encoder.pth'
-IMAGE_WEIGHTS_PATH = '/home/selam/model_weights/epoch_1499_vision_encoder.pth'
-DATA_DIR = "/home/selam/processed_data/"
-CODE_START_DIR = '/home/selam/beadsight' 
+BEADSIGHT_WEIGHTS_PATH = '/home/selamg/model_weights/epoch_1499_beadsight_encoder.pth'
+IMAGE_WEIGHTS_PATH = '/home/selamg/model_weights/epoch_1499_vision_encoder.pth'
+DATA_DIR = "/home/selamg/processed_data/"
+CODE_START_DIR = '/home/selamg/beadsight' 
 ENC_TYPE = 'clip' 
 DEVICE_STR = 'cuda:0'
 PRED_HORIZON = 20
-ABLATE_BEAD = True 
+ABLATE_BEAD = False 
 BEAD_ONLY = False
+
+# #NODE 3 clip:
+# DATA_TYPE = "_ablateBead3500"
+# CKPT_DIR = '/home/selam/beadsight_data/checkpoints/'
+# #for pretrained clip head
+# BEADSIGHT_WEIGHTS_PATH = '/home/selam/model_weights/epoch_1499_beadsight_encoder.pth'
+# IMAGE_WEIGHTS_PATH = '/home/selam/model_weights/epoch_1499_vision_encoder.pth'
+# DATA_DIR = "/home/selam/processed_data/"
+# CODE_START_DIR = '/home/selam/beadsight' 
+# ENC_TYPE = 'clip' 
+# DEVICE_STR = 'cuda:0'
+# PRED_HORIZON = 20
+# ABLATE_BEAD = True 
+# BEAD_ONLY = False
 
 # # ablate bead 
 # # local testing:
