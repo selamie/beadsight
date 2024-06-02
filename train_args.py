@@ -79,5 +79,5 @@ thisfile_name = os.path.basename(__file__)
 os.makedirs(CODE_DIR,exist_ok=True)
 
 
-shutil.copytree(CODE_START_DIR, CODE_DIR+'/diffusion_plugging')
+shutil.copytree(CODE_START_DIR, CODE_DIR+'/beadsight')
 shutil.copyfile(thisfile, CODE_DIR+'/'+thisfile_name)

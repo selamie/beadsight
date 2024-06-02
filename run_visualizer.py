@@ -8,7 +8,7 @@ import numpy as np
 
 device = torch.device('cuda')
 
-num_episodes=13
+num_episodes=105
 dataset_path = "/media/selamg/DATA/beadsight/data/processed_data"
 dataset_dir = dataset_path
 
@@ -16,7 +16,7 @@ dataset_dir = dataset_path
 ckpt_dir = "/media/selamg/DATA/beadsight/data/checkpoints/"
 
 
-wt_name = "resnet18_epoch0_18-58-49_2024-05-23"
+wt_name = "clip_epoch3500_23-56-01_2024-06-01"
 
 weights_dir = ckpt_dir + wt_name
 
@@ -28,15 +28,15 @@ pred_horizon = 20
 camera_names = [1,2,3,4,5,6,"beadsight"]
 
 
-# norm_stats = get_norm_stats(dataset_dir, num_episodes)
+norm_stats = get_norm_stats(dataset_dir, num_episodes)
     
-norm_stats_dir = "/home/selamg/diffusion_plugging/norm_stats_fixed.json"
+# norm_stats_dir = "/home/selamg/diffusion_plugging/norm_stats_fixed.json"
 
-with open(norm_stats_dir, 'r') as f:
-    norm_stats = json.load(f)
+# with open(norm_stats_dir, 'r') as f:
+#     norm_stats = json.load(f)
 
-for key in norm_stats:
-    norm_stats[key] = np.array(norm_stats[key])
+# for key in norm_stats:
+#     norm_stats[key] = np.array(norm_stats[key])
 
 dataloader, model_dict = load_models(
     dataset_dir, weights_dir, norm_stats, camera_names, num_episodes,pred_horizon)

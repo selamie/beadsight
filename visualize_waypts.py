@@ -89,7 +89,7 @@ def predict_diff_actions(batch,unnormalizer:NormalizeDiffusionActionQpos,model_d
                 *ncur.shape[:2],-1)
             image_features = torch.cat([image_features, ncur_features], dim=-1)
         
-        if "beadsight" in batch.keys():
+        if "beadsight_encoder" in nets.keys():
             bead = batch["beadsight"][:,:obs_horizon].to(device)
             bead_features = nets['beadsight_encoder'](bead.flatten(end_dim=1))
             bead_features = bead_features.reshape(*bead.shape[:2],-1)
@@ -137,9 +137,9 @@ def predict_diff_actions(batch,unnormalizer:NormalizeDiffusionActionQpos,model_d
 
         #again with 100 inference steps and compare
         
-        # inference_iters = 10
-        # noise_scheduler.set_timesteps(inference_iters)
-        # naction2 = noisy_action #1,5,4
+        inference_iters = 10
+        noise_scheduler.set_timesteps(inference_iters)
+        naction2 = noisy_action #1,5,4
 
         
         # for k in noise_scheduler.timesteps:
