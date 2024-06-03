@@ -26,7 +26,7 @@ cameras = MultiprocessedCameras(cams, sizes)
 # Create VideoCapture objects for each camera
 captures = [cv2.VideoCapture(path) for path in video_paths]
 
-frame_num = 100
+frame_num = 1
 # Read the frame_num frame from each camera
 for _ in range(frame_num):
     original_frames = [capture.read()[1] for capture in captures]

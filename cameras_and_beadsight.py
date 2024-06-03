@@ -60,7 +60,7 @@ class CamerasAndBeadSight:
         self.bead_buffer = self.bead_buffer[1:] #this might be too low frequency/not multiprocessed
         return all_frames
     
-    def get_bead_buffer(self):
+    def get_and_update_bead_buffer(self):
         r, im = self.beadsight.get_frame()
         self.bead_buffer.append(im)
         self.bead_buffer = self.bead_buffer[1:] #this might be too low frequency/not multiprocessed

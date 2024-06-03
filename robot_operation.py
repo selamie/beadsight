@@ -166,7 +166,7 @@ def visualize(images, qpos, actions, ground_truth=None):
 
 if __name__ == '__main__':
 
-    use_real_robot = False
+    use_real_robot = True
     if use_real_robot:
         from frankapy import FrankaArm
         from frankapy import FrankaConstants as FC
@@ -187,7 +187,7 @@ if __name__ == '__main__':
 
         default_impedances = np.array(FC.DEFAULT_TRANSLATIONAL_STIFFNESSES + FC.DEFAULT_ROTATIONAL_STIFFNESSES)
         new_impedances = np.copy(default_impedances)
-        new_impedances[3:] = new_impedances[3:]*0.5 # reduce the rotational stiffnesses, default in gotopose live
+        new_impedances[3:] = new_impedances[3:] # reduce the rotational stiffnesses, default in gotopose live
         # new_impedances[:3] = 1.5*default_impedances[:3] # increase the translational stiffnesses
         new_impedances[:3] = default_impedances[:3] # reduce the translational stiffnesse
 
@@ -201,8 +201,8 @@ if __name__ == '__main__':
         
         camera_nums = [1, 2, 3, 4, 5, 6]
         camera_sizes = [(1080, 1920), (1080, 1920), (1080, 1920), (1080, 1920), (1080, 1920), (800, 1280)]
-        cameras = CamerasAndBeadSight(device=36,bead_horizon=BEAD_HORIZON)
-        min_gripper_width = 0.004
+        cameras = CamerasAndBeadSight(device=12,bead_horizon=BEAD_HORIZON) #check cam test to find devicenum
+        min_gripper_width = 0.007
 
     else:
         import h5py
@@ -248,11 +248,11 @@ if __name__ == '__main__':
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     from predict_robot_actions import diffuse_robot
 
-    # weights_dir = "/home/abraham/diffusion_plugging/data/fixed/resnet_H32_both/FXD32_resnet18_epoch3050_19-56-19_2024-03-01"
-    # norm_stats_dir = "/home/abraham/diffusion_plugging/norm_stats_fixed.json"
-
-    weights_dir = "/home/selamg/beadsight/data/ssd/weights/VisionOnly_resnet18_epoch3500_23-16-24_2024-06-01"
+    weights_dir = "/home/selamg/beadsight/data/ssd/weights/VisionOnly_clip_epoch3500_22-55-09_2024-06-01"
     norm_stats_dir = "/home/selamg/beadsight/norm_stats.json"
+
+    # weights_dir = "/home/selamg/beadsight/data/ssd/weights/clip_epoch3500_23-56-01_2024-06-01"
+    # norm_stats_dir = "/home/selamg/beadsight/norm_stats.json"
 
 
     with open(norm_stats_dir, 'r') as f:
@@ -264,10 +264,6 @@ if __name__ == '__main__':
 
     # create the fake dataset
     # EXPECTED_CAMERA_NAMES = ['1','2','3','4','5','6','beadsight'] 
-    # EXPECTED_CAMERA_NAMES = ['1','2','3','beadsight'] 
-
-    # for gel only:
-    # EXPECTED_CAMERA_NAMES = ['gelsight']
 
     # for images only:
     EXPECTED_CAMERA_NAMES = ['1','2','3','4','5','6']
@@ -295,7 +291,7 @@ if __name__ == '__main__':
         if use_real_robot:
             fa.open_gripper()
             move_pose = FC.HOME_POSE
-            move_pose.translation = np.array([0.6, 0, 0.35])
+            move_pose.translation = np.array([0.44, -0.06, 0.3])
 
             print(fa.get_pose().translation)
             input("Press enter to continue")
@@ -356,6 +352,8 @@ if __name__ == '__main__':
 
             image_data, qpos_data = preprocess.process_data(images, beadframes, qpos)
 
+            print('normalized qpos values:', qpos_data)
+
             # get the action from the model
             qpos_data = qpos_data.to(device)
             image_data = [img.to(device) for img in image_data]
@@ -394,9 +392,9 @@ if __name__ == '__main__':
 
             print('actions', actions)
             print('current pose', current_pose.translation)
-            for move_action in actions[:]:
+            for move_action in actions[:11]:
                 print("move_action", move_action)
-
+                cameras.get_and_update_bead_buffer() #update the buffer at rate of action execution
                 # move the robot:
                 if np.linalg.norm(last_position - current_pose.translation) < 0.0025 and not moved_gripper: # if the robot hasn't moved much, add to the integral term (to deal with friction)
                     integral_term += (move_action[:3] - current_pose.translation)*0.25

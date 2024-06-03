@@ -57,20 +57,20 @@ def test1():
         # without sleep--0.035
         # with sleep--0.0175 (so prob fine?)
 
-# if __name__ == '__main__':
+if __name__ == '__main__':
 
-#     # test1()
+    # test1()
 
-#     beadcam = BeadSight()
-#     while(True):
-#         r, im = beadcam.get_frame()
-#         if r:
-#             # cv2.imshow('og',og)
-#             cv2.imshow('unwarped',im)
-#             if cv2.waitKey(1) & 0xFF == ord('q'):
-#                 break
-#         else:
-#             break
+    beadcam = BeadSight(0)
+    while(True):
+        r, im = beadcam.get_frame()
+        if r:
+            # cv2.imshow('og',og)
+            cv2.imshow('unwarped',im)
+            if cv2.waitKey(1) & 0xFF == ord('q'):
+                break
+        else:
+            break
     
-#     beadcam.cap.release()
-#     cv2.destroyAllWindows()
+    beadcam.cap.release()
+    cv2.destroyAllWindows()

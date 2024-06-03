@@ -115,7 +115,7 @@ class EpisodicDataset(torch.utils.data.Dataset):
                 elif cam_name == 'beadsight':
                     beadframes = []
                     if start_ts < (self.beadsight_horizon+1): #indexing at zero
-                        for i in range(self.beadsight_horizon-start_ts):
+                        for _ in range(self.beadsight_horizon-start_ts):
                             image = root[f'/observations/images/{cam_name}'][start_ts]
                             image = torch.tensor(image, dtype=torch.float32)/255.0
                             image = torch.einsum('h w c -> c h w', image) # change to c h w
@@ -131,6 +131,7 @@ class EpisodicDataset(torch.utils.data.Dataset):
 
                     else:
                         for i in range((start_ts-self.beadsight_horizon)+1,start_ts+1):
+                            #TODO: if i < 0: i = 0
                             image = root[f'/observations/images/{cam_name}'][i]
                             # normalize image # ?? do we actually wanna?
                             image = torch.tensor(image, dtype=torch.float32)/255.0

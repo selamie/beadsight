@@ -10,12 +10,9 @@ from utils import get_norm_stats
 from visualization import visualize
 
 
-
-
 EXPECTED_CAMERA_NAMES = ['1','2','3','4','5','6','beadsight'] 
-
-
 print("CAMNAMES:", EXPECTED_CAMERA_NAMES)
+
 
 # pretend to be a robot by loading a dataset
 data_dir = "/home/selamg/beadsight/data/ssd/full_dataset/run_2/episode_3/episode_3.hdf5"
