@@ -2,7 +2,7 @@
 
 import cv2
 import time
-from beadsight_controller.defisheye import Defisheye 
+from HardwareTeleop.defisheye import Defisheye 
 #this won't work if you try to run this file but works for the relative import
 
 # DEVICENUM = 0 # beadsight is at /dev/video[devicenum]

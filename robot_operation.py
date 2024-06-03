@@ -171,10 +171,10 @@ if __name__ == '__main__':
         from frankapy import FrankaArm
         from frankapy import FrankaConstants as FC
         from robomail.motion import GotoPoseLive
-        from rospy import rate
+        from rospy import Rate
 
         # from simple_gelsight import GelSightMultiprocessed, get_camera_id
-        from HardwareTeleop.cameras_and_beadsight import CamerasAndBeadSight        
+        from cameras_and_beadsight import CamerasAndBeadSight        
         print("starting")
         import time
         fa = FrankaArm()
@@ -201,7 +201,7 @@ if __name__ == '__main__':
         
         camera_nums = [1, 2, 3, 4, 5, 6]
         camera_sizes = [(1080, 1920), (1080, 1920), (1080, 1920), (1080, 1920), (1080, 1920), (800, 1280)]
-        cameras = CamerasAndBeadSight()
+        cameras = CamerasAndBeadSight(device=36,bead_horizon=BEAD_HORIZON)
         min_gripper_width = 0.004
 
     else:
@@ -251,7 +251,7 @@ if __name__ == '__main__':
     # weights_dir = "/home/abraham/diffusion_plugging/data/fixed/resnet_H32_both/FXD32_resnet18_epoch3050_19-56-19_2024-03-01"
     # norm_stats_dir = "/home/abraham/diffusion_plugging/norm_stats_fixed.json"
 
-    weights_dir = "/home/selamg/beadsight/data/ssd/weights/clip_epoch3500_23-56-01_2024-06-01"
+    weights_dir = "/home/selamg/beadsight/data/ssd/weights/VisionOnly_resnet18_epoch3500_23-16-24_2024-06-01"
     norm_stats_dir = "/home/selamg/beadsight/norm_stats.json"
 
 
@@ -263,14 +263,14 @@ if __name__ == '__main__':
         norm_stats[key] = np.array(norm_stats[key])
 
     # create the fake dataset
-    EXPECTED_CAMERA_NAMES = ['1','2','3','4','5','6','beadsight'] 
+    # EXPECTED_CAMERA_NAMES = ['1','2','3','4','5','6','beadsight'] 
     # EXPECTED_CAMERA_NAMES = ['1','2','3','beadsight'] 
 
     # for gel only:
     # EXPECTED_CAMERA_NAMES = ['gelsight']
 
     # for images only:
-    #EXPECTED_CAMERA_NAMES = ['1','2','3','4','5','6']
+    EXPECTED_CAMERA_NAMES = ['1','2','3','4','5','6']
 
     preprocess = PreprocessData(norm_stats, EXPECTED_CAMERA_NAMES)
 
@@ -345,7 +345,7 @@ if __name__ == '__main__':
                 
                 # cur_joints = robo_data['joints']
                 # cur_vel = robo_data['joint_velocities']
-                finger_width = robo_data['gripper_width']
+                finger_width = fa.get_gripper_width()
                 qpos = np.zeros(4)
                 qpos[:3] = current_pose.translation
                 qpos[3] = finger_width
@@ -394,7 +394,7 @@ if __name__ == '__main__':
 
             print('actions', actions)
             print('current pose', current_pose.translation)
-            for move_action in actions[:8]:
+            for move_action in actions[:]:
                 print("move_action", move_action)
 
                 # move the robot:

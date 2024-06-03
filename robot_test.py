@@ -1,4 +1,4 @@
-from predict_robot_actions import create_nets, diffuse_robot
+from predict_robot_actions import diffuse_robot
 from robot_operation_old import PreprocessData
 import h5py
 import numpy as np
@@ -12,15 +12,16 @@ from visualization import visualize
 
 
 
-EXPECTED_CAMERA_NAMES = ['1','2','3','4','5','6','gelsight'] 
+EXPECTED_CAMERA_NAMES = ['1','2','3','4','5','6','beadsight'] 
 
 
 print("CAMNAMES:", EXPECTED_CAMERA_NAMES)
 
 # pretend to be a robot by loading a dataset
-data_dir = "/home/selamg/diffusion_plugging/demo_data/episode_3.hdf5"
+data_dir = "/home/selamg/beadsight/data/ssd/full_dataset/run_2/episode_3/episode_3.hdf5"
 with h5py.File(data_dir, 'r') as root:
     qpos = root['/observations/position'][()]
+    import pdb; pdb.set_trace()
     gall_imagest_actions = root['/goal_position'][()]
     all_gelsight_data = root['observations/gelsight/depth_strain_image'][()]
     num_episodes = root.attrs['num_timesteps']
@@ -61,19 +62,19 @@ enc_type = 'clip' #valid is 'clip' or 'resnet18'
 #note that weights dir for clip is hard coded inside create_nets
 # which is inside predict_robot_actions.py
 
-nets = create_nets(enc_type)
+# nets = create_nets(enc_type)
 
-image_encoder  = nets['image_encoder']
-gelsight_encoder = nets['gelsight_encoder']
-noise_pred_net = nets['noise_pred_net']
+# image_encoder  = nets['image_encoder']
+# gelsight_encoder = nets['gelsight_encoder']
+# noise_pred_net = nets['noise_pred_net']
 
-device = 'cuda'
-#prediction horizon is 8 time-steps
-actions = diffuse_robot(qpos_data,image_data,
-                         image_encoder,gelsight_encoder,
-                         noise_pred_net,
-                         pred_horizon=8,device=device)
+# device = 'cuda'
+# #prediction horizon is 8 time-steps
+# actions = diffuse_robot(qpos_data,image_data,
+#                          image_encoder,gelsight_encoder,
+#                          noise_pred_net,
+#                          pred_horizon=8,device=device)
 
-print(actions.shape)
+# print(actions.shape)
 
 

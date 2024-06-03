@@ -2,8 +2,8 @@ import pyrealsense2 as rs
 import cv2
 import numpy as np
 from typing import List, Tuple, Dict
-from multiprocessed_cameras import SaveVideosMultiprocessed
-from beadsight_controller.beadsight_realtime import BeadSight
+from HardwareTeleop.multiprocessed_cameras import SaveVideosMultiprocessed
+from HardwareTeleop.beadsight_realtime import BeadSight
 import time
 import copy
 
@@ -22,7 +22,8 @@ class CamerasAndBeadSight:
                  cameras:List[int] = [1,2,3,4,5,6],
                  shapes:List[Tuple[int, int]] = [(1080, 1920), (1080, 1920), (1080, 1920), (1080, 1920), (1080, 1920), (800, 1280)],
                  frame_rate:int = 30,
-                 device = 36) -> None:
+                 device = 36,
+                 bead_horizon = 5) -> None:
         
         self.pipelines = []
         configs = []
@@ -41,8 +42,9 @@ class CamerasAndBeadSight:
         self.cameras = cameras
         self.beadsight = BeadSight(device) #36 was devicenum on robot pc
         r, start_im = self.beadsight.get_frame()
-        self.bead_buffer = [start_im, copy(start_im), copy(start_im),copy(start_im),copy(start_im)]
-        
+        self.bead_buffer = [start_im]
+        for i in range(bead_horizon-1):
+            self.bead_buffer.append(start_im.copy())
  
     def get_next_frames(self) -> Dict[str, np.ndarray]:
         all_frames = {}

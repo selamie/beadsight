@@ -45,7 +45,6 @@ def diffuse_robot(qpos_data,image_data,camera_names,model_dict,
     for i in range(len(image_data)):
         image_data[i] = torch.stack([image_data[i],])
     
-    print("beadshape:",image_data[6].shape) #[2, 1, 15, 480, 480]
     qpos_data = torch.stack([qpos_data,])
 
 
