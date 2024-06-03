@@ -6,7 +6,7 @@ from clip_pretraining import modified_resnet18
 import os
 
 #from dataset import NormalizeDiffusionActionQpos
-#EXPECTED_CAMERA_NAMES = [1,2,3,4,5,6,'gelsight'] 
+#EXPECTED_CAMERA_NAMES = [1,2,3,4,5,6,'beadsight'] 
 
 device = 'cuda'
 
@@ -45,6 +45,7 @@ def diffuse_robot(qpos_data,image_data,camera_names,model_dict,
     for i in range(len(image_data)):
         image_data[i] = torch.stack([image_data[i],])
     
+    print("beadshape:",image_data[6].shape) #[2, 1, 15, 480, 480]
     qpos_data = torch.stack([qpos_data,])
 
 
@@ -54,11 +55,11 @@ def diffuse_robot(qpos_data,image_data,camera_names,model_dict,
         #set models to eval
         image_features = torch.Tensor().to(device)
         for i,cam_name in enumerate(camera_names):
-            if cam_name == 'gelsight':
-                gel = image_data[i].to(device)
-                gel_features = nets['gelsight_encoder'](gel.flatten(end_dim=1))
-                gel_features = gel_features.reshape(*gel.shape[:2],-1)
-                image_features = torch.cat([image_features,gel_features],dim=-1)
+            if cam_name == 'beadsight':
+                bead = image_data[i].to(device)
+                bead_features = nets['beadsight_encoder'](bead.flatten(end_dim=1))
+                bead_features = bead_features.reshape(*bead.shape[:2],-1)
+                image_features = torch.cat([image_features,bead_features],dim=-1)
                 continue
             ncur:torch.Tensor = image_data[i].to(device) #implicitly in order....?
             ncur_features:torch.Tensor = nets[f'{cam_name}_encoder'](

@@ -14,11 +14,9 @@ import time
 import json
 # from rospy import Rate
 
-def monitor_cameras(frames: Dict[str, np.ndarray], gelsight_frame: np.ndarray = None):
+def monitor_cameras(frames: Dict[str, np.ndarray]): #, gelsight_frame: np.ndarray = None):
     print('show cams')
     out_size = (900, 1800, 3)
-    if gelsight_frame is not None:
-        gelsight_frame = (visualize_gelsight_data(gelsight_frame)*255).astype(np.uint8)
     
     n_col = int(np.ceil(np.sqrt(len(frames)))) # 3
     n_row = int(np.ceil(len(frames) / n_col))
@@ -29,40 +27,35 @@ def monitor_cameras(frames: Dict[str, np.ndarray], gelsight_frame: np.ndarray = 
 
     running_idx = 0
     for i, (name, frame) in enumerate(frames.items()):
-        if name != 'gelsight':
-            frame = frame[CROP_PARAMS[int(name)]['i']:CROP_PARAMS[int(name)]['i']+CROP_PARAMS[int(name)]['h'], 
-                        CROP_PARAMS[int(name)]['j']:CROP_PARAMS[int(name)]['j']+CROP_PARAMS[int(name)]['w']]
+        if name != 'beadsight':
+            frame = frame[CROP_PARAMS[name]['i']:CROP_PARAMS[name]['i']+CROP_PARAMS[name]['h'], 
+                        CROP_PARAMS[name]['j']:CROP_PARAMS[name]['j']+CROP_PARAMS[name]['w']]
         if name == '6': # rotate the 6th camera
             frame = np.rot90(frame).copy()
         row = i // n_col
         col = i % n_col
         scale_factor = min(tile_size[0]/frame.shape[0], tile_size[1]/frame.shape[1])
         frame = cv2.resize(frame.copy(), (0, 0), fx=scale_factor, fy=scale_factor)
-        if row == n_row - 1 and gelsight_frame is not None: # sqeeze the gelsight into the bottom row
-            grid[row*tile_size[0]:row*tile_size[0]+frame.shape[0], 
-                running_idx:running_idx+frame.shape[1]] = frame
-            running_idx += frame.shape[1]
-        else:
-            grid[row*tile_size[0]:row*tile_size[0]+frame.shape[0], 
-                col*tile_size[1]:col*tile_size[1]+frame.shape[1]] = frame
-            
-    if gelsight_frame is not None:
-        scale_factor = min(tile_size[0]/gelsight_frame.shape[0], (grid.shape[1]-running_idx)/gelsight_frame.shape[1])
-        gelsight_frame = cv2.resize(gelsight_frame, (0, 0), fx=scale_factor, fy=scale_factor)
-        grid[-gelsight_frame.shape[0]:, -gelsight_frame.shape[1]:] = gelsight_frame
+        # if row == n_row - 1 and gelsight_frame is not None: # sqeeze the gelsight into the bottom row
+        #     grid[row*tile_size[0]:row*tile_size[0]+frame.shape[0], 
+        #         running_idx:running_idx+frame.shape[1]] = frame
+        #     running_idx += frame.shape[1]
+        grid[row*tile_size[0]:row*tile_size[0]+frame.shape[0], 
+            col*tile_size[1]:col*tile_size[1]+frame.shape[1]] = frame
+    
     
     cv2.imshow('cameras', grid)
     cv2.waitKey(1)
 
-def visualize_gelsight_data(image):
-    # Convert the image to LAB color space
-    max_depth = 10
-    max_strain = 30
-    # Show all three using LAB color space
-    image[:, :, 0] = np.clip(100*np.maximum(image[:, :, 0], 0)/max_depth, 0, 100)
-    # normalized_depth = np.clip(100*(depth_image/depth_image.max()), 0, 100)
-    image[:, :, 1:] = np.clip(128*(image[:, :, 1:]/max_strain), -128, 127)
-    return cv2.cvtColor(image.astype(np.float32), cv2.COLOR_LAB2BGR)
+# def visualize_gelsight_data(image):
+#     # Convert the image to LAB color space
+#     max_depth = 10
+#     max_strain = 30
+#     # Show all three using LAB color space
+#     image[:, :, 0] = np.clip(100*np.maximum(image[:, :, 0], 0)/max_depth, 0, 100)
+#     # normalized_depth = np.clip(100*(depth_image/depth_image.max()), 0, 100)
+#     image[:, :, 1:] = np.clip(128*(image[:, :, 1:]/max_strain), -128, 127)
+#     return cv2.cvtColor(image.astype(np.float32), cv2.COLOR_LAB2BGR)
 
 image_size = (400, 480)
 
@@ -75,29 +68,36 @@ class PreprocessData:
                                             std=[0.229, 0.224, 0.225])
         # self.normalizer = NormalizeActionQpos(norm_stats)
         self.normalizer = NormalizeDiffusionActionQpos(norm_stats)
-        self.gelsight_mean = norm_stats["gelsight_mean"]
-        self.gelsight_std = norm_stats["gelsight_std"]
         self.masks = make_masks(image_size=image_size, verticies=MASK_VERTICIES)
         self.camera_names = camera_names
 
     def process_data(self, 
                      images: Dict[str, np.ndarray], 
-                     gelsight: np.ndarray, 
+                     beadsight_frames: List[np.ndarray], 
                      qpos: np.ndarray) -> Tuple[Dict[str, torch.Tensor], torch.Tensor, torch.Tensor]:
         
+        normed_bead = []
+        for image in beadsight_frames:
+            image = torch.tensor(image, dtype=torch.float32)/255.0
+            image = torch.einsum('h w c -> c h w', image) # change to c h w
+            image = self.image_normalize(image)
+            normed_bead.append(image)
+
+        if normed_bead != []:
+            beadcat = torch.concat(normed_bead,axis=0)
+            beadcat = beadcat.unsqueeze(0)
+        else:
+            beadcat = None
+
         all_images = []
         for cam_name in self.camera_names:
 
-            if cam_name == "gelsight":
-                # process gelsight
-                gelsight_data = (gelsight - self.gelsight_mean) / self.gelsight_std
-                gelsight_data = torch.tensor(gelsight_data, dtype=torch.float32)
-                gelsight_data = torch.einsum('h w c -> c h w', gelsight_data)
-                all_images.append(gelsight_data.unsqueeze(0))
+            if cam_name == "beadsight" and beadcat != None:
+                all_images.append(beadcat)
 
             elif cam_name in images.keys():
                 # crop the images
-                crop = CROP_PARAMS[int(cam_name)]
+                crop = CROP_PARAMS[cam_name]
 
                 # crop the image and resize
                 image = images[cam_name]
@@ -116,7 +116,7 @@ class PreprocessData:
 
             else:
                 raise ValueError(f"Camera name {cam_name} not found in images")
-            
+
         # get rid of velocities
         if qpos.shape[0] == 7:
             qpos = np.concatenate([qpos[:3], qpos[6:]])
@@ -173,8 +173,8 @@ if __name__ == '__main__':
         from robomail.motion import GotoPoseLive
         from rospy import rate
 
-        from simple_gelsight import GelSightMultiprocessed, get_camera_id
-        from HardwareTeleop.multiprocessed_cameras import MultiprocessedCameras
+        # from simple_gelsight import GelSightMultiprocessed, get_camera_id
+        from HardwareTeleop.cameras_and_beadsight import CamerasAndBeadSight        
         print("starting")
         import time
         fa = FrankaArm()
@@ -195,37 +195,32 @@ if __name__ == '__main__':
         pose_controller.set_goal_pose(move_pose)
 
         save_video_path = "data/videos"
-        
-        
-        camera_id = get_camera_id('GelSight')
-        gelsight = GelSightMultiprocessed(camera_id, use_gpu=True)
 
         device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
         print(f"Using device {device}")
         
         camera_nums = [1, 2, 3, 4, 5, 6]
         camera_sizes = [(1080, 1920), (1080, 1920), (1080, 1920), (1080, 1920), (1080, 1920), (800, 1280)]
-        cameras = MultiprocessedCameras(camera_nums, camera_sizes, 30)
+        cameras = CamerasAndBeadSight()
         min_gripper_width = 0.004
 
     else:
         import h5py
-        data_dir = "/media/selamg/DATA/beadsight/data/full_dataset/run/episode_0/episode_0.hdf5"
-        # data_dir = "/home/abraham/GelSightTeleopDataCollection/ssd/camara_cage_7_nonfixed/run_4/episode_17/episode_17.hdf5"
+        # data_dir = "/media/selamg/DATA/beadsight/data/full_dataset/run/episode_0/episode_0.hdf5"
+        data_dir = "/home/selamg/beadsight/data/ssd/full_dataset/run_0/episode_0/episode_0.hdf5"
         with h5py.File(data_dir, 'r') as root:
             all_qpos_7 = root['/observations/position'][()]
             all_qpos = np.empty([all_qpos_7.shape[0], 4])
             all_qpos[:, :3] = all_qpos_7[:, :3]
             all_qpos[:, 3] = all_qpos_7[:, 6]
             gt_actions = root['/goal_position'][()]
-            # all_gelsight_data = root['observations/gelsight/depth_strain_image'][()]
-            all_gelsight_data = root['/observations/position']
             num_episodes = root.attrs['num_timesteps']
             #num_episodes = 50
 
             all_images = {}
             for cam in root.attrs['camera_names']:
                 if cam == 'beadsight':
+                    #how do I construct a rolling stacked object...
                     video_images = []
                     video_path = os.path.join(os.path.dirname(data_dir), f'cam-{cam}.avi')
                     cap = cv2.VideoCapture(video_path)
@@ -256,8 +251,8 @@ if __name__ == '__main__':
     # weights_dir = "/home/abraham/diffusion_plugging/data/fixed/resnet_H32_both/FXD32_resnet18_epoch3050_19-56-19_2024-03-01"
     # norm_stats_dir = "/home/abraham/diffusion_plugging/norm_stats_fixed.json"
 
-    weights_dir = "/media/selamg/DATA/diffusion_plugging_checkpoints/resnet18_epoch3500_01-47-26_2024-03-14_NOTFXD_ABLATE_GEL"
-    norm_stats_dir = "/home/selamg/diffusion_plugging/norm_stats_not_fixed.json"
+    weights_dir = "/home/selamg/beadsight/data/ssd/weights/clip_epoch3500_23-56-01_2024-06-01"
+    norm_stats_dir = "/home/selamg/beadsight/norm_stats.json"
 
 
     with open(norm_stats_dir, 'r') as f:
@@ -268,13 +263,14 @@ if __name__ == '__main__':
         norm_stats[key] = np.array(norm_stats[key])
 
     # create the fake dataset
-    # EXPECTED_CAMERA_NAMES = ['1','2','3','4','5','6','gelsight'] 
-    
+    EXPECTED_CAMERA_NAMES = ['1','2','3','4','5','6','beadsight'] 
+    # EXPECTED_CAMERA_NAMES = ['1','2','3','beadsight'] 
+
     # for gel only:
     # EXPECTED_CAMERA_NAMES = ['gelsight']
 
     # for images only:
-    EXPECTED_CAMERA_NAMES = ['1','2','3','4','5','6']
+    #EXPECTED_CAMERA_NAMES = ['1','2','3','4','5','6']
 
     preprocess = PreprocessData(norm_stats, EXPECTED_CAMERA_NAMES)
 
@@ -323,17 +319,25 @@ if __name__ == '__main__':
 
             if use_real_robot:
                 images = cameras.get_next_frames()
-                frame, marker_data, depth, strain_x, strain_y = gelsight.get_next_frame()
-                # gelsight_data = np.stack([depth, strain_x, strain_y], axis=-1)
+                beadframes = cameras.bead_buffer
             
             else:
                 images = {key: all_images[key][i] for key in all_images}
-                # gelsight_data = all_gelsight_data[i]
-                beadsight_images = all_beadsight_images[i]
-
+                if 'beadsight' in all_images.keys():
+                    if i < BEAD_HORIZON:
+                        beadframes = [all_images['beadsight'][i]]
+                        for c in range(BEAD_HORIZON-1):
+                            beadframes.append(all_images['beadsight'][i].copy())  
+                    elif i >= BEAD_HORIZON:
+                        beadframes = []
+                        for c in range(BEAD_HORIZON-1):
+                            beadframes.append(all_images['beadsight'][i-c])  
+                        beadframes.append(all_images['beadsight'][i])
+                else:
+                    beadframes = []
 
             # show the images
-            monitor_cameras(images, np.copy(beadsight_images)) #this won't work sigh
+            monitor_cameras(images) 
 
             if use_real_robot:
                 robo_data = fa.get_robot_state()
@@ -350,7 +354,7 @@ if __name__ == '__main__':
                 qpos = all_qpos[i]
                 current_pose = None
 
-            image_data, qpos_data = preprocess.process_data(images, gelsight_data, qpos)
+            image_data, qpos_data = preprocess.process_data(images, beadframes, qpos)
 
             # get the action from the model
             qpos_data = qpos_data.to(device)
@@ -371,6 +375,8 @@ if __name__ == '__main__':
 
             # visualize the data
             vis_images = [image_data[j].squeeze().detach().cpu().numpy().transpose(1, 2, 0) for j in range(len(image_data))]
+            #TODO: hardcoded:
+            vis_images = vis_images[:-1]
 
             if use_real_robot:
                 run_images.append(vis_images)
@@ -453,8 +459,8 @@ if __name__ == '__main__':
                         out_mp4.write((image*255).astype(np.uint8))
                     else:
                         image = images[cam_num]*norm_stats['gelsight_std'] + norm_stats['gelsight_mean']
-                        out_avi.write((visualize_gelsight_data(image)*255).astype(np.uint8))
-                        out_mp4.write((visualize_gelsight_data(image)*255).astype(np.uint8))
+                        # out_avi.write((visualize_gelsight_data(image)*255).astype(np.uint8))
+                        # out_mp4.write((visualize_gelsight_data(image)*255).astype(np.uint8))
 
                 out_avi.release()
                 out_mp4.release()

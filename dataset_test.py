@@ -19,7 +19,8 @@ from diffusers.schedulers.scheduling_ddpm import DDPMScheduler
 pred_horizon = 5
 #action_horizon = 4
 
-dataset_path = "/media/selamg/DATA/beadsight/data/processed_data"
+# dataset_path = "/media/selamg/DATA/beadsight/data/processed_data"
+dataset_path = "/home/selamg/beadsight/data/ssd/processed_data"
 
 dataset_dir = dataset_path
 
@@ -65,23 +66,34 @@ print("batch[6].shape:", batch[6].shape)
 print("batch['agent_pos'].shape:", batch['agent_pos'].shape)
 print("batch['action'].shape:", batch["action"].shape)
 
+weights_dir = "/home/selamg/beadsight/data/ssd/weights/clip_epoch3500_23-56-01_2024-06-01"
 
-import cv2
+model_dict = torch.load(weights_dir, map_location='cuda')
 
-#done in visualize_waypts/predict_diff_actions
-bead = batch["beadsight"][0].flatten(end_dim=1).to('cpu')
-bead = bead.permute(1,2,0) #H W C
-bead = bead.detach().to('cpu')
-print("bead",bead.shape)
+nets = nn.ModuleDict(model_dict).to('cuda')
 
-beadframes = []
-start = 0
-assert bead.shape[0] % 3 == 0
-for i in range(int(bead.shape[0]/3)):
-    print(i)
-    frame = bead[:,:,start:((i+1)*3)]
-    beadframes.append(frame)
-    start += 3
+obs_horizon = 1
+bead = batch['beadsight'][:,:obs_horizon].to('cuda')
+
+print("bead:", bead.shape)
+bead_features = nets['beadsight_encoder'](bead.flatten(end_dim=1))
+print("success")
+# import cv2
+
+# #done in visualize_waypts/predict_diff_actions
+# bead = batch["beadsight"][0].flatten(end_dim=1).to('cpu')
+# bead = bead.permute(1,2,0) #H W C
+# bead = bead.detach().to('cpu')
+# print("bead",bead.shape)
+
+# beadframes = []
+# start = 0
+# assert bead.shape[0] % 3 == 0
+# for i in range(int(bead.shape[0]/3)):
+#     print(i)
+#     frame = bead[:,:,start:((i+1)*3)]
+#     beadframes.append(frame)
+#     start += 3
 
 
 

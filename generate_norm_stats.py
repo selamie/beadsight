@@ -2,9 +2,9 @@ from utils import get_norm_stats
 import json
 
 
-dataset_dir = '/media/selamg/DATA/beadsight/data/processed_data'
+dataset_dir = '/home/selamg/beadsight/data/ssd/processed_data'
 
-norm_stats = get_norm_stats(dataset_dir,num_episodes=100)
+norm_stats = get_norm_stats(dataset_dir,num_episodes=105)
 print(norm_stats)
 
 for i in norm_stats.keys():

@@ -9,14 +9,17 @@ import numpy as np
 device = torch.device('cuda')
 
 num_episodes=105
+# dataset_path = "/media/selamg/DATA/beadsight/data/processed_data"
 dataset_path = "/media/selamg/DATA/beadsight/data/processed_data"
+
 dataset_dir = dataset_path
 
 
+# ckpt_dir = "/media/selamg/DATA/beadsight/data/checkpoints/"
 ckpt_dir = "/media/selamg/DATA/beadsight/data/checkpoints/"
 
 
-wt_name = "clip_epoch3500_23-56-01_2024-06-01"
+# wt_name = "clip_epoch3500_23-56-01_2024-06-01"
 
 weights_dir = ckpt_dir + wt_name
 

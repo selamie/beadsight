@@ -5,6 +5,7 @@ from typing import List, Tuple, Dict
 from multiprocessed_cameras import SaveVideosMultiprocessed
 from beadsight_controller.beadsight_realtime import BeadSight
 import time
+import copy
 
 CAM_SERIALS = {
         1: '220222066259',
@@ -20,7 +21,8 @@ class CamerasAndBeadSight:
     def __init__(self, 
                  cameras:List[int] = [1,2,3,4,5,6],
                  shapes:List[Tuple[int, int]] = [(1080, 1920), (1080, 1920), (1080, 1920), (1080, 1920), (1080, 1920), (800, 1280)],
-                 frame_rate:int = 30) -> None:
+                 frame_rate:int = 30,
+                 device = 36) -> None:
         
         self.pipelines = []
         configs = []
@@ -37,7 +39,10 @@ class CamerasAndBeadSight:
 
         self.frame_num = 0 # keep track of the frame number
         self.cameras = cameras
-        self.beadsight = BeadSight(36) #36 was devicenum on robot pc
+        self.beadsight = BeadSight(device) #36 was devicenum on robot pc
+        r, start_im = self.beadsight.get_frame()
+        self.bead_buffer = [start_im, copy(start_im), copy(start_im),copy(start_im),copy(start_im)]
+        
  
     def get_next_frames(self) -> Dict[str, np.ndarray]:
         all_frames = {}
@@ -49,9 +54,16 @@ class CamerasAndBeadSight:
             all_frames[str(cam)] = color_image
         r, im = self.beadsight.get_frame()
         all_frames["beadsight"] = im
-
+        self.bead_buffer.append(im)
+        self.bead_buffer = self.bead_buffer[1:] #this might be too low frequency/not multiprocessed
         return all_frames
     
+    def get_bead_buffer(self):
+        r, im = self.beadsight.get_frame()
+        self.bead_buffer.append(im)
+        self.bead_buffer = self.bead_buffer[1:] #this might be too low frequency/not multiprocessed
+        return self.bead_buffer
+
     def close(self) -> None:
         self.beadsight.close()
 
