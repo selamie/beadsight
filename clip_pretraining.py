@@ -241,8 +241,10 @@ class ClipDataset(torch.utils.data.Dataset):
                         image = torch.einsum('h w c -> c h w', image) # change to c h w
 
                         # normalize image
+                        start_shape = image.shape
                         if self.image_transforms != None:
                             image = self.image_transforms(image)
+                        assert start_shape == image.shape
                         image = self.image_normalize(image)
                         timestep_cam_images.append(image)
 
@@ -606,10 +608,10 @@ def run_clip_pretraining(n_epochs, device):
     t = transforms.Compose([
     transforms.RandomRotation(degrees=10),
     transforms.RandomPerspective(distortion_scale=0.15, p=0.5), #0.1, p = 0.5
-    transforms.RandomResizedCrop(size=[480,480], scale=(0.8,1.0),ratio=(1,1)) #0.9, 1.0
+    transforms.RandomResizedCrop(size=[400,480], scale=(0.8,1.0),ratio=(1,1)) #0.9, 1.0
     ])
 
-    train_dataset = ClipDataset(train_indices, dataset_dir, camera_names, norm_stats, n_images=n_clip_images, min_distance=min_distance, image_transforms=None)
+    train_dataset = ClipDataset(train_indices, dataset_dir, camera_names, norm_stats, n_images=n_clip_images, min_distance=min_distance, image_transforms=t)
     test_dataset = ClipDataset(val_indices, dataset_dir, camera_names, norm_stats, n_images=n_clip_images, min_distance=min_distance)
 
     if device == torch.device("cuda"):
