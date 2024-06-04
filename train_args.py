@@ -15,7 +15,7 @@ CODE_START_DIR = '/home/selamg/beadsight'
 ENC_TYPE = 'clip' 
 DEVICE_STR = 'cuda' #exact device to be contrlled with CUDA_VISIBLE_DEVICES...
 PRED_HORIZON = 20
-ABLATE_BEAD = True 
+ABLATE_BEAD = False 
 BEAD_ONLY = False
 FREEZE_BEAD = True
 
