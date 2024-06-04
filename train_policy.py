@@ -104,14 +104,14 @@ def create_nets(enc_type,data_dir,norm_stats,camera_names,pred_horizon,
     train_indices = shuffled_indices[:int(train_ratio * num_episodes)]
     val_indices = shuffled_indices[int(train_ratio * num_episodes):]
     
-    #TODO: check
+    #TODO: augmentation
     # t = transforms.Compose([
     # transforms.RandomRotation(degrees=10),
     # transforms.RandomPerspective(distortion_scale=0.15, p=0.5), #0.1, p = 0.5
     # transforms.RandomResizedCrop(size=[480,480], scale=(0.8,1.0),ratio=(1,1)) #0.9, 1.0
 
     # ])
-
+    t = None
 
     train_dataset = DiffusionEpisodicDataset(train_indices,data_dir,pred_horizon,camera_names,norm_stats, image_transforms=t)
 
