@@ -73,9 +73,10 @@ class EpisodicDataset(torch.utils.data.Dataset):
         # image normalization for resnet. 
         self.image_normalize = transforms.Normalize(mean=[0.485, 0.456, 0.406],
                                          std=[0.229, 0.224, 0.225])
-        self.__getitem__(0) # initialize self.is_sim, self.image_size
 
         self.image_transforms = image_transforms
+
+        self.__getitem__(0) # initialize self.is_sim, self.image_size
 
 
         # image = normalize(image)
@@ -144,6 +145,7 @@ class EpisodicDataset(torch.utils.data.Dataset):
                     image = torch.tensor(image, dtype=torch.float32)/255.0
                     image = torch.einsum('h w c -> c h w', image) # change to c h w
                     if self.image_transforms != None:
+                        print("TRANSFORMING IMAGE LN147 utils.py")
                         image = self.image_transforms(image) #TODO: check 
                     image = self.image_normalize(image)
                     all_cam_images.append(image)

@@ -44,9 +44,12 @@ train_indices = shuffled_indices[:int(train_ratio * num_episodes)]
 val_indices = shuffled_indices[int(train_ratio * num_episodes):]
 
 
-t = transforms.Compose(
-    transforms.RandomResizedCrop(size=[480,480], scale=(0.9,1.0)),
-    transforms.RandomPerspective(distortion_scale=0.1, p=0.5) )
+t = transforms.Compose([
+    transforms.RandomRotation(degrees=10),
+    transforms.RandomPerspective(distortion_scale=0.15, p=0.5), #0.1, p = 0.5
+    transforms.RandomResizedCrop(size=[480,480], scale=(0.8,1.0),ratio=(1,1)) #0.9, 1.0
+
+    ])
 
 train_dataset = DiffusionEpisodicDataset(train_indices, dataset_dir, pred_horizon, camera_names, norm_stats, image_transforms=t)
 
@@ -71,19 +74,29 @@ print("batch[6].shape:", batch[6].shape)
 print("batch['agent_pos'].shape:", batch['agent_pos'].shape)
 print("batch['action'].shape:", batch["action"].shape)
 
+image = batch[4][0]
+image = image.flatten(end_dim=1)
+image = image.permute(1,2,0)
+image = image.detach().to('cpu')
+image = image.numpy()
+
+import cv2
+cv2.imshow('transformed im',image)
+cv2.waitKey(0)
+
 # weights_dir = "/home/selamg/beadsight/data/ssd/weights/clip_epoch3500_23-56-01_2024-06-01"
-weights_dir = "/media/selamg/DATA/beadsight/data/final_wts/clip_epoch3000_03-25-05_2024-06-01"
+# weights_dir = "/media/selamg/DATA/beadsight/data/final_wts/clip_epoch3000_03-25-05_2024-06-01"
 
-model_dict = torch.load(weights_dir, map_location='cuda')
+# model_dict = torch.load(weights_dir, map_location='cuda')
 
-nets = nn.ModuleDict(model_dict).to('cuda')
+# nets = nn.ModuleDict(model_dict).to('cuda')
 
-obs_horizon = 1
-bead = batch['beadsight'][:,:obs_horizon].to('cuda')
+# obs_horizon = 1
+# bead = batch['beadsight'][:,:obs_horizon].to('cuda')
 
-print("bead:", bead.shape)
-bead_features = nets['beadsight_encoder'](bead.flatten(end_dim=1))
-print("success")
+# print("bead:", bead.shape)
+# bead_features = nets['beadsight_encoder'](bead.flatten(end_dim=1))
+# print("success")
 # import cv2
 
 # #done in visualize_waypts/predict_diff_actions

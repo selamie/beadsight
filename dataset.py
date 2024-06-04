@@ -51,8 +51,7 @@ class DiffusionEpisodicDataset(EpisodicDataset):
 
     def __init__(self, episode_ids, dataset_dir, pred_horizon, camera_names,norm_stats,image_size=None, image_transforms = None):
         self.bead_idx = None
-        self.image_transforms = image_transforms
-        super().__init__(episode_ids,dataset_dir,camera_names,norm_stats, pred_horizon,image_size)
+        super().__init__(episode_ids,dataset_dir,camera_names,norm_stats, pred_horizon,image_size,image_transforms=image_transforms)
         self.action_qpos_normalize = NormalizeDiffusionActionQpos(norm_stats)
         self.camera_names = camera_names
 

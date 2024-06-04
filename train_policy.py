@@ -3,6 +3,7 @@ import os
 import numpy as np
 import torch
 import torch.nn as nn
+from torchvision import transforms
 # from torchvision.transforms import v1
 
 from diffusers.schedulers.scheduling_ddpm import DDPMScheduler
@@ -24,7 +25,7 @@ from visualize_waypts import predict_diff_actions
 
 from train_args import CKPT_DIR, BEADSIGHT_WEIGHTS_PATH, \
 IMAGE_WEIGHTS_PATH, DEVICE_STR, ABLATE_BEAD,\
-START_TIME, VAL_EVERY, FREEZE_BEAD
+START_TIME, VAL_EVERY, FREEZE_BEAD, DATA_TYPE
 
 
 #CKPT_DIR = '/media/selamg/DATA/diffusion_plugging_checkpoints/'
@@ -104,11 +105,15 @@ def create_nets(enc_type,data_dir,norm_stats,camera_names,pred_horizon,
     val_indices = shuffled_indices[int(train_ratio * num_episodes):]
     
     #TODO: check
-    # transforms = v2.compose(
-        
-    # )
+    # t = transforms.Compose([
+    # transforms.RandomRotation(degrees=10),
+    # transforms.RandomPerspective(distortion_scale=0.15, p=0.5), #0.1, p = 0.5
+    # transforms.RandomResizedCrop(size=[480,480], scale=(0.8,1.0),ratio=(1,1)) #0.9, 1.0
 
-    train_dataset = DiffusionEpisodicDataset(train_indices,data_dir,pred_horizon,camera_names,norm_stats)
+    # ])
+
+
+    train_dataset = DiffusionEpisodicDataset(train_indices,data_dir,pred_horizon,camera_names,norm_stats, image_transforms=t)
 
     train_dataloader = torch.utils.data.DataLoader(
         train_dataset,
@@ -226,8 +231,7 @@ def train(num_epochs,camera_names,nets:nn.ModuleDict,train_dataloader,val_datalo
     debug.plot=True 
     debug.dataset=('validation')
     today = START_TIME.strftime("%Y-%m-%d_%H-%M-%S")
-    debugdir = CKPT_DIR+today+'_plots'+'_'+enc_type
-    debug.visualizations_dir=debugdir
+    debugdir = CKPT_DIR+today+'_plots'+'_'+enc_type+'_'+DATA_TYPE
 
 
     # TODO: 
