@@ -3,6 +3,8 @@ import os
 import numpy as np
 import torch
 import torch.nn as nn
+from torchvision.transforms import v2
+
 from diffusers.schedulers.scheduling_ddpm import DDPMScheduler
 from diffusers.training_utils import EMAModel
 from diffusers.optimization import get_scheduler
@@ -22,7 +24,7 @@ from visualize_waypts import predict_diff_actions
 
 from train_args import CKPT_DIR, BEADSIGHT_WEIGHTS_PATH, \
 IMAGE_WEIGHTS_PATH, DEVICE_STR, ABLATE_BEAD,\
-START_TIME, VAL_EVERY
+START_TIME, VAL_EVERY, FREEZE_BEAD
 
 
 #CKPT_DIR = '/media/selamg/DATA/diffusion_plugging_checkpoints/'
@@ -101,6 +103,11 @@ def create_nets(enc_type,data_dir,norm_stats,camera_names,pred_horizon,
     train_indices = shuffled_indices[:int(train_ratio * num_episodes)]
     val_indices = shuffled_indices[int(train_ratio * num_episodes):]
     
+    #TODO: check
+    # transforms = v2.compose(
+        
+    # )
+
     train_dataset = DiffusionEpisodicDataset(train_indices,data_dir,pred_horizon,camera_names,norm_stats)
 
     train_dataloader = torch.utils.data.DataLoader(
@@ -126,7 +133,7 @@ def create_nets(enc_type,data_dir,norm_stats,camera_names,pred_horizon,
         shuffle=True,
         # accelerate cpu-gpu transfer
         pin_memory=True,
-        # don't kill worker process afte each epoch
+        # don't kill worker process after each epoch
         persistent_workers=True
     )
 
@@ -148,7 +155,6 @@ def create_nets(enc_type,data_dir,norm_stats,camera_names,pred_horizon,
 
 def _save_ckpt(start_time:datetime,epoch,enc_type,
                nets,train_losses,val_losses,test=False):
-    
     ckpt_dir=CKPT_DIR
     # noise_pred_net
     model_checkpoint = {}
@@ -238,12 +244,27 @@ def train(num_epochs,camera_names,nets:nn.ModuleDict,train_dataloader,val_datalo
     #     power=0.75)
 
     nets.to(device)
-
-    # Standard ADAM optimizer
-    # Note that EMA parametesr are not optimized
-    optimizer = torch.optim.AdamW(
-        params=nets.parameters(),
-        lr=1e-4, weight_decay=1e-6)
+    
+    if FREEZE_BEAD:
+        parameters_no_beadsight = []
+        
+        for key in nets.keys():
+            if key == "beadsight_encoder":
+                continue
+            parameters_no_beadsight.append({'params':nets[key].parameters()})
+        
+        # Standard ADAM optimizer
+        # Note that EMA parametesr are not optimized
+        optimizer = torch.optim.AdamW(
+            params = parameters_no_beadsight,
+            lr=1e-4, weight_decay=1e-6)
+    else:
+        # Standard ADAM optimizer
+        # Note that EMA parametesr are not optimized
+        optimizer = torch.optim.AdamW(
+            #params = paramaeters_no_beadsight
+            params=nets.parameters(),
+            lr=1e-4, weight_decay=1e-6)
 
     # Cosine LR schedule with linear warmup
     lr_scheduler = get_scheduler(
@@ -436,6 +457,18 @@ def train(num_epochs,camera_names,nets:nn.ModuleDict,train_dataloader,val_datalo
             
             val_losses.append(np.mean(val_loss))
             
+            # verify that the model is loaded correctly by checking to make sure all the parameters are the different
+            # BEADSIGHT_CUR = nets["beadsight_encoder"]
+            # for key in BEADSIGHT_ORIG.state_dict().keys():
+            #     # assert that the parameters are different
+            #     if torch.any(BEADSIGHT_ORIG.state_dict()[key] != BEADSIGHT_CUR.state_dict()[key]):
+            #         print(f"Parameter {key} is NOT THE SAME in the loaded model as the original model.")
+            #         print(BEADSIGHT_CUR.state_dict()[key])
+            #         input("oh no") 
+            #     else:
+            #         print("success")
+
+            # exit()
 
             if epoch_idx % 500 == 0: 
                 _save_ckpt(START_TIME,epoch_idx,enc_type,nets,train_losses,val_losses)

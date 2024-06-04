@@ -5,18 +5,19 @@ import os
 START_TIME = datetime.now()
 
 #NODE 6:
-DATA_TYPE = "_visionOnly"
+DATA_TYPE = "_frozen"
 CKPT_DIR = '/home/selamg/beadsight_data/checkpoints/'
 #for pretrained clip head
 BEADSIGHT_WEIGHTS_PATH = '/home/selamg/model_weights/epoch_1499_beadsight_encoder.pth'
 IMAGE_WEIGHTS_PATH = '/home/selamg/model_weights/epoch_1499_vision_encoder.pth'
 DATA_DIR = "/home/selamg/processed_data/"
 CODE_START_DIR = '/home/selamg/beadsight' 
-ENC_TYPE = 'resnet18' 
+ENC_TYPE = 'clip' 
 DEVICE_STR = 'cuda' #exact device to be contrlled with CUDA_VISIBLE_DEVICES...
 PRED_HORIZON = 20
 ABLATE_BEAD = True 
 BEAD_ONLY = False
+FREEZE_BEAD = True
 
 # #NODE 3 clip:
 # DATA_TYPE = "_ablateBead3500"
@@ -32,10 +33,9 @@ BEAD_ONLY = False
 # ABLATE_BEAD = True 
 # BEAD_ONLY = False
 
-# # ablate bead 
 # # local testing:
 # DATA_TYPE = "_ablateBeadtest"
-# CKPT_DIR = '/media/selamg/DATA/beadsight/data'
+# CKPT_DIR = '/media/selamg/DATA/beadsight/data/'
 # #for pretrained clip head
 # BEADSIGHT_WEIGHTS_PATH = '/media/selamg/DATA/beadsight/data/clipmodels/epoch_1499_beadsight_encoder.pth'
 # IMAGE_WEIGHTS_PATH = '/media/selamg/DATA/beadsight/data/clipmodels/epoch_1499_vision_encoder.pth'
@@ -44,20 +44,23 @@ BEAD_ONLY = False
 # ENC_TYPE = 'clip' 
 # DEVICE_STR = 'cuda:0'
 # PRED_HORIZON = 20
-# ABLATE_BEAD = True 
+# ABLATE_BEAD = False 
 # BEAD_ONLY = False
+# FREEZE_BEAD = True
+
 
 
 #SAVING RATE
 #TODO:
-EPOCHS = 3500 #3500
-VAL_EVERY = 10
+EPOCHS = 10 #3500
+VAL_EVERY = 2 #10
 
 # REMEMBER TO EDIT TRAINING PARAMS(!!)
 
 ######### shutil moves code ###############
 
 assert  not(ABLATE_BEAD == True and BEAD_ONLY == True)
+assert  not(ABLATE_BEAD == True and FREEZE_BEAD == True)
 
 print(f"{START_TIME}__STARTING TASK: {DATA_TYPE} WITH {ENC_TYPE} CUDA {DEVICE_STR} HORIZON {PRED_HORIZON} FOR {EPOCHS} EPOCHS")
 

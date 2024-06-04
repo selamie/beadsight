@@ -19,8 +19,8 @@ from diffusers.schedulers.scheduling_ddpm import DDPMScheduler
 pred_horizon = 5
 #action_horizon = 4
 
-# dataset_path = "/media/selamg/DATA/beadsight/data/processed_data"
-dataset_path = "/home/selamg/beadsight/data/ssd/processed_data"
+dataset_path = "/media/selamg/DATA/beadsight/data/processed_data"
+# dataset_path = "/home/selamg/beadsight/data/ssd/processed_data"
 
 dataset_dir = dataset_path
 
@@ -66,7 +66,8 @@ print("batch[6].shape:", batch[6].shape)
 print("batch['agent_pos'].shape:", batch['agent_pos'].shape)
 print("batch['action'].shape:", batch["action"].shape)
 
-weights_dir = "/home/selamg/beadsight/data/ssd/weights/clip_epoch3500_23-56-01_2024-06-01"
+# weights_dir = "/home/selamg/beadsight/data/ssd/weights/clip_epoch3500_23-56-01_2024-06-01"
+weights_dir = "/media/selamg/DATA/beadsight/data/final_wts/clip_epoch3000_03-25-05_2024-06-01"
 
 model_dict = torch.load(weights_dir, map_location='cuda')
 

@@ -5,6 +5,7 @@ import h5py
 from torch.utils.data import TensorDataset, DataLoader
 import cv2
 from torchvision import transforms
+from torchvision.transforms import v2
 from tqdm import tqdm
 import json
 
@@ -52,7 +53,7 @@ class NormalizeDeltaActionQpos:
         return qpos, action
 
 class EpisodicDataset(torch.utils.data.Dataset):
-    def __init__(self, episode_ids, dataset_dir, camera_names, norm_stats, chunk_size, image_size = None, beadsight_horizon = 5):
+    def __init__(self, episode_ids, dataset_dir, camera_names, norm_stats, chunk_size, image_size = None, beadsight_horizon = 5, image_transforms = None):
         super(EpisodicDataset).__init__()
         self.episode_ids = episode_ids
         self.dataset_dir = dataset_dir
@@ -73,6 +74,8 @@ class EpisodicDataset(torch.utils.data.Dataset):
         self.image_normalize = transforms.Normalize(mean=[0.485, 0.456, 0.406],
                                          std=[0.229, 0.224, 0.225])
         self.__getitem__(0) # initialize self.is_sim, self.image_size
+
+        self.image_transforms = image_transforms
 
 
         # image = normalize(image)
@@ -114,24 +117,9 @@ class EpisodicDataset(torch.utils.data.Dataset):
                     all_cam_images.append(gelsight_data)
                 elif cam_name == 'beadsight':
                     beadframes = []
-                    if start_ts < (self.beadsight_horizon+1): #indexing at zero
-                        for _ in range(self.beadsight_horizon-start_ts):
-                            image = root[f'/observations/images/{cam_name}'][start_ts]
-                            image = torch.tensor(image, dtype=torch.float32)/255.0
-                            image = torch.einsum('h w c -> c h w', image) # change to c h w
-                            image = self.image_normalize(image)
-                            beadframes.append(image)
-                    
-                        for i in range(start_ts):
-                            image = root[f'/observations/images/{cam_name}'][i]
-                            image = torch.tensor(image, dtype=torch.float32)/255.0
-                            image = torch.einsum('h w c -> c h w', image) # change to c h w
-                            image = self.image_normalize(image)
-                            beadframes.append(image)
-
-                    else:
-                        for i in range((start_ts-self.beadsight_horizon)+1,start_ts+1):
-                            #TODO: if i < 0: i = 0
+                    for i in range((start_ts-self.beadsight_horizon)+1,start_ts+1):
+                            if i < 0: 
+                                i = 0
                             image = root[f'/observations/images/{cam_name}'][i]
                             # normalize image # ?? do we actually wanna?
                             image = torch.tensor(image, dtype=torch.float32)/255.0
@@ -146,6 +134,7 @@ class EpisodicDataset(torch.utils.data.Dataset):
                     all_cam_images.append(beadcat)
                 else:
                     image = root[f'/observations/images/{cam_name}'][start_ts]
+
                     # resize image
                     if self.image_size != image.shape[:2]:
                         print('reshaping image')
@@ -154,6 +143,8 @@ class EpisodicDataset(torch.utils.data.Dataset):
                     # normalize image
                     image = torch.tensor(image, dtype=torch.float32)/255.0
                     image = torch.einsum('h w c -> c h w', image) # change to c h w
+                    if self.image_transforms != None:
+                        image = self.image_transforms(image) #TODO: check 
                     image = self.image_normalize(image)
                     all_cam_images.append(image)
 
