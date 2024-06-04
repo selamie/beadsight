@@ -5,7 +5,7 @@ from utils import get_norm_stats
 import torch
 import numpy as np
 
-
+from torchvision import transforms
 
 import torch.nn as nn
 from diffusers.schedulers.scheduling_ddpm import DDPMScheduler
@@ -43,7 +43,12 @@ shuffled_indices = np.random.permutation(num_episodes)
 train_indices = shuffled_indices[:int(train_ratio * num_episodes)]
 val_indices = shuffled_indices[int(train_ratio * num_episodes):]
 
-train_dataset = DiffusionEpisodicDataset(train_indices, dataset_dir, pred_horizon, camera_names, norm_stats)
+
+t = transforms.Compose(
+    transforms.RandomResizedCrop(size=[480,480], scale=(0.9,1.0)),
+    transforms.RandomPerspective(distortion_scale=0.1, p=0.5) )
+
+train_dataset = DiffusionEpisodicDataset(train_indices, dataset_dir, pred_horizon, camera_names, norm_stats, image_transforms=t)
 
 
 dataloader = torch.utils.data.DataLoader(
