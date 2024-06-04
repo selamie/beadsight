@@ -5,7 +5,7 @@ import h5py
 from torch.utils.data import TensorDataset, DataLoader
 import cv2
 from torchvision import transforms
-from torchvision.transforms import v2
+from torchvision.transforms import v1
 from tqdm import tqdm
 import json
 
