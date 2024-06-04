@@ -609,7 +609,7 @@ def run_clip_pretraining(n_epochs, device):
     transforms.RandomResizedCrop(size=[480,480], scale=(0.8,1.0),ratio=(1,1)) #0.9, 1.0
     ])
 
-    train_dataset = ClipDataset(train_indices, dataset_dir, camera_names, norm_stats, n_images=n_clip_images, min_distance=min_distance, image_transforms=t)
+    train_dataset = ClipDataset(train_indices, dataset_dir, camera_names, norm_stats, n_images=n_clip_images, min_distance=min_distance, image_transforms=None)
     test_dataset = ClipDataset(val_indices, dataset_dir, camera_names, norm_stats, n_images=n_clip_images, min_distance=min_distance)
 
     if device == torch.device("cuda"):
