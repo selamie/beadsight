@@ -5,7 +5,7 @@ import os
 START_TIME = datetime.now()
 
 #NODE 6:
-DATA_TYPE = "_frozenAugmented"
+DATA_TYPE = "_Augmented"
 CKPT_DIR = '/home/selamg/beadsight_data/checkpoints/'
 #for pretrained clip head
 BEADSIGHT_WEIGHTS_PATH = '/home/selamg/model_weights/augmented_clip_wts/epoch_1499_beadsight_encoder.pth'
