@@ -34,7 +34,7 @@ FREEZE_BEAD = True
 # BEAD_ONLY = False
 
 # # local testing:
-# DATA_TYPE = "_augmented"
+# DATA_TYPE = "_augmentedFrozen"
 # CKPT_DIR = '/media/selamg/DATA/beadsight/data/'
 # #for pretrained clip head
 # BEADSIGHT_WEIGHTS_PATH = '/media/selamg/DATA/beadsight/data/weights/clip_weights_aug/epoch_1499_beadsight_encoder.pth'
@@ -52,8 +52,8 @@ FREEZE_BEAD = True
 
 #SAVING RATE
 #TODO:
-EPOCHS = 3500
-VAL_EVERY = 10
+EPOCHS = 2#3500
+VAL_EVERY = 1#10
 
 # REMEMBER TO EDIT TRAINING PARAMS(!!)
 

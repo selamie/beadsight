@@ -170,7 +170,7 @@ def _save_ckpt(start_time:datetime,epoch,enc_type,
     now_time = now.strftime("%H-%M-%S_%Y-%m-%d")
     today = start_time.strftime("%Y-%m-%d_%H-%M-%S")
     
-    ckpt_dir = ckpt_dir+today+'_'+enc_type
+    ckpt_dir = ckpt_dir+today+'_'+enc_type+'_'+DATA_TYPE
     os.makedirs(ckpt_dir,exist_ok=True)
 
     save_dir = os.path.join(ckpt_dir,f'{enc_type}_epoch{epoch}_{now_time}_{DATA_TYPE}')
@@ -231,7 +231,7 @@ def train(num_epochs,camera_names,nets:nn.ModuleDict,train_dataloader,val_datalo
     debug.plot=True 
     debug.dataset=('validation')
     today = START_TIME.strftime("%Y-%m-%d_%H-%M-%S")
-    debugdir = CKPT_DIR+today+'_plots'+'_'+enc_type+'_'+DATA_TYPE
+    debug.visualizations_dir = CKPT_DIR+today+'_plots'+'_'+enc_type+'_'+DATA_TYPE
 
 
     # TODO: 
