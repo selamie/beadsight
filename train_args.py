@@ -17,7 +17,7 @@ DEVICE_STR = 'cuda' #exact device to be contrlled with CUDA_VISIBLE_DEVICES...
 PRED_HORIZON = 20
 ABLATE_BEAD = False 
 BEAD_ONLY = False
-FREEZE_BEAD = True
+FREEZE_BEAD = False
 
 # #NODE 3 clip:
 # DATA_TYPE = "_ablateBead3500"
