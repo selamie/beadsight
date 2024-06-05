@@ -105,13 +105,13 @@ def create_nets(enc_type,data_dir,norm_stats,camera_names,pred_horizon,
     val_indices = shuffled_indices[int(train_ratio * num_episodes):]
     
     #TODO: augmentation
-    # t = transforms.Compose([
-    # transforms.RandomRotation(degrees=10),
-    # transforms.RandomPerspective(distortion_scale=0.15, p=0.5), #0.1, p = 0.5
-    # transforms.RandomResizedCrop(size=[480,480], scale=(0.8,1.0),ratio=(1,1)) #0.9, 1.0
+    t = transforms.Compose([
+    transforms.RandomRotation(degrees=10),
+    transforms.RandomPerspective(distortion_scale=0.15, p=0.5), #0.1, p = 0.5
+    transforms.RandomResizedCrop(size=[400,480], scale=(0.8,1.0),ratio=(1,1)) #0.9, 1.0
 
-    # ])
-    t = None
+    ])
+
 
     train_dataset = DiffusionEpisodicDataset(train_indices,data_dir,pred_horizon,camera_names,norm_stats, image_transforms=t)
 
@@ -173,7 +173,7 @@ def _save_ckpt(start_time:datetime,epoch,enc_type,
     ckpt_dir = ckpt_dir+today+'_'+enc_type
     os.makedirs(ckpt_dir,exist_ok=True)
 
-    save_dir = os.path.join(ckpt_dir,f'{enc_type}_epoch{epoch}_{now_time}')
+    save_dir = os.path.join(ckpt_dir,f'{enc_type}_epoch{epoch}_{now_time}_{DATA_TYPE}')
     torch.save(model_checkpoint, save_dir)
     
     np.save(

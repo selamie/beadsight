@@ -74,15 +74,15 @@ print("batch[6].shape:", batch[6].shape)
 print("batch['agent_pos'].shape:", batch['agent_pos'].shape)
 print("batch['action'].shape:", batch["action"].shape)
 
-image = batch[4][0]
-image = image.flatten(end_dim=1)
-image = image.permute(1,2,0)
-image = image.detach().to('cpu')
-image = image.numpy()
+# image = batch[4][0]
+# image = image.flatten(end_dim=1)
+# image = image.permute(1,2,0)
+# image = image.detach().to('cpu')
+# image = image.numpy()
 
-import cv2
-cv2.imshow('transformed im',image)
-cv2.waitKey(0)
+# import cv2
+# cv2.imshow('transformed im',image)
+# cv2.waitKey(0)
 
 # weights_dir = "/home/selamg/beadsight/data/ssd/weights/clip_epoch3500_23-56-01_2024-06-01"
 # weights_dir = "/media/selamg/DATA/beadsight/data/final_wts/clip_epoch3000_03-25-05_2024-06-01"

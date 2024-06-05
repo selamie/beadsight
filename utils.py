@@ -144,9 +144,10 @@ class EpisodicDataset(torch.utils.data.Dataset):
                     # normalize image
                     image = torch.tensor(image, dtype=torch.float32)/255.0
                     image = torch.einsum('h w c -> c h w', image) # change to c h w
+                    start_shape = image.shape
                     if self.image_transforms != None:
-                        print("TRANSFORMING IMAGE LN147 utils.py")
                         image = self.image_transforms(image) #TODO: check 
+                    assert start_shape == image.shape
                     image = self.image_normalize(image)
                     all_cam_images.append(image)
 

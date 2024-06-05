@@ -5,11 +5,11 @@ import os
 START_TIME = datetime.now()
 
 #NODE 6:
-DATA_TYPE = "_frozen"
+DATA_TYPE = "_frozenAugmented"
 CKPT_DIR = '/home/selamg/beadsight_data/checkpoints/'
 #for pretrained clip head
-BEADSIGHT_WEIGHTS_PATH = '/home/selamg/model_weights/epoch_1499_beadsight_encoder.pth'
-IMAGE_WEIGHTS_PATH = '/home/selamg/model_weights/epoch_1499_vision_encoder.pth'
+BEADSIGHT_WEIGHTS_PATH = '/home/selamg/model_weights/augmented_clip_wts/epoch_1499_beadsight_encoder.pth'
+IMAGE_WEIGHTS_PATH = '/home/selamg/model_weights/augmented_clip_wts/epoch_1499_vision_encoder.pth'
 DATA_DIR = "/home/selamg/processed_data/"
 CODE_START_DIR = '/home/selamg/beadsight' 
 ENC_TYPE = 'clip' 
@@ -34,11 +34,11 @@ FREEZE_BEAD = True
 # BEAD_ONLY = False
 
 # # local testing:
-# DATA_TYPE = "_ablateBeadtest"
+# DATA_TYPE = "_augmented"
 # CKPT_DIR = '/media/selamg/DATA/beadsight/data/'
 # #for pretrained clip head
-# BEADSIGHT_WEIGHTS_PATH = '/media/selamg/DATA/beadsight/data/clipmodels/epoch_1499_beadsight_encoder.pth'
-# IMAGE_WEIGHTS_PATH = '/media/selamg/DATA/beadsight/data/clipmodels/epoch_1499_vision_encoder.pth'
+# BEADSIGHT_WEIGHTS_PATH = '/media/selamg/DATA/beadsight/data/weights/clip_weights_aug/epoch_1499_beadsight_encoder.pth'
+# IMAGE_WEIGHTS_PATH = '/media/selamg/DATA/beadsight/data/weights/clip_weights_aug/epoch_1499_vision_encoder.pth'
 # DATA_DIR = "/media/selamg/DATA/beadsight/data/processed_data"
 # CODE_START_DIR = '/media/selamg/DATA/beadsight/HardwareTeleop' #throwaway 
 # ENC_TYPE = 'clip' 
@@ -52,8 +52,8 @@ FREEZE_BEAD = True
 
 #SAVING RATE
 #TODO:
-EPOCHS = 3500
-VAL_EVERY = 10
+EPOCHS = 10 #3500
+VAL_EVERY = 2 #10
 
 # REMEMBER TO EDIT TRAINING PARAMS(!!)
 
