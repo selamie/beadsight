@@ -5,7 +5,7 @@ import os
 START_TIME = datetime.now()
 
 #NODE 6:
-DATA_TYPE = "_AugmentedVisionOnly"
+DATA_TYPE = "_Augmented"
 CKPT_DIR = '/home/selamg/beadsight_data/checkpoints/'
 #for pretrained clip head
 BEADSIGHT_WEIGHTS_PATH = '/home/selamg/model_weights/augmented_clip_wts/epoch_1499_beadsight_encoder.pth'
@@ -15,7 +15,7 @@ CODE_START_DIR = '/home/selamg/beadsight'
 ENC_TYPE = 'clip' 
 DEVICE_STR = 'cuda' #exact device to be contrlled with CUDA_VISIBLE_DEVICES...
 PRED_HORIZON = 20
-ABLATE_BEAD = True 
+ABLATE_BEAD = False 
 BEAD_ONLY = False
 FREEZE_BEAD = False
 
