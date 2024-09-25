@@ -35,10 +35,10 @@ class NormalizeDiffusionActionQpos:
         new_qpos = (qpos + 1)/2 
         new_qpos = (new_qpos*(self.qpos_max-self.qpos_min))+self.qpos_min
 
-        print("max qpos:", self.qpos_max)
-        print("min qpos:", self.qpos_min)
-        print("max action:", self.action_max)
-        print("min action:", self.action_min)
+        # print("max qpos:", self.qpos_max)
+        # print("min qpos:", self.qpos_min)
+        # print("max action:", self.action_max)
+        # print("min action:", self.action_min)
 
         new_action = (action+1)/2
         new_action = (new_action*(self.action_max-self.action_min))+self.action_min

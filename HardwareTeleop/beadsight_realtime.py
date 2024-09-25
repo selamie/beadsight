@@ -2,7 +2,8 @@
 
 import cv2
 import time
-from HardwareTeleop.defisheye import Defisheye 
+from defisheye import Defisheye 
+# from HardwareTeleop.defisheye import Defisheye 
 #this won't work if you try to run this file but works for the relative import
 
 # DEVICENUM = 0 # beadsight is at /dev/video[devicenum]
@@ -61,16 +62,23 @@ if __name__ == '__main__':
 
     # test1()
 
-    beadcam = BeadSight(0)
-    while(True):
-        r, im = beadcam.get_frame()
-        if r:
-            # cv2.imshow('og',og)
-            cv2.imshow('unwarped',im)
-            if cv2.waitKey(1) & 0xFF == ord('q'):
-                break
-        else:
-            break
+    beadcam = BeadSight(6)
+    fourcc_mp4 = cv2.VideoWriter_fourcc(*'mp4v')
+    out = cv2.VideoWriter('output.mp4', fourcc_mp4, 30.0, (480, 480), isColor=True) 
     
+    while(True):
+
+        r, im = beadcam.get_frame()
+
+        if not r:
+            break
+            
+        out.write(im)
+
+        cv2.imshow('im',im)
+        if cv2.waitKey(1) & 0xFF == ord('q'):
+            break
+
+    out.release()
     beadcam.cap.release()
     cv2.destroyAllWindows()
