@@ -3,6 +3,7 @@ import torch
 import numpy as np
 import warnings
 
+
 class NormalizeDiffusionActionQpos:
     def __init__(self, norm_stats):
         # since the values of the qpos and action are tied together
@@ -48,9 +49,9 @@ class NormalizeDiffusionActionQpos:
 
 class DiffusionEpisodicDataset(EpisodicDataset):
 
-    def __init__(self, episode_ids, dataset_dir, pred_horizon, camera_names,norm_stats,image_size=None):
+    def __init__(self, episode_ids, dataset_dir, pred_horizon, camera_names,norm_stats,image_size=None, image_transforms = None):
         self.bead_idx = None
-        super().__init__(episode_ids,dataset_dir,camera_names,norm_stats, pred_horizon,image_size)
+        super().__init__(episode_ids,dataset_dir,camera_names,norm_stats, pred_horizon,image_size,image_transforms=image_transforms)
         self.action_qpos_normalize = NormalizeDiffusionActionQpos(norm_stats)
         self.camera_names = camera_names
 

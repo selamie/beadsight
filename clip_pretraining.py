@@ -8,7 +8,7 @@ import os
 import cv2
 from torchvision.transforms import Normalize
 import numpy as np
-
+from torchvision import transforms
 
 def replace_submodules(
         root_module: nn.Module,
@@ -132,7 +132,8 @@ class ClipDataset(torch.utils.data.Dataset):
                  beadsight_size: Tuple[int, int] = BEADSIGHT_SIZE,
                  beadsight_horizon = 5,
                  min_distance = 10,
-                 n_images = 7):
+                 n_images = 7,
+                 image_transforms = None):
         
         super(ClipDataset).__init__()
         self.n_images = n_images
@@ -152,6 +153,7 @@ class ClipDataset(torch.utils.data.Dataset):
                                          std=[0.229, 0.224, 0.225])
 
         self.beadsight_horizon = beadsight_horizon
+        self.image_transforms = image_transforms
     
 
         # get the length of each episode
@@ -239,6 +241,10 @@ class ClipDataset(torch.utils.data.Dataset):
                         image = torch.einsum('h w c -> c h w', image) # change to c h w
 
                         # normalize image
+                        start_shape = image.shape
+                        if self.image_transforms != None:
+                            image = self.image_transforms(image)
+                        assert start_shape == image.shape
                         image = self.image_normalize(image)
                         timestep_cam_images.append(image)
 
@@ -582,7 +588,9 @@ def run_clip_pretraining(n_epochs, device):
     from utils import get_norm_stats
     num_episodes = 106 #TODO: Change
     dataset_dir = "/home/selamg/processed_data"
+    # dataset_dir = "/media/selamg/DATA/beadsight/data/processed_data"
     save_dir = "/home/selamg/clipmodels"
+    # save_dir = "/media/selamg/DATA/beadsight/data/clipmodels"
     camera_names = ['1', '2', '3', '4', '5', '6', 'beadsight']
     norm_stats = get_norm_stats(dataset_dir, num_episodes, use_existing=True)
     batch_size_train = 2
@@ -597,7 +605,13 @@ def run_clip_pretraining(n_epochs, device):
     train_indices = shuffled_indices[:int(train_ratio * num_episodes)]
     val_indices = shuffled_indices[int(train_ratio * num_episodes):]
 
-    train_dataset = ClipDataset(train_indices, dataset_dir, camera_names, norm_stats, n_images=n_clip_images, min_distance=min_distance)
+    t = transforms.Compose([
+    transforms.RandomRotation(degrees=10),
+    transforms.RandomPerspective(distortion_scale=0.15, p=0.5), #0.1, p = 0.5
+    transforms.RandomResizedCrop(size=[400,480], scale=(0.8,1.0),ratio=(1,1)) #0.9, 1.0
+    ])
+
+    train_dataset = ClipDataset(train_indices, dataset_dir, camera_names, norm_stats, n_images=n_clip_images, min_distance=min_distance, image_transforms=t)
     test_dataset = ClipDataset(val_indices, dataset_dir, camera_names, norm_stats, n_images=n_clip_images, min_distance=min_distance)
 
     if device == torch.device("cuda"):
@@ -669,8 +683,8 @@ def replot_loss_graph(training_losses, testing_losses):
 
 
 if __name__ == "__main__":
-    run_clip_pretraining(1501, device='cuda:0')
-    
+    run_clip_pretraining(1501, device='cuda')
+    # run_clip_pretraining(5,device='cuda')
     # training_losses = np.load('/home/aigeorge/research/TactileACT/data/camera_cage_new_mount/clip_models/11/epoch1450-training_losses.npy')[:1450]
     # testing_losses = np.load('/home/aigeorge/research/TactileACT/data/camera_cage_new_mount/clip_models/11/epoch1450-testing_losses.npy')[:1450]
     # replot_loss_graph(training_losses, testing_losses)
