@@ -7,7 +7,7 @@ if __name__ == '__main__':
 
     # test1()
 
-    for i in range(36):
+    for i in range(40):
         try:
             beadcam = BeadSight(i)
             while(True):
@@ -23,5 +23,5 @@ if __name__ == '__main__':
             beadcam.cap.release()
             cv2.destroyAllWindows()
         except:
-            Exception("try again")
-    
+            print(i, ' is not cam')
+            Exception()
