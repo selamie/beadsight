@@ -10,12 +10,12 @@ video_paths = [
     # "/home/abraham/GelSightTeleopDataCollection/ssd/camara_cage_6_new_gel/run_2/episode_7/cam-4.avi",
     # "/home/abraham/GelSightTeleopDataCollection/ssd/camara_cage_6_new_gel/run_2/episode_7/cam-5.avi",
     # "/home/abraham/GelSightTeleopDataCollection/ssd/camara_cage_6_new_gel/run_2/episode_7/cam-6.avi",
-    "/home/selamg/beadsight/data/ssd/full_dataset/run_3/episode_3/cam-1.avi",
-    "/home/selamg/beadsight/data/ssd/full_dataset/run_3/episode_3/cam-2.avi",
-    "/home/selamg/beadsight/data/ssd/full_dataset/run_3/episode_3/cam-3.avi",
-    "/home/selamg/beadsight/data/ssd/full_dataset/run_3/episode_3/cam-4.avi",
-    "/home/selamg/beadsight/data/ssd/full_dataset/run_3/episode_3/cam-5.avi",
-    "/home/selamg/beadsight/data/ssd/full_dataset/run_3/episode_3/cam-6.avi"
+    "/home/selamg/beadsight/data/ssd/full_dataset/run_3/episode_10/cam-1.avi",
+    "/home/selamg/beadsight/data/ssd/full_dataset/run_3/episode_10/cam-2.avi",
+    "/home/selamg/beadsight/data/ssd/full_dataset/run_3/episode_10/cam-3.avi",
+    "/home/selamg/beadsight/data/ssd/full_dataset/run_3/episode_10/cam-4.avi",
+    "/home/selamg/beadsight/data/ssd/full_dataset/run_3/episode_10/cam-5.avi",
+    "/home/selamg/beadsight/data/ssd/full_dataset/run_3/episode_10/cam-6.avi"
 ]
 
 cams = [1, 2, 3, 4, 5, 6]

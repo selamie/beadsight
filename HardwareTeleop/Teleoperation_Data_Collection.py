@@ -14,7 +14,7 @@ import rospy
 import cv2
 
 
-SAVE_DIR = '/home/selamg/beadsight/data/ssd/full_dataset/'
+SAVE_DIR = '/home/selamg/beadsight_stonehenge/data/ssd/full_dataset/'
 FOLDER_NAME = 'run/'   
 
 cv2_dispay.start()
@@ -33,7 +33,7 @@ class Teleoperation:
 				 girpper_offset = [0, 0, 0], 
 				 scaleing_factor = 1, #scaling factor to apply to motions
 				 scaleing_center =[0.5, 0, 0], # location to scale about (m, in franka frame)
-				 min_gripper_width = 0.007,
+				 min_gripper_width = 0.03,   #0.007, for usb
 				 record_data=True,
 				 Hz = 10,
 				 print_pos = False) -> None:
