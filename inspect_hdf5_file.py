@@ -96,7 +96,7 @@ def save_images_from_hdf5_file(source_file, save_folder):
 
 import os
 if __name__ == "__main__":
-    filename = "/media/selamg/DATA/beadsight/data/processed_data/"
+    filename = "/media/selamg/DATA/beadsight/data/processed_data/episode_95.hdf5"
 
     folder = "/media/selamg/DATA/beadsight/data/processed_data"
 
