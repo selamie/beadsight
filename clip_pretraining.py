@@ -400,7 +400,7 @@ def clip_pretraining(train_loader: DataLoader,
                      test_loader: DataLoader,
                      device: torch.device,
                      save_dir: str,
-                     save_freq: int = 100,
+                     save_freq: int = 100, #changed line 
                      plot_freq: int = 50,
                      n_epochs: int = 1000,
                      clip_dim: int = 512,
@@ -577,7 +577,7 @@ def clip_pretraining(train_loader: DataLoader,
         np.save(f'testing_losses.npy', testing_losses)
 
         # save the models
-        if (epoch+1) % save_freq == 0:
+        if (epoch) % save_freq == 0: #changed so that the 0th ckpt is saved for debug reasons
             torch.save(vision_encoder.state_dict(), f'{save_dir}/epoch_{epoch}_vision_encoder.pth')
             torch.save(vision_projection.state_dict(), f'{save_dir}/epoch_{epoch}_vision_projection.pth')
             torch.save(beadsight_encoder.state_dict(), f'{save_dir}/epoch_{epoch}_beadsight_encoder.pth')
@@ -586,10 +586,10 @@ def clip_pretraining(train_loader: DataLoader,
 
 def run_clip_pretraining(n_epochs, device):
     from utils import get_norm_stats
-    num_episodes = 106 #TODO: Change
-    dataset_dir = "/home/selamg/processed_data"
-    # dataset_dir = "/media/selamg/DATA/beadsight/data/processed_data"
-    save_dir = "/home/selamg/clipmodels"
+    num_episodes = 100 #TODO: Change
+    # dataset_dir = "/media/selamg/DATA/beadsight/data/beadsight_/data/processed_stonehenge/"
+    dataset_dir = "/home/selam/processed_stonehenge"
+    save_dir = "/home/selam/clipmodels"
     # save_dir = "/media/selamg/DATA/beadsight/data/clipmodels"
     camera_names = ['1', '2', '3', '4', '5', '6', 'beadsight']
     norm_stats = get_norm_stats(dataset_dir, num_episodes, use_existing=True)
