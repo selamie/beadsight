@@ -587,7 +587,7 @@ def clip_pretraining(train_loader: DataLoader,
 def run_clip_pretraining(n_epochs, device):
     from utils import get_norm_stats
     num_episodes = 100 #TODO: Change
-    # dataset_dir = "/media/selamg/DATA/beadsight/data/beadsight_/data/processed_stonehenge/"
+    # dataset_dir = "/media/selamg/DATA/beadsight/data/beadsight_data/processed_stonehenge/"
     dataset_dir = "/home/selam/processed_stonehenge"
     save_dir = "/home/selam/clipmodels"
     # save_dir = "/media/selamg/DATA/beadsight/data/clipmodels"
@@ -615,8 +615,8 @@ def run_clip_pretraining(n_epochs, device):
     test_dataset = ClipDataset(val_indices, dataset_dir, camera_names, norm_stats, n_images=n_clip_images, min_distance=min_distance)
 
     if device == torch.device("cuda"):
-        train_dataloader = DataLoader(train_dataset, batch_size=batch_size_train, shuffle=True, pin_memory=True, num_workers=10, prefetch_factor=10, pin_memory_device='cuda')
-        test_dataloader = DataLoader(test_dataset, batch_size=batch_size_test, shuffle=True, pin_memory=True, num_workers=10, prefetch_factor=10, pin_memory_device='cuda')
+        train_dataloader = DataLoader(train_dataset, batch_size=batch_size_train, shuffle=True, pin_memory=True, num_workers=8, prefetch_factor=10, pin_memory_device='cuda')
+        test_dataloader = DataLoader(test_dataset, batch_size=batch_size_test, shuffle=True, pin_memory=True, num_workers=8, prefetch_factor=10, pin_memory_device='cuda')
     else:
         train_dataloader = DataLoader(train_dataset, batch_size=batch_size_train, shuffle=True)
         test_dataloader = DataLoader(test_dataset, batch_size=batch_size_test, shuffle=True)
