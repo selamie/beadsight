@@ -577,7 +577,7 @@ def clip_pretraining(train_loader: DataLoader,
         np.save(f'testing_losses.npy', testing_losses)
 
         # save the models
-        if (epoch) % save_freq == 0: #changed so that the 0th ckpt is saved for debug reasons
+        if (epoch+1) % save_freq == 0: #changed so that the 0th ckpt is saved for debug reasons
             torch.save(vision_encoder.state_dict(), f'{save_dir}/epoch_{epoch}_vision_encoder.pth')
             torch.save(vision_projection.state_dict(), f'{save_dir}/epoch_{epoch}_vision_projection.pth')
             torch.save(beadsight_encoder.state_dict(), f'{save_dir}/epoch_{epoch}_beadsight_encoder.pth')
