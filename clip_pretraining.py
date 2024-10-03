@@ -614,12 +614,12 @@ def run_clip_pretraining(n_epochs, device):
     train_dataset = ClipDataset(train_indices, dataset_dir, camera_names, norm_stats, n_images=n_clip_images, min_distance=min_distance, image_transforms=t)
     test_dataset = ClipDataset(val_indices, dataset_dir, camera_names, norm_stats, n_images=n_clip_images, min_distance=min_distance)
 
-    if device == torch.device("cuda"):
-        train_dataloader = DataLoader(train_dataset, batch_size=batch_size_train, shuffle=True, pin_memory=True, num_workers=2, prefetch_factor=2, pin_memory_device='cuda')
-        test_dataloader = DataLoader(test_dataset, batch_size=batch_size_test, shuffle=True, pin_memory=True, num_workers=2, prefetch_factor=2, pin_memory_device='cuda')
-    else:
-        train_dataloader = DataLoader(train_dataset, batch_size=batch_size_train, shuffle=True)
-        test_dataloader = DataLoader(test_dataset, batch_size=batch_size_test, shuffle=True)
+    # if device == torch.device("cuda"):
+    #     train_dataloader = DataLoader(train_dataset, batch_size=batch_size_train, shuffle=True, pin_memory=True, num_workers=1, prefetch_factor=1, pin_memory_device='cuda')
+    #     test_dataloader = DataLoader(test_dataset, batch_size=batch_size_test, shuffle=True, pin_memory=True, num_workers=1, prefetch_factor=1, pin_memory_device='cuda')
+    # else:
+    train_dataloader = DataLoader(train_dataset, batch_size=batch_size_train, shuffle=True, num_workers=4)
+    test_dataloader = DataLoader(test_dataset, batch_size=batch_size_test, shuffle=True, num_workers=4)
 
     # create directory to save models and plots
     # get all folders in the clip_models directory
