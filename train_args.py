@@ -15,10 +15,10 @@ IMAGE_WEIGHTS_PATH = '/home/selam/model_weights/epoch_1499_vision_encoder.pth'
 #not used for resnet
 DATA_DIR = "/home/selam/processed_data/"
 CODE_START_DIR = '/home/selam/beadsight' 
-ENC_TYPE = 'resnet18' 
+ENC_TYPE = 'clip' 
 DEVICE_STR = 'cuda:0'
 PRED_HORIZON = 20
-ABLATE_BEAD = False
+ABLATE_BEAD = True
 FREEZE_BEAD = False
 
 BEAD_ONLY = False #not gonna mess with this
@@ -59,6 +59,9 @@ if ABLATE_BEAD:
 
 if BEAD_ONLY:
     print("BEAD ONLY ABLATING IMAGES")
+
+if FREEZE_BEAD:
+    print("FREEZING BEADSIGHT ENCODER")
 
 now_time = START_TIME.strftime("%H-%M-%S_%Y-%m-%d")
 
