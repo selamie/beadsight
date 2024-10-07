@@ -7,7 +7,7 @@ START_TIME = datetime.now()
 
 
 #NODE 3 clip:
-DATA_TYPE = "_stonehenge_clip"
+DATA_TYPE = "_stonehenge" # only put dataset type here, the rest is handled below
 CKPT_DIR = '/home/selam/beadsight_data/revision_checkpoints/'
 #for pretrained clip head
 BEADSIGHT_WEIGHTS_PATH = '/home/selam/model_weights/epoch_1499_beadsight_encoder.pth'
@@ -18,7 +18,7 @@ CODE_START_DIR = '/home/selam/beadsight'
 ENC_TYPE = 'clip' 
 DEVICE_STR = 'cuda:0'
 PRED_HORIZON = 20
-ABLATE_BEAD = True
+ABLATE_BEAD = False
 FREEZE_BEAD = False
 
 BEAD_ONLY = False #not gonna mess with this
@@ -54,18 +54,25 @@ assert  not(ABLATE_BEAD == True and FREEZE_BEAD == True)
 
 print(f"{START_TIME}__STARTING TASK: {DATA_TYPE} WITH {ENC_TYPE} CUDA {DEVICE_STR} HORIZON {PRED_HORIZON} FOR {EPOCHS} EPOCHS")
 
+
+now_time = START_TIME.strftime("%H-%M-%S_%Y-%m-%d")
+CODE_DIR = CKPT_DIR+'/code_'+now_time+'_'+ ENC_TYPE + DATA_TYPE
+
 if ABLATE_BEAD:
     print("ABLATING BEADSIGHT")
+    DATA_TYPE = DATA_TYPE + '_ablate_'
+    CODE_DIR = CKPT_DIR+'/code_'+now_time+'_'+ ENC_TYPE + DATA_TYPE
 
 if BEAD_ONLY:
     print("BEAD ONLY ABLATING IMAGES")
+    DATA_TYPE = DATA_TYPE + '_beadOnly_'
+    CODE_DIR = CKPT_DIR+'/code_'+now_time+'_'+ ENC_TYPE + DATA_TYPE
+
 
 if FREEZE_BEAD:
     print("FREEZING BEADSIGHT ENCODER")
-
-now_time = START_TIME.strftime("%H-%M-%S_%Y-%m-%d")
-
-CODE_DIR = CKPT_DIR+'/code_'+now_time+'_'+ ENC_TYPE + DATA_TYPE
+    DATA_TYPE = DATA_TYPE + '_freezeBead_'
+    CODE_DIR = CKPT_DIR+'/code_'+now_time+'_'+ ENC_TYPE + DATA_TYPE
 
 
 thisfile = os.path.abspath(__file__)

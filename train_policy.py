@@ -168,7 +168,7 @@ def _save_ckpt(start_time:datetime,epoch,enc_type,
         
     now = datetime.now()
     now_time = now.strftime("%H-%M-%S_%Y-%m-%d")
-    today = start_time.strftime("%Y-%m-%d_%H-%M-%S")
+    today = start_time.strftime("%H-%M-%S_%Y-%m-%d")
     
     ckpt_dir = ckpt_dir+today+'_'+enc_type+'_'+DATA_TYPE
     os.makedirs(ckpt_dir,exist_ok=True)
