@@ -15,10 +15,10 @@ IMAGE_WEIGHTS_PATH = '/home/selam/model_weights/epoch_1499_vision_encoder.pth'
 #not used for resnet
 DATA_DIR = "/home/selam/processed_data/"
 CODE_START_DIR = '/home/selam/beadsight' 
-ENC_TYPE = 'clip' 
+ENC_TYPE = 'resnet18' 
 DEVICE_STR = 'cuda:0'
 PRED_HORIZON = 20
-ABLATE_BEAD = True
+ABLATE_BEAD = False
 FREEZE_BEAD = False
 
 BEAD_ONLY = False #not gonna mess with this
