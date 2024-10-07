@@ -51,6 +51,7 @@ VAL_EVERY = 10
 
 assert  not(ABLATE_BEAD == True and BEAD_ONLY == True)
 assert  not(ABLATE_BEAD == True and FREEZE_BEAD == True)
+assert  not(FREEZE_BEAD == True and BEAD_ONLY == True)
 
 print(f"{START_TIME}__STARTING TASK: {DATA_TYPE} WITH {ENC_TYPE} CUDA {DEVICE_STR} HORIZON {PRED_HORIZON} FOR {EPOCHS} EPOCHS")
 
