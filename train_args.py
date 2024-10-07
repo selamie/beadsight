@@ -7,7 +7,7 @@ START_TIME = datetime.now()
 
 
 #NODE 3 clip:
-DATA_TYPE = "_stonehenge"
+DATA_TYPE = "_stonehenge_clip"
 CKPT_DIR = '/home/selam/beadsight_data/revision_checkpoints/'
 #for pretrained clip head
 BEADSIGHT_WEIGHTS_PATH = '/home/selam/model_weights/epoch_1499_beadsight_encoder.pth'
@@ -18,7 +18,7 @@ CODE_START_DIR = '/home/selam/beadsight'
 ENC_TYPE = 'clip' 
 DEVICE_STR = 'cuda:0'
 PRED_HORIZON = 20
-ABLATE_BEAD = False
+ABLATE_BEAD = True
 FREEZE_BEAD = False
 
 BEAD_ONLY = False #not gonna mess with this
