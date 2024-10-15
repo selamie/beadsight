@@ -20,6 +20,7 @@ def diffuse_robot(qpos_data,image_data,camera_names,model_dict,
     # "process data" class spits out
     
     nets = nn.ModuleDict(model_dict).to(device)
+    print(nets.keys())
 
     #obs_horizon = 1 
     #map_indices:

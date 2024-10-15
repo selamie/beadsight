@@ -181,28 +181,14 @@ if __name__ == '__main__':
     replan_horizon = 8
     timeout_steps = 1000
 
-    weights_dir = "/home/selamg/beadsight/data/ssd/weights/resnet18_epoch3500_00-01-46_2024-06-02"
-    save_path = "/home/selamg/beadsight/data/ssd/experiment_results/diffusion/test"
+    weights_dir = 'data/weights/resnet18_epoch3500_05-09-26_2024-10-10__stonehenge_ablate'
+    # weights_dir = "/home/selamg/beadsight/data/weights/clip_epoch3500_04-12-47_2024-10-10__stonehenge_clip_frozen"
+    save_path = "/home/selamg/beadsight/data/ssd/experiment_results/"
     
-    # weights_dir = "/home/selamg/beadsight/data/ssd/weights/clip_epoch3500_23-56-01_2024-06-01"
-    # save_path = "/home/selamg/beadsight/data/ssd/experiment_results/diffusion/pretrained_both"
+    norm_stats_dir = "/home/selamg/beadsight/data/norm_stats/stonehenge_norm_stats.json"
 
-    # weights_dir = "/home/selamg/beadsight/data/ssd/weights/VisionOnly_resnet18_epoch3500_23-16-24_2024-06-01"
-    # save_path = "/home/selamg/beadsight/data/ssd/experiment_results/diffusion/nopretrain_image_only"
-
-    # weights_dir = "/home/selamg/beadsight/data/ssd/weights/resnet18_epoch3500_00-01-46_2024-06-02"
-    # save_path = "/home/selamg/beadsight/data/ssd/experiment_results/diffusion/nopretrain_both"
-
-    # weights_dir = "/home/selamg/beadsight/data/ssd/weights/clip_epoch3500_07-44-00_2024-06-04_frozen"
-    # save_path = "/home/selamg/beadsight/data/ssd/experiment_results/diffusion/pretrained_both_frozen"
-
-    # weights_dir = "/home/selamg/beadsight/data/ssd/weights/resnet18_epoch3500_07-50-53_2024-06-04_frozen"
-    # save_path = "/home/selamg/beadsight/data/ssd/experiment_results/diffusion/nopretrain_both_frozen"
-
-    norm_stats_dir = "/home/selamg/beadsight/norm_stats.json"
-
-    EXPECTED_CAMERA_NAMES = ['1','2','3','4','5','6','beadsight'] 
-    # EXPECTED_CAMERA_NAMES = ['1','2','3','4','5','6']
+    # EXPECTED_CAMERA_NAMES = ['1','2','3','4','5','6','beadsight'] 
+    EXPECTED_CAMERA_NAMES = ['1','2','3','4','5','6']
 
     SAVE_VIDEO = True
 
@@ -244,7 +230,7 @@ if __name__ == '__main__':
         
         camera_nums = [1, 2, 3, 4, 5, 6]
         camera_sizes = [(1080, 1920), (1080, 1920), (1080, 1920), (1080, 1920), (1080, 1920), (800, 1280)]
-        cameras = CamerasAndBeadSight(device=6,bead_horizon=BEAD_HORIZON) #check cam test to find devicenum
+        cameras = CamerasAndBeadSight(device=36,bead_horizon=BEAD_HORIZON) #check cam test to find devicenum
         min_gripper_width = 0.007
 
     else:
