@@ -322,10 +322,10 @@ if __name__ == '__main__':
             print(fa.get_pose().translation)
             input("Press enter to continue")
 
-            while np.linalg.norm(fa.get_pose().translation - move_pose.translation) > 0.04:
-                pose_controller.step(goal_pose = move_pose)
-                time.sleep(0.05)
-                print('moving to home')
+            # while np.linalg.norm(fa.get_pose().translation - move_pose.translation) > 0.04:
+            #     pose_controller.step(goal_pose = move_pose)
+            #     time.sleep(0.05)
+            #     print('moving to home')
 
             input("Press enter to continue")
 

@@ -4,7 +4,7 @@ import json
 
 dataset_dir = '/home/selamg/beadsight/data/ssd/processed_ishape'
 
-norm_stats = get_norm_stats(dataset_dir,num_episodes=100)
+norm_stats = get_norm_stats(dataset_dir,num_episodes=96)
 print(norm_stats)
 
 for i in norm_stats.keys():
