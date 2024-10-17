@@ -14,7 +14,10 @@ BEAD_HORIZON = 5
 from copy import deepcopy
 import time
 import json
-# from rospy import Rate
+from rospy import Rate
+
+from robomail.motion import GotoPoseLive
+
 
 def monitor_cameras(frames: Dict[str, np.ndarray]): #, gelsight_frame: np.ndarray = None):
     print('show cams')
@@ -171,6 +174,36 @@ class AsyncInput:
     def _get_input(self):
         self.responce = input(self.command)
 
+CENTER = [0.55, 0]
+RADIUS = 0.1
+MIN_DIST = 0.1
+def reset_scene(pose_controller: GotoPoseLive):
+    print("Resetting Scene")
+    while True:
+        block1_location = CENTER + (1 - 2*np.random.rand(2))*RADIUS
+        block2_location = CENTER + (1 - 2*np.random.rand(2))*RADIUS
+        if np.linalg.norm(block1_location - block2_location) > MIN_DIST:
+            break
+
+
+    move_to_pose = FC.HOME_POSE.copy()
+    # pose_controller.set_goal_pose(move_to_pose)
+    # while np.linalg.norm(pose_controller.fa.get_pose().translation - move_to_pose.translation) > 0.05:
+    #     pose_controller.step()
+        
+    move_to_pose.translation = np.array([block1_location[0], block1_location[1], 0.15])
+    pose_controller.set_goal_pose(move_to_pose)
+    while np.linalg.norm(pose_controller.fa.get_pose().translation - move_to_pose.translation) > 0.05:
+        pose_controller.step()
+    input("Place Block One here, then press enter")
+
+    move_to_pose.translation = np.array([block2_location[0], block2_location[1], 0.15])
+    pose_controller.set_goal_pose(move_to_pose)
+    while np.linalg.norm(pose_controller.fa.get_pose().translation - move_to_pose.translation) > 0.05:
+        pose_controller.step()
+    input("Place Block Two here, then press enter")
+    input("Place Block Three somewhere, then press enter")
+
 if __name__ == '__main__':
     num_episodes = 1100
     grip_closed = False
@@ -181,14 +214,14 @@ if __name__ == '__main__':
     replan_horizon = 8
     timeout_steps = 1000
 
-    weights_dir = 'data/weights/resnet18_epoch3500_05-09-26_2024-10-10__stonehenge_ablate'
-    # weights_dir = "/home/selamg/beadsight/data/weights/clip_epoch3500_04-12-47_2024-10-10__stonehenge_clip_frozen"
+    # weights_dir = '/home/selamg/beadsight/data/weights/resnet18_epoch3500_05-09-26_2024-10-10__stonehenge_ablate'
+    weights_dir = "//home/selamg/beadsight/data/weights/clip_epoch3500_04-53-59_2024-10-10__stonehenge_clip_freeze"
     save_path = "/home/selamg/beadsight/data/ssd/experiment_results/"
     
     norm_stats_dir = "/home/selamg/beadsight/data/norm_stats/stonehenge_norm_stats.json"
 
-    # EXPECTED_CAMERA_NAMES = ['1','2','3','4','5','6','beadsight'] 
-    EXPECTED_CAMERA_NAMES = ['1','2','3','4','5','6']
+    EXPECTED_CAMERA_NAMES = ['1','2','3','4','5','6','beadsight'] 
+    # EXPECTED_CAMERA_NAMES = ['1','2','3','4','5','6']
 
     SAVE_VIDEO = True
 
@@ -218,8 +251,10 @@ if __name__ == '__main__':
 
         default_impedances = np.array(FC.DEFAULT_TRANSLATIONAL_STIFFNESSES + FC.DEFAULT_ROTATIONAL_STIFFNESSES)
         new_impedances = np.copy(default_impedances)
+        # new_impedances[3:] = np.array([0.5, 2, 0.5])*new_impedances[3:] # reduce the rotational stiffnesses, default in gotopose live
+        # new_impedances[:3] = np.array([0.5, 0.5, 1])*default_impedances[:3] # reduce the translational stiffnesse
         new_impedances[3:] = np.array([0.5, 2, 0.5])*new_impedances[3:] # reduce the rotational stiffnesses, default in gotopose live
-        new_impedances[:3] = np.array([0.5, 0.5, 1])*default_impedances[:3] # reduce the translational stiffnesse
+        new_impedances[:3] = np.array([1, 1, 1])*default_impedances[:3] # reduce the translational stiffnesse
 
         pose_controller = GotoPoseLive(cartesian_impedances=new_impedances.tolist(), step_size=0.05)
         pose_controller.set_goal_pose(move_pose)
@@ -231,7 +266,7 @@ if __name__ == '__main__':
         camera_nums = [1, 2, 3, 4, 5, 6]
         camera_sizes = [(1080, 1920), (1080, 1920), (1080, 1920), (1080, 1920), (1080, 1920), (800, 1280)]
         cameras = CamerasAndBeadSight(device=36,bead_horizon=BEAD_HORIZON) #check cam test to find devicenum
-        min_gripper_width = 0.007
+        min_gripper_width = 0.028 #for blocks
 
     else:
         assert not SAVE_VIDEO, "Save video doesn't work with the fake robot"
@@ -316,17 +351,19 @@ if __name__ == '__main__':
         # noise = OUNoise(3, theta=0.1, sigma=0.0005)
         if use_real_robot:
             fa.open_gripper()
+            reset_scene(pose_controller)
             move_pose = FC.HOME_POSE
-            move_pose.translation = np.array([0.44, -0.06, 0.3])
+            move_pose.translation = np.array([0.51642333, -0.01241467,  0.38239434])
+            # move_pose.translation = np.array([0.44, -0.06, 0.3])
+            # move_pose.translation = np.array([0.55, 0, 0.4])
 
-            print(fa.get_pose().translation)
-            input("Press enter to continue")
+            while np.linalg.norm(fa.get_pose().translation - move_pose.translation) > 0.04:
+                pose_controller.step(goal_pose = move_pose)
+                time.sleep(0.05)
+                print('moving to home')
+            
 
-            # while np.linalg.norm(fa.get_pose().translation - move_pose.translation) > 0.04:
-            #     pose_controller.step(goal_pose = move_pose)
-            #     time.sleep(0.05)
-            #     print('moving to home')
-
+            print("get_pose:",fa.get_pose().translation)
             input("Press enter to continue")
 
             integral_term = np.zeros(3)
@@ -370,6 +407,9 @@ if __name__ == '__main__':
                 disp_images[f"beadsight{bead_num}"] = bead_image # add all of the beadsight images in
             monitor_cameras(disp_images) 
 
+            # print("get_pose:",fa.get_pose().translation)
+            # input("Press enter to continue")
+
             if use_real_robot:
                 robo_data = fa.get_robot_state()
                 current_pose = robo_data['pose']*fa._tool_delta_pose
@@ -399,7 +439,7 @@ if __name__ == '__main__':
             start = time.time()
             # For gel only, image data should be of form: 
             norm_actions = diffuse_robot(qpos_data,image_data,EXPECTED_CAMERA_NAMES,model_dict,
-                         pred_horizon=20,device=device)
+                         pred_horizon=8,device=device)
 
             print('norm_actions', norm_actions)
             end = time.time()
