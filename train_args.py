@@ -57,23 +57,23 @@ print(f"{START_TIME}__STARTING TASK: {DATA_TYPE} WITH {ENC_TYPE} CUDA {DEVICE_ST
 
 
 now_time = START_TIME.strftime("%H-%M-%S_%Y-%m-%d")
-CODE_DIR = CKPT_DIR+'/code_'+now_time+'_'+ ENC_TYPE + DATA_TYPE
+CODE_DIR = CKPT_DIR+'/code_'+now_time+'_'+ ENC_TYPE + '_'+DATA_TYPE
 
 if ABLATE_BEAD:
     print("ABLATING BEADSIGHT")
     DATA_TYPE = DATA_TYPE + '_ablate'
-    CODE_DIR = CKPT_DIR+'/code_'+now_time+'_'+ ENC_TYPE + DATA_TYPE
+    CODE_DIR = CKPT_DIR+'/code_'+now_time+'_'+ ENC_TYPE + '_'+DATA_TYPE
 
 if BEAD_ONLY:
     print("BEAD ONLY ABLATING IMAGES")
     DATA_TYPE = DATA_TYPE + '_beadOnly'
-    CODE_DIR = CKPT_DIR+'/code_'+now_time+'_'+ ENC_TYPE + DATA_TYPE
+    CODE_DIR = CKPT_DIR+'/code_'+now_time+'_'+ ENC_TYPE +'_'+ DATA_TYPE
 
 
 if FREEZE_BEAD:
     print("FREEZING BEADSIGHT ENCODER")
     DATA_TYPE = DATA_TYPE + '_freeze'
-    CODE_DIR = CKPT_DIR+'/code_'+now_time+'_'+ ENC_TYPE + DATA_TYPE
+    CODE_DIR = CKPT_DIR+'/code_'+now_time+'_'+ ENC_TYPE +'_'+ DATA_TYPE
 
 
 thisfile = os.path.abspath(__file__)
