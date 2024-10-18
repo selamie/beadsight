@@ -230,7 +230,7 @@ def train(num_epochs,camera_names,nets:nn.ModuleDict,train_dataloader,val_datalo
     debug.print=True
     debug.plot=True 
     debug.dataset=('validation')
-    today = START_TIME.strftime("%Y-%m-%d_%H-%M-%S")
+    today = START_TIME.strftime("%H-%M-%S_%Y-%m-%d")
     debug.visualizations_dir = CKPT_DIR+today+'_plots'+'_'+enc_type+'_'+DATA_TYPE
 
 
