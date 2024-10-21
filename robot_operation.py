@@ -214,23 +214,23 @@ if __name__ == '__main__':
     replan_horizon = 8
     timeout_steps = 1000
 
-    # weights_dir = '/home/selamg/beadsight/data/weights/resnet18_epoch3500_05-09-26_2024-10-10__stonehenge_ablate'
-    weights_dir = "//home/selamg/beadsight/data/weights/clip_epoch3500_04-53-59_2024-10-10__stonehenge_clip_freeze"
+    weights_dir = '/home/selamg/beadsight/data/weights/resnet18_epoch3500_05-09-26_2024-10-10__stonehenge_ablate'
+    # weights_dir = "//home/selamg/beadsight/data/weights/clip_epoch3500_04-53-59_2024-10-10__stonehenge_clip_freeze"
     save_path = "/home/selamg/beadsight/data/ssd/experiment_results/"
     
     norm_stats_dir = "/home/selamg/beadsight/data/norm_stats/stonehenge_norm_stats.json"
 
-    EXPECTED_CAMERA_NAMES = ['1','2','3','4','5','6','beadsight'] 
-    # EXPECTED_CAMERA_NAMES = ['1','2','3','4','5','6']
+    # EXPECTED_CAMERA_NAMES = ['1','2','3','4','5','6','beadsight'] 
+    EXPECTED_CAMERA_NAMES = ['1','2','3','4','5','6']
 
-    SAVE_VIDEO = True
+    SAVE_VIDEO = False #TODO
 
     # offset = np.array([0, 0, -0.01])
 
     # for images only:
     
 
-    use_real_robot = True
+    use_real_robot = False
     if use_real_robot:
         from frankapy import FrankaArm
         from frankapy import FrankaConstants as FC
@@ -272,7 +272,7 @@ if __name__ == '__main__':
         assert not SAVE_VIDEO, "Save video doesn't work with the fake robot"
         import h5py
         # data_dir = "/media/selamg/DATA/beadsight/data/full_dataset/run/episode_0/episode_0.hdf5"
-        data_dir = "/home/selamg/beadsight/data/ssd/full_dataset/run_0/episode_0/episode_0.hdf5"
+        data_dir = "/home/selamg/beadsight/data/stonehenge_examples/episode_0/episode_0.hdf5"
         with h5py.File(data_dir, 'r') as root:
             all_qpos_7 = root['/observations/position'][()]
             all_qpos = np.empty([all_qpos_7.shape[0], 4])
@@ -352,7 +352,7 @@ if __name__ == '__main__':
         if use_real_robot:
             fa.open_gripper()
             reset_scene(pose_controller)
-            move_pose = FC.HOME_POSE
+            move_pose = FC.HOME_POSE.copy()
             move_pose.translation = np.array([0.51642333, -0.01241467,  0.38239434])
             # move_pose.translation = np.array([0.44, -0.06, 0.3])
             # move_pose.translation = np.array([0.55, 0, 0.4])
@@ -360,7 +360,7 @@ if __name__ == '__main__':
             while np.linalg.norm(fa.get_pose().translation - move_pose.translation) > 0.04:
                 pose_controller.step(goal_pose = move_pose)
                 time.sleep(0.05)
-                print('moving to home')
+                print('moving to start position')
             
 
             print("get_pose:",fa.get_pose().translation)
