@@ -7,18 +7,18 @@ START_TIME = datetime.now()
 
 
 #NODE 3 clip:
-DATA_TYPE = "_stonehenge" # only put dataset type here, the rest is handled below
-CKPT_DIR = '/home/selam/beadsight_data/revision_checkpoints/'
+DATA_TYPE = "ishape" # only put dataset type here, the rest is handled below
+CKPT_DIR = '/home/selam/beadsight_data/ishape_checkpoints/'
 #for pretrained clip head
-BEADSIGHT_WEIGHTS_PATH = '/home/selam/model_weights/epoch_1499_beadsight_encoder.pth'
-IMAGE_WEIGHTS_PATH = '/home/selam/model_weights/epoch_1499_vision_encoder.pth'
+BEADSIGHT_WEIGHTS_PATH = '/home/selam/model_weights/stonehenge_epoch1499_beadsight_encoder.pth'
+IMAGE_WEIGHTS_PATH = '/home/selam/model_weights/stonehenge_epoch1499_vision_encoder.pth'
 #not used for resnet
-DATA_DIR = "/home/selam/processed_stonehenge/"
+DATA_DIR = "/home/selam/processed_ishape_2/"
 CODE_START_DIR = '/home/selam/beadsight' 
-ENC_TYPE = 'clip' 
+ENC_TYPE = 'resnet18' 
 DEVICE_STR = 'cuda:0'
 PRED_HORIZON = 20
-ABLATE_BEAD = False
+ABLATE_BEAD = True
 FREEZE_BEAD = False
 
 BEAD_ONLY = False #not gonna mess with this
@@ -57,23 +57,23 @@ print(f"{START_TIME}__STARTING TASK: {DATA_TYPE} WITH {ENC_TYPE} CUDA {DEVICE_ST
 
 
 now_time = START_TIME.strftime("%H-%M-%S_%Y-%m-%d")
-CODE_DIR = CKPT_DIR+'/code_'+now_time+'_'+ ENC_TYPE + DATA_TYPE
+CODE_DIR = CKPT_DIR+'/code_'+now_time+'_'+ ENC_TYPE + '_'+DATA_TYPE
 
 if ABLATE_BEAD:
     print("ABLATING BEADSIGHT")
-    DATA_TYPE = DATA_TYPE + '_ablate_'
-    CODE_DIR = CKPT_DIR+'/code_'+now_time+'_'+ ENC_TYPE + DATA_TYPE
+    DATA_TYPE = DATA_TYPE + '_ablate'
+    CODE_DIR = CKPT_DIR+'/code_'+now_time+'_'+ ENC_TYPE + '_'+DATA_TYPE
 
 if BEAD_ONLY:
     print("BEAD ONLY ABLATING IMAGES")
-    DATA_TYPE = DATA_TYPE + '_beadOnly_'
-    CODE_DIR = CKPT_DIR+'/code_'+now_time+'_'+ ENC_TYPE + DATA_TYPE
+    DATA_TYPE = DATA_TYPE + '_beadOnly'
+    CODE_DIR = CKPT_DIR+'/code_'+now_time+'_'+ ENC_TYPE +'_'+ DATA_TYPE
 
 
 if FREEZE_BEAD:
     print("FREEZING BEADSIGHT ENCODER")
-    DATA_TYPE = DATA_TYPE + '_freezeBead_'
-    CODE_DIR = CKPT_DIR+'/code_'+now_time+'_'+ ENC_TYPE + DATA_TYPE
+    DATA_TYPE = DATA_TYPE + '_freeze'
+    CODE_DIR = CKPT_DIR+'/code_'+now_time+'_'+ ENC_TYPE +'_'+ DATA_TYPE
 
 
 thisfile = os.path.abspath(__file__)

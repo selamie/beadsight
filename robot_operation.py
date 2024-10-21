@@ -14,9 +14,9 @@ BEAD_HORIZON = 5
 from copy import deepcopy
 import time
 import json
-from rospy import Rate
+# from rospy import Rate
 
-from robomail.motion import GotoPoseLive
+# from robomail.motion import GotoPoseLive
 
 
 def monitor_cameras(frames: Dict[str, np.ndarray]): #, gelsight_frame: np.ndarray = None):
@@ -177,7 +177,7 @@ class AsyncInput:
 CENTER = [0.55, 0]
 RADIUS = 0.1
 MIN_DIST = 0.1
-def reset_scene(pose_controller: GotoPoseLive):
+def reset_scene(pose_controller):
     print("Resetting Scene")
     while True:
         block1_location = CENTER + (1 - 2*np.random.rand(2))*RADIUS
@@ -211,7 +211,7 @@ if __name__ == '__main__':
     ADD_NOISE = True
     noise_std = 0.0025
     noise_mean = 0
-    replan_horizon = 8
+    replan_horizon = 2
     timeout_steps = 1000
 
     weights_dir = '/home/selamg/beadsight/data/weights/resnet18_epoch3500_05-09-26_2024-10-10__stonehenge_ablate'
@@ -223,17 +223,15 @@ if __name__ == '__main__':
     # EXPECTED_CAMERA_NAMES = ['1','2','3','4','5','6','beadsight'] 
     EXPECTED_CAMERA_NAMES = ['1','2','3','4','5','6']
 
-    SAVE_VIDEO = False #TODO
 
-    # offset = np.array([0, 0, -0.01])
 
-    # for images only:
-    
+    SAVE_VIDEO = False
 
     use_real_robot = False
     if use_real_robot:
         from frankapy import FrankaArm
         from frankapy import FrankaConstants as FC
+        from robomail.motion import GotoPoseLive
         from robomail.motion import GotoPoseLive
         from rospy import Rate
 
@@ -285,7 +283,6 @@ if __name__ == '__main__':
             all_images = {}
             for cam in root.attrs['camera_names']:
                 if cam == 'beadsight':
-                    #how do I construct a rolling stacked object...
                     video_images = []
                     video_path = os.path.join(os.path.dirname(data_dir), f'cam-{cam}.avi')
                     cap = cv2.VideoCapture(video_path)
@@ -438,8 +435,10 @@ if __name__ == '__main__':
                 print(im.shape)
             start = time.time()
             # For gel only, image data should be of form: 
+
+            #TODO switch back zeros like
             norm_actions = diffuse_robot(qpos_data,image_data,EXPECTED_CAMERA_NAMES,model_dict,
-                         pred_horizon=8,device=device)
+                         pred_horizon=20,device=device)
 
             print('norm_actions', norm_actions)
             end = time.time()
@@ -454,7 +453,7 @@ if __name__ == '__main__':
             vis_images = vis_images[:-1]
 
             if not use_real_robot:
-                if i %100 == 0:
+                if i %1 == 0:
                     visualize(vis_images, qpos, actions, ground_truth=gt_actions[i:i+len(actions)])
                 continue
 
