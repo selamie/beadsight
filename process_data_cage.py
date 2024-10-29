@@ -162,8 +162,8 @@ if __name__ == "__main__":
     # source_folders = ['/media/selamg/DATA/beadsight/data/full_dataset/']
     # save_folder = '/media/selamg/DATA/beadsight/data/processed_data_test/' 
 
-    source_folders = ['/home/selamg/beadsight/data/ssd/ishape_dataset']
-    save_folder = '/media/selamg/Crucial/selam/processed_ishape_2'
+    source_folders = ['/home/selamg/beadsight/data/ssd/drawer_dataset']
+    save_folder = '/media/selamg/Crucial/selam/processed_drawer'
 
     process_folder(source_folders, save_folder, image_size, masks)
     #might be slow (10-30 minutes) 

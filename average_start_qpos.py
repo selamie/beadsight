@@ -14,7 +14,6 @@ import os
 
 
 def uncompress_data(source_folder):
-    # First, copy the hdf files to the save_path
     # Find the hdf5 files in the source folder
     print("starting", source_folder)
     all_qpos = []
@@ -60,9 +59,10 @@ def process_folder(source_folders):
          qpos = uncompress_data(episode_folders[i])
          all_qpos += qpos
     return all_qpos
-if __name__ == "__main__":
-    source_folders = ['/home/selamg/beadsight/data/ssd/processed_data']
 
-    all_qpos = process_folder(source_folders)
+if __name__ == "__main__":
+    source_folders = '/media/selamg/Crucial/selam/processed_ishape_2'
+
+    all_qpos = uncompress_data(source_folders)
     print(all_qpos)
     print('mean', np.mean(all_qpos, axis = 0))

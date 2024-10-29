@@ -121,7 +121,7 @@ class PreprocessData:
         return all_images, qpos_data        
 
 def visualize(images, qpos, actions, ground_truth=None):
-
+    print("LEN IMAGES", len(images))
     import matplotlib.pyplot as plt
     # Create a figure and axes
     fig = plt.figure(figsize=(10, 10), layout='tight')
@@ -211,23 +211,24 @@ if __name__ == '__main__':
     ADD_NOISE = True
     noise_std = 0.0025
     noise_mean = 0
-    replan_horizon = 2
+    replan_horizon = 10
     timeout_steps = 1000
 
-    weights_dir = '/home/selamg/beadsight/data/weights/resnet18_epoch3500_05-09-26_2024-10-10__stonehenge_ablate'
+    # weights_dir = '/home/selamg/beadsight/data/weights/resnet18_epoch3500_05-09-26_2024-10-10__stonehenge_ablate'
     # weights_dir = "//home/selamg/beadsight/data/weights/clip_epoch3500_04-53-59_2024-10-10__stonehenge_clip_freeze"
+    weights_dir = '/home/selamg/beadsight/data/weights/resnet18_epoch3500_22-28-10_2024-10-20_ishape_ablate'
     save_path = "/home/selamg/beadsight/data/ssd/experiment_results/"
     
-    norm_stats_dir = "/home/selamg/beadsight/data/norm_stats/stonehenge_norm_stats.json"
+    norm_stats_dir = "/home/selamg/beadsight/ishape_norm_stats.json"
 
     # EXPECTED_CAMERA_NAMES = ['1','2','3','4','5','6','beadsight'] 
     EXPECTED_CAMERA_NAMES = ['1','2','3','4','5','6']
 
 
 
-    SAVE_VIDEO = False
+    SAVE_VIDEO = False  #TODO
 
-    use_real_robot = False
+    use_real_robot = True
     if use_real_robot:
         from frankapy import FrankaArm
         from frankapy import FrankaConstants as FC
@@ -263,7 +264,7 @@ if __name__ == '__main__':
         
         camera_nums = [1, 2, 3, 4, 5, 6]
         camera_sizes = [(1080, 1920), (1080, 1920), (1080, 1920), (1080, 1920), (1080, 1920), (800, 1280)]
-        cameras = CamerasAndBeadSight(device=36,bead_horizon=BEAD_HORIZON) #check cam test to find devicenum
+        cameras = CamerasAndBeadSight(device=6,bead_horizon=BEAD_HORIZON) #check cam test to find devicenum
         min_gripper_width = 0.028 #for blocks
 
     else:
@@ -350,7 +351,8 @@ if __name__ == '__main__':
             fa.open_gripper()
             reset_scene(pose_controller)
             move_pose = FC.HOME_POSE.copy()
-            move_pose.translation = np.array([0.51642333, -0.01241467,  0.38239434])
+            # move_pose.translation = np.array([0.51642333, -0.01241467,  0.38239434]) #stonehenge
+            move_pose.translation = np.array([0.46060304, -0.03064966, 0.39440889])
             # move_pose.translation = np.array([0.44, -0.06, 0.3])
             # move_pose.translation = np.array([0.55, 0, 0.4])
 
@@ -436,7 +438,6 @@ if __name__ == '__main__':
             start = time.time()
             # For gel only, image data should be of form: 
 
-            #TODO switch back zeros like
             norm_actions = diffuse_robot(qpos_data,image_data,EXPECTED_CAMERA_NAMES,model_dict,
                          pred_horizon=20,device=device)
 
@@ -450,7 +451,7 @@ if __name__ == '__main__':
             # visualize the data
             vis_images = [image_data[j].squeeze().detach().cpu().numpy().transpose(1, 2, 0) for j in range(len(image_data))]
             #TODO: hardcoded:
-            vis_images = vis_images[:-1]
+            # vis_images = vis_images[:-1]
 
             if not use_real_robot:
                 if i %1 == 0:
@@ -545,7 +546,8 @@ if __name__ == '__main__':
                 json.dump(run_stats, f)
 
         else:
-            video_recorder.close()
+            if SAVE_VIDEO:
+                video_recorder.close()
             # delete the save data folder:
             input(f'Deleting failed run data. Press enter to delete {run_save_folder}')
             shutil.rmtree(run_save_folder)

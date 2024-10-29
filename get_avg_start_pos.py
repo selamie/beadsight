@@ -36,8 +36,7 @@ if __name__ == '__main__':
 
 # for stonehenge: [ 0.51642333 -0.01241467  0.38239434  0.07577089]
 # for i shape: [ 0.46060304 -0.03064966  0.39440889  0.07545292]
-
-
+# from average_start_qpos processed_ishape_2 mean [0.5002351  0.00122454 0.34534257 0.07557248]
 
 # filename = '/home/selamg/beadsight/data/ssd/processed_ishape/episode_0.hdf5'
 

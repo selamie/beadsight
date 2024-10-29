@@ -314,7 +314,7 @@ if __name__ == '__main__':
     # which is inside predict_robot_actions.py
 
     # norm_stats_dir = "/home/abraham/diffusion_plugging/data/block_stacking/norm_stats_block_stacking.json"
-    norm_stats_dir = "/home/abraham/diffusion_plugging/data/block_stacking_rect/norm_stats_rect.json"
+    # norm_stats_dir = "/home/abraham/diffusion_plugging/data/block_stacking_rect/norm_stats_rect.json"
     # norm_stats_dir = "/home/abraham/diffusion_plugging/norm_stats_fixed.json"
     # norm_stats_dir = "/home/abraham/diffusion_plugging/norm_stats_not_fixed.json"
 
@@ -366,8 +366,9 @@ if __name__ == '__main__':
     # weights_dir = "/home/abraham/diffusion_plugging/data/block_stacking_rect/pretrain_vision/clip_epoch3500_09-59-55_2024-09-12__clip_ablateGelRectangleBlocks"
     # save_path = "/home/abraham/diffusion_plugging/data/block_stacking_rect/pretrain_vision/run_data"
 
-    weights_dir = "/home/abraham/diffusion_plugging/data/block_stacking_rect/no_pretrain_vision/resnet18_epoch3500_10-59-15_2024-09-12__resnet_ablateGelRectangleBlocks"
-    save_path = "/home/abraham/diffusion_plugging/data/block_stacking_rect/no_pretrain_vision/run_data"
+    weights_dir = "/home/selamg/beadsight/data/weights/resnet18_epoch3500_22-28-10_2024-10-20_ishape_ablate"
+    save_path = "/home/selamg/beadsight/data/ssd/experiment_results/"
+    norm_stats_dir = "/home/selamg/beadsight/ishape_norm_stats.json"
 
     with open(norm_stats_dir, 'r') as f:
         norm_stats = json.load(f)
