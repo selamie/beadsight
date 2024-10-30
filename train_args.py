@@ -8,7 +8,7 @@ START_TIME = datetime.now()
 
 #NODE 3 clip:
 DATA_TYPE = "drawer" # only put dataset type here, the rest is handled below
-CKPT_DIR = '/home/selam/beadsight_data/ishape_checkpoints/'
+CKPT_DIR = '/home/selam/beadsight_data/drawer_checkpoints/'
 #for pretrained clip head
 BEADSIGHT_WEIGHTS_PATH = '/home/selam/model_weights/stonehenge_epoch1499_beadsight_encoder.pth'
 IMAGE_WEIGHTS_PATH = '/home/selam/model_weights/stonehenge_epoch1499_vision_encoder.pth'
