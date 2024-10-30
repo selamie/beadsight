@@ -588,8 +588,8 @@ def run_clip_pretraining(n_epochs, device):
     from utils import get_norm_stats
     num_episodes = 100 #TODO: Change
     # dataset_dir = "/media/selamg/DATA/beadsight/data/beadsight_data/processed_stonehenge/"
-    dataset_dir = "/home/selam/processed_ishape_2"
-    save_dir = "/home/selam/clipmodels/ishape"
+    dataset_dir = "/home/selam/processed_drawer"
+    save_dir = "/home/selam/clipmodels/processed_drawer"
     # save_dir = "/media/selamg/DATA/beadsight/data/clipmodels"
     camera_names = ['1', '2', '3', '4', '5', '6', 'beadsight']
     norm_stats = get_norm_stats(dataset_dir, num_episodes, use_existing=True)
