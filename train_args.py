@@ -7,13 +7,13 @@ START_TIME = datetime.now()
 
 
 #NODE 3 clip:
-DATA_TYPE = "ishape" # only put dataset type here, the rest is handled below
+DATA_TYPE = "drawer" # only put dataset type here, the rest is handled below
 CKPT_DIR = '/home/selam/beadsight_data/ishape_checkpoints/'
 #for pretrained clip head
 BEADSIGHT_WEIGHTS_PATH = '/home/selam/model_weights/stonehenge_epoch1499_beadsight_encoder.pth'
 IMAGE_WEIGHTS_PATH = '/home/selam/model_weights/stonehenge_epoch1499_vision_encoder.pth'
 #not used for resnet
-DATA_DIR = "/home/selam/processed_ishape_2/"
+DATA_DIR = "/home/selam/processed_drawer/"
 CODE_START_DIR = '/home/selam/beadsight' 
 ENC_TYPE = 'resnet18' 
 DEVICE_STR = 'cuda:0'
