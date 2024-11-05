@@ -172,6 +172,10 @@ class ClipDataset(torch.utils.data.Dataset):
         i=0
         for length in self.episode_lengths:
             print(i, length)
+            I+=1
+        i=0
+        for length in self.episode_lengths:
+            print(i, length)
             assert length >= n_images*min_distance*1.5, "To small of an episode length for the number of images and min_distance"
             i+=1
 
