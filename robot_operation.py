@@ -6,7 +6,7 @@ import cv2
 import torch
 import os
 from dataset import NormalizeDiffusionActionQpos
-from HardwareTeleop.multiprocessed_cameras import SaveVideosMultiprocessed
+# from HardwareTeleop.multiprocessed_cameras import SaveVideosMultiprocessed
 import shutil
 
 BEAD_HORIZON = 5
@@ -216,10 +216,10 @@ if __name__ == '__main__':
 
     # weights_dir = '/home/selamg/beadsight/data/weights/resnet18_epoch3500_05-09-26_2024-10-10__stonehenge_ablate'
     # weights_dir = "//home/selamg/beadsight/data/weights/clip_epoch3500_04-53-59_2024-10-10__stonehenge_clip_freeze"
-    weights_dir = '/home/selamg/beadsight/data/weights/resnet18_epoch3500_22-28-10_2024-10-20_ishape_ablate'
-    save_path = "/home/selamg/beadsight/data/ssd/experiment_results/"
+    weights_dir = '/media/selamg/DATA/beadsight/data/weights/DRAWER_resnet18_epoch3500_23-41-40_2024-11-01_drawer_ablate'
+    save_path = "/media/selamg/DATA/beadsight/data/experimental_results"
     
-    norm_stats_dir = "/home/selamg/beadsight/ishape_norm_stats.json"
+    norm_stats_dir = "/media/selamg/DATA/beadsight/drawer_norm_stats.json"
 
     # EXPECTED_CAMERA_NAMES = ['1','2','3','4','5','6','beadsight'] 
     EXPECTED_CAMERA_NAMES = ['1','2','3','4','5','6']
@@ -270,8 +270,8 @@ if __name__ == '__main__':
     else:
         assert not SAVE_VIDEO, "Save video doesn't work with the fake robot"
         import h5py
-        # data_dir = "/media/selamg/DATA/beadsight/data/full_dataset/run/episode_0/episode_0.hdf5"
-        data_dir = "/home/selamg/beadsight/data/stonehenge_examples/episode_0/episode_0.hdf5"
+        data_dir = "/media/selamg/DATA/beadsight/data/beadsight_data/drawer_examples/episode_1/episode_1.hdf5"
+        # data_dir = "/home/selamg/beadsight/data/stonehenge_examples/episode_0/episode_0.hdf5"
         with h5py.File(data_dir, 'r') as root:
             all_qpos_7 = root['/observations/position'][()]
             all_qpos = np.empty([all_qpos_7.shape[0], 4])
@@ -454,7 +454,7 @@ if __name__ == '__main__':
             # vis_images = vis_images[:-1]
 
             if not use_real_robot:
-                if i %1 == 0:
+                if i %25 == 0: #timesteps
                     visualize(vis_images, qpos, actions, ground_truth=gt_actions[i:i+len(actions)])
                 continue
 
