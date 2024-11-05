@@ -172,7 +172,7 @@ class ClipDataset(torch.utils.data.Dataset):
         i=0
         for length in self.episode_lengths:
             print(i, length)
-            I+=1
+            i+=1
         i=0
         for length in self.episode_lengths:
             print(i, length)
