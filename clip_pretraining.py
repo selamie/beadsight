@@ -169,15 +169,11 @@ class ClipDataset(torch.utils.data.Dataset):
                     # these attrs don't currently exist
                 
         # check that the episode lengths are long enough for the number of images and min_distance
-        i=0
+        # i=0
         for length in self.episode_lengths:
-            print(i, length)
-            i+=1
-        i=0
-        for length in self.episode_lengths:
-            print(i, length)
+            # print(i, length)
             assert length >= n_images*min_distance*1.5, "To small of an episode length for the number of images and min_distance"
-            i+=1
+            # i+=1
 
 
     def __len__(self):
@@ -596,7 +592,7 @@ def run_clip_pretraining(n_epochs, device):
     num_episodes = 100 #TODO: Change
     # dataset_dir = "/media/selamg/DATA/beadsight/data/beadsight_data/processed_stonehenge/"
     dataset_dir = "/home/selam/processed_drawer"
-    save_dir = "/home/selam/clipmodels/processed_drawer"
+    save_dir = "/home/selam/clipmodels/drawer"
     # save_dir = "/media/selamg/DATA/beadsight/data/clipmodels"
     camera_names = ['1', '2', '3', '4', '5', '6', 'beadsight']
     norm_stats = get_norm_stats(dataset_dir, num_episodes, use_existing=True)
