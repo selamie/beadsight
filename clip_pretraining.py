@@ -686,9 +686,8 @@ def replot_loss_graph(training_losses, testing_losses):
 
 
 if __name__ == "__main__":
-    #TODO: 
-    # run_clip_pretraining(1501, device='cuda')
-    run_clip_pretraining(1,device='cuda')
+    run_clip_pretraining(1501, device='cuda')
+    # run_clip_pretraining(1,device='cuda')
     # training_losses = np.load('/home/aigeorge/research/TactileACT/data/camera_cage_new_mount/clip_models/11/epoch1450-training_losses.npy')[:1450]
     # testing_losses = np.load('/home/aigeorge/research/TactileACT/data/camera_cage_new_mount/clip_models/11/epoch1450-testing_losses.npy')[:1450]
     # replot_loss_graph(training_losses, testing_losses)
