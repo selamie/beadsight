@@ -6,7 +6,7 @@ import cv2
 import torch
 import os
 from dataset import NormalizeDiffusionActionQpos
-from HardwareTeleop.multiprocessed_cameras import SaveVideosMultiprocessed
+# from HardwareTeleop.multiprocessed_cameras import SaveVideosMultiprocessed
 import shutil
 
 BEAD_HORIZON = 5
@@ -276,8 +276,8 @@ if __name__ == '__main__':
     else:
         assert not SAVE_VIDEO, "Save video doesn't work with the fake robot"
         import h5py
-        # data_dir = "/media/selamg/DATA/beadsight/data/full_dataset/run/episode_0/episode_0.hdf5"
-        data_dir = "/home/selamg/beadsight/data/stonehenge_examples/episode_0/episode_0.hdf5"
+        data_dir = "/media/selamg/DATA/beadsight/data/beadsight_data/drawer_examples/episode_1/episode_1.hdf5"
+        # data_dir = "/home/selamg/beadsight/data/stonehenge_examples/episode_0/episode_0.hdf5"
         with h5py.File(data_dir, 'r') as root:
             all_qpos_7 = root['/observations/position'][()]
             all_qpos = np.empty([all_qpos_7.shape[0], 4])
@@ -461,7 +461,7 @@ if __name__ == '__main__':
             # vis_images = vis_images[:-1]
 
             if not use_real_robot:
-                if i %1 == 0:
+                if i %25 == 0: #timesteps
                     visualize(vis_images, qpos, actions, ground_truth=gt_actions[i:i+len(actions)])
                 continue
 

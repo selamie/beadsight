@@ -169,8 +169,11 @@ class ClipDataset(torch.utils.data.Dataset):
                     # these attrs don't currently exist
                 
         # check that the episode lengths are long enough for the number of images and min_distance
+        # i=0
         for length in self.episode_lengths:
+            # print(i, length)
             assert length >= n_images*min_distance*1.5, "To small of an episode length for the number of images and min_distance"
+            # i+=1
 
 
     def __len__(self):
@@ -588,8 +591,8 @@ def run_clip_pretraining(n_epochs, device):
     from utils import get_norm_stats
     num_episodes = 100 #TODO: Change
     # dataset_dir = "/media/selamg/DATA/beadsight/data/beadsight_data/processed_stonehenge/"
-    dataset_dir = "/home/selam/processed_ishape_2"
-    save_dir = "/home/selam/clipmodels/ishape"
+    dataset_dir = "/home/selam/processed_drawer"
+    save_dir = "/home/selam/clipmodels/drawer"
     # save_dir = "/media/selamg/DATA/beadsight/data/clipmodels"
     camera_names = ['1', '2', '3', '4', '5', '6', 'beadsight']
     norm_stats = get_norm_stats(dataset_dir, num_episodes, use_existing=True)
@@ -684,7 +687,7 @@ def replot_loss_graph(training_losses, testing_losses):
 
 if __name__ == "__main__":
     run_clip_pretraining(1501, device='cuda')
-    # run_clip_pretraining(5,device='cuda')
+    # run_clip_pretraining(1,device='cuda')
     # training_losses = np.load('/home/aigeorge/research/TactileACT/data/camera_cage_new_mount/clip_models/11/epoch1450-training_losses.npy')[:1450]
     # testing_losses = np.load('/home/aigeorge/research/TactileACT/data/camera_cage_new_mount/clip_models/11/epoch1450-testing_losses.npy')[:1450]
     # replot_loss_graph(training_losses, testing_losses)
