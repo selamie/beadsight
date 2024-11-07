@@ -30,7 +30,7 @@ def avg_start_pos(dataset_dir, num_episodes) -> tuple:
 
 if __name__ == '__main__':
 
-    datadir = '/media/selamg/Crucial/selam/processed_ishape_2'
+    datadir = '/media/selamg/Crucial/selam/processed_drawer'
     avg = avg_start_pos(datadir, 100)
     print(avg)
 
