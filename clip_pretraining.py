@@ -601,7 +601,7 @@ def run_clip_pretraining(n_epochs, device):
     n_clip_images = 7
     min_distance = 10
     # device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-    print("**DEVICE**",device)
+
     # obtain train test split
     train_ratio = 0.8
     shuffled_indices = np.random.permutation(num_episodes)
