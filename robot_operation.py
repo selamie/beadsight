@@ -174,17 +174,23 @@ class AsyncInput:
     def _get_input(self):
         self.responce = input(self.command)
 
-CENTER = [0.55, 0]
-RADIUS = 0.1
+# CENTER = [0.55, 0]
+CENTER = [0.5, 0] #drawer
+# RADIUS = 0.1
+RADIUS = 0.09 #drawer
 MIN_DIST = 0.1
 def reset_scene(pose_controller):
     print("Resetting Scene")
-    while True:
-        block1_location = CENTER + (1 - 2*np.random.rand(2))*RADIUS
-        block2_location = CENTER + (1 - 2*np.random.rand(2))*RADIUS
-        if np.linalg.norm(block1_location - block2_location) > MIN_DIST:
-            break
 
+    #ishape and stonehenge 
+    # while True:
+    #     block1_location = CENTER + (1 - 2*np.random.rand(2))*RADIUS
+    #     block2_location = CENTER + (1 - 2*np.random.rand(2))*RADIUS
+    #     if np.linalg.norm(block1_location - block2_location) > MIN_DIST:
+    #         break
+
+    # drawer
+    block1_location = CENTER + (1 - 2*np.random.rand(2))*RADIUS
 
     move_to_pose = FC.HOME_POSE.copy()
     # pose_controller.set_goal_pose(move_to_pose)
@@ -197,12 +203,12 @@ def reset_scene(pose_controller):
         pose_controller.step()
     input("Place Block One here, then press enter")
 
-    move_to_pose.translation = np.array([block2_location[0], block2_location[1], 0.15])
-    pose_controller.set_goal_pose(move_to_pose)
-    while np.linalg.norm(pose_controller.fa.get_pose().translation - move_to_pose.translation) > 0.05:
-        pose_controller.step()
-    input("Place Block Two here, then press enter")
-    input("Place Block Three somewhere, then press enter")
+    # move_to_pose.translation = np.array([block2_location[0], block2_location[1], 0.15])
+    # pose_controller.set_goal_pose(move_to_pose)
+    # while np.linalg.norm(pose_controller.fa.get_pose().translation - move_to_pose.translation) > 0.05:
+    #     pose_controller.step()
+    # input("Place Block Two here, then press enter")
+    # input("Place Block Three somewhere, then press enter")
 
 if __name__ == '__main__':
     num_episodes = 1100
@@ -211,22 +217,22 @@ if __name__ == '__main__':
     ADD_NOISE = True
     noise_std = 0.0025
     noise_mean = 0
-    replan_horizon = 10
+    replan_horizon = 14
     timeout_steps = 1000
 
     # weights_dir = '/home/selamg/beadsight/data/weights/resnet18_epoch3500_05-09-26_2024-10-10__stonehenge_ablate'
     # weights_dir = "//home/selamg/beadsight/data/weights/clip_epoch3500_04-53-59_2024-10-10__stonehenge_clip_freeze"
-    weights_dir = '/media/selamg/DATA/beadsight/data/weights/DRAWER_resnet18_epoch3500_23-41-40_2024-11-01_drawer_ablate'
-    save_path = "/media/selamg/DATA/beadsight/data/experimental_results"
+    weights_dir = '/home/selamg/beadsight/data/weights/resnet18_epoch3500_23-41-40_2024-11-01_drawer_ablate'
+    save_path = "/home/selamg/beadsight/data/ssd/experiment_results/run_data"
     
-    norm_stats_dir = "/media/selamg/DATA/beadsight/drawer_norm_stats.json"
+    norm_stats_dir = "/home/selamg/beadsight/drawer_norm_stats.json"
 
     # EXPECTED_CAMERA_NAMES = ['1','2','3','4','5','6','beadsight'] 
     EXPECTED_CAMERA_NAMES = ['1','2','3','4','5','6']
 
 
 
-    SAVE_VIDEO = False  #TODO
+    SAVE_VIDEO = True  #TODO
 
     use_real_robot = True
     if use_real_robot:
@@ -264,7 +270,7 @@ if __name__ == '__main__':
         
         camera_nums = [1, 2, 3, 4, 5, 6]
         camera_sizes = [(1080, 1920), (1080, 1920), (1080, 1920), (1080, 1920), (1080, 1920), (800, 1280)]
-        cameras = CamerasAndBeadSight(device=6,bead_horizon=BEAD_HORIZON) #check cam test to find devicenum
+        cameras = CamerasAndBeadSight(device=28,bead_horizon=BEAD_HORIZON) #check cam test to find devicenum
         min_gripper_width = 0.028 #for blocks
 
     else:
@@ -352,7 +358,8 @@ if __name__ == '__main__':
             reset_scene(pose_controller)
             move_pose = FC.HOME_POSE.copy()
             # move_pose.translation = np.array([0.51642333, -0.01241467,  0.38239434]) #stonehenge
-            move_pose.translation = np.array([0.46060304, -0.03064966, 0.39440889])
+            move_pose.translation = np.array([0.48179667, 0.00109848, 0.34917753]) #drawer
+            # move_pose.translation = np.array([0.46060304, -0.03064966, 0.39440889]) #ishape?
             # move_pose.translation = np.array([0.44, -0.06, 0.3])
             # move_pose.translation = np.array([0.55, 0, 0.4])
 

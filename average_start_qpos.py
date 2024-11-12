@@ -1,7 +1,8 @@
 import h5py
 import numpy as np
 import os
-
+##NOTE: 
+## difference between this and get_avg_start_pos.py is that this is all data not just first 100 eps
 
 # EXPECTED_CAMERA_NAMES = ['1','2','3','4','5','6','beadsight'] 
 
@@ -61,7 +62,7 @@ def process_folder(source_folders):
     return all_qpos
 
 if __name__ == "__main__":
-    source_folders = '/media/selamg/Crucial/selam/processed_ishape_2'
+    source_folders = '/media/selamg/Crucial/selam/processed_drawer'
 
     all_qpos = uncompress_data(source_folders)
     print(all_qpos)
