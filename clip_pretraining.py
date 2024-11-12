@@ -590,10 +590,10 @@ def clip_pretraining(train_loader: DataLoader,
 def run_clip_pretraining(n_epochs, device):
     from utils import get_norm_stats
     num_episodes = 100 #TODO: Change
-    dataset_dir = "/media/selamg/DATA/beadsight/data/beadsight_data/processed_drawer/"
-    # dataset_dir = "/home/selam/processed_drawer"
-    # save_dir = "/home/selam/clipmodels/drawer"
-    save_dir = "/media/selamg/DATA/beadsight/data/clipmodels/drawer"
+    # dataset_dir = "/media/selamg/DATA/beadsight/data/beadsight_data/processed_drawer/"
+    dataset_dir = "/home/selam/processed_drawer"
+    save_dir = "/home/selam/clipmodels/drawer"
+    # save_dir = "/media/selamg/DATA/beadsight/data/clipmodels/drawer"
     camera_names = ['1', '2', '3', '4', '5', '6', 'beadsight']
     norm_stats = get_norm_stats(dataset_dir, num_episodes, use_existing=True)
     batch_size_train = 2 
@@ -617,8 +617,8 @@ def run_clip_pretraining(n_epochs, device):
     train_dataset = ClipDataset(train_indices, dataset_dir, camera_names, norm_stats, n_images=n_clip_images, min_distance=min_distance, image_transforms=t)
     test_dataset = ClipDataset(val_indices, dataset_dir, camera_names, norm_stats, n_images=n_clip_images, min_distance=min_distance)
 
-    train_dataloader = DataLoader(train_dataset, batch_size=batch_size_train, shuffle=True, pin_memory=False, num_workers=4, prefetch_factor=4)
-    test_dataloader = DataLoader(test_dataset, batch_size=batch_size_test, shuffle=True, pin_memory=False, num_workers=4, prefetch_factor=4)
+    train_dataloader = DataLoader(train_dataset, batch_size=batch_size_train, shuffle=True, pin_memory=False, num_workers=8, prefetch_factor=8)
+    test_dataloader = DataLoader(test_dataset, batch_size=batch_size_test, shuffle=True, pin_memory=False, num_workers=8, prefetch_factor=8)
 
     # import pdb; pdb.set_trace()
 
