@@ -590,10 +590,10 @@ def clip_pretraining(train_loader: DataLoader,
 def run_clip_pretraining(n_epochs, device):
     from utils import get_norm_stats
     num_episodes = 100 #TODO: Change
-    # dataset_dir = "/media/selamg/DATA/beadsight/data/beadsight_data/processed_stonehenge/"
-    dataset_dir = "/home/selam/processed_drawer"
-    save_dir = "/home/selam/clipmodels/drawer"
-    # save_dir = "/media/selamg/DATA/beadsight/data/clipmodels"
+    dataset_dir = "/media/selamg/DATA/beadsight/data/beadsight_data/processed_drawer/"
+    # dataset_dir = "/home/selam/processed_drawer"
+    # save_dir = "/home/selam/clipmodels/drawer"
+    save_dir = "/media/selamg/DATA/beadsight/data/clipmodels/drawer"
     camera_names = ['1', '2', '3', '4', '5', '6', 'beadsight']
     norm_stats = get_norm_stats(dataset_dir, num_episodes, use_existing=True)
     batch_size_train = 2 
@@ -601,7 +601,7 @@ def run_clip_pretraining(n_epochs, device):
     n_clip_images = 7
     min_distance = 10
     # device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-
+    print("**DEVICE**",device)
     # obtain train test split
     train_ratio = 0.8
     shuffled_indices = np.random.permutation(num_episodes)
@@ -617,12 +617,21 @@ def run_clip_pretraining(n_epochs, device):
     train_dataset = ClipDataset(train_indices, dataset_dir, camera_names, norm_stats, n_images=n_clip_images, min_distance=min_distance, image_transforms=t)
     test_dataset = ClipDataset(val_indices, dataset_dir, camera_names, norm_stats, n_images=n_clip_images, min_distance=min_distance)
 
-    if device == torch.device("cuda"):
-        train_dataloader = DataLoader(train_dataset, batch_size=batch_size_train, shuffle=True, pin_memory=True, num_workers=10, prefetch_factor=10, pin_memory_device='cuda')
-        test_dataloader = DataLoader(test_dataset, batch_size=batch_size_test, shuffle=True, pin_memory=True, num_workers=10, prefetch_factor=10, pin_memory_device='cuda')
-    else:
-        train_dataloader = DataLoader(train_dataset, batch_size=batch_size_train, shuffle=True, num_workers=10, prefetch_factor=10)
-        test_dataloader = DataLoader(test_dataset, batch_size=batch_size_test, shuffle=True, num_workers=10, prefetch_factor=10)
+    train_dataloader = DataLoader(train_dataset, batch_size=batch_size_train, shuffle=True, pin_memory=False, num_workers=4, prefetch_factor=4)
+    test_dataloader = DataLoader(test_dataset, batch_size=batch_size_test, shuffle=True, pin_memory=False, num_workers=4, prefetch_factor=4)
+
+    # import pdb; pdb.set_trace()
+
+    # if device == torch.device("cuda"):
+    #     # train_dataloader = DataLoader(train_dataset, batch_size=batch_size_train, shuffle=True, pin_memory=True, num_workers=10, prefetch_factor=10, pin_memory_device='cuda')
+    #     # test_dataloader = DataLoader(test_dataset, batch_size=batch_size_test, shuffle=True, pin_memory=True, num_workers=10, prefetch_factor=10, pin_memory_device='cuda')
+    #     print("HERE")
+    #     train_dataloader = DataLoader(train_dataset, batch_size=batch_size_train, shuffle=True, pin_memory=False, num_workers=4, prefetch_factor=4)
+    #     test_dataloader = DataLoader(test_dataset, batch_size=batch_size_test, shuffle=True, pin_memory=False, num_workers=4, prefetch_factor=4)
+    # else:
+    #     print("DEVICENOTCUDA, ", torch.device('cuda'))
+    #     train_dataloader = DataLoader(train_dataset, batch_size=batch_size_train, shuffle=True, num_workers=10, prefetch_factor=10)
+    #     test_dataloader = DataLoader(test_dataset, batch_size=batch_size_test, shuffle=True, num_workers=10, prefetch_factor=10)
 
     # create directory to save models and plots
     # get all folders in the clip_models directory
