@@ -20,8 +20,8 @@ CODE_START_DIR = '/home/selam/beadsight'
 ENC_TYPE = 'clip' 
 DEVICE_STR = 'cuda:0'
 PRED_HORIZON = 20
-ABLATE_BEAD = True
-FREEZE_BEAD = False
+ABLATE_BEAD = False
+FREEZE_BEAD = True
 
 BEAD_ONLY = False #not gonna mess with this
 
