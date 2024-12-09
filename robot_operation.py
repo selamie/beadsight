@@ -6,7 +6,7 @@ import cv2
 import torch
 import os
 from dataset import NormalizeDiffusionActionQpos
-# from HardwareTeleop.multiprocessed_cameras import SaveVideosMultiprocessed
+from HardwareTeleop.multiprocessed_cameras import SaveVideosMultiprocessed
 import shutil
 
 BEAD_HORIZON = 5
@@ -214,16 +214,16 @@ if __name__ == '__main__':
     num_episodes = 1100
     grip_closed = False
 
-    ADD_NOISE = True
+    ADD_NOISE = True #TODO
     noise_std = 0.0025
     noise_mean = 0
     replan_horizon = 14
-    timeout_steps = 1000
+    timeout_steps = 750
 
-    # weights_dir = '/home/selamg/beadsight/data/weights/resnet18_epoch3500_05-09-26_2024-10-10__stonehenge_ablate'
-    # weights_dir = "//home/selamg/beadsight/data/weights/clip_epoch3500_04-53-59_2024-10-10__stonehenge_clip_freeze"
-    weights_dir = '/home/selamg/beadsight/data/weights/resnet18_epoch3500_23-41-40_2024-11-01_drawer_ablate'
-    save_path = "/home/selamg/beadsight/data/ssd/experiment_results/run_data"
+    # weights_dir = '/home/selamg/beadsight/data/weights/clip_epoch3500_01-17-53_2024-11-16_drawer_ablate'
+    # weights_dir = "/home/selamg/beadsight/data/weights/clip_epoch3500_01-36-52_2024-11-16_drawer_fromUSB_ablate"
+    weights_dir = '/home/selamg/beadsight/data/weights/resnet18_epoch3500_20-32-49_2024-11-07_drawer_ablate'
+    save_path = "/home/selamg/beadsight/data/ssd/experiment_results/vision_only/run_data"
     
     norm_stats_dir = "/home/selamg/beadsight/drawer_norm_stats.json"
 
@@ -270,8 +270,8 @@ if __name__ == '__main__':
         
         camera_nums = [1, 2, 3, 4, 5, 6]
         camera_sizes = [(1080, 1920), (1080, 1920), (1080, 1920), (1080, 1920), (1080, 1920), (800, 1280)]
-        cameras = CamerasAndBeadSight(device=28,bead_horizon=BEAD_HORIZON) #check cam test to find devicenum
-        min_gripper_width = 0.028 #for blocks
+        cameras = CamerasAndBeadSight(device=6,bead_horizon=BEAD_HORIZON) #check cam test to find devicenum
+        min_gripper_width = 0.029 #for blocks
 
     else:
         assert not SAVE_VIDEO, "Save video doesn't work with the fake robot"
@@ -384,6 +384,23 @@ if __name__ == '__main__':
             # gelsight_data = all_gelsight_data[i]
 
             if use_real_robot:
+                robo_data = fa.get_robot_state()
+                current_pose = robo_data['pose']*fa._tool_delta_pose
+                
+                # cur_joints = robo_data['joints']
+                # cur_vel = robo_data['joint_velocities']
+                finger_width = fa.get_gripper_width()
+                # if grip_closed:
+                #     finger_width = 0.0
+                qpos = np.zeros(4)
+                qpos[:3] = current_pose.translation
+                qpos[3] = finger_width
+                print("qpos", qpos)
+            else:
+                qpos = all_qpos[i]
+                current_pose = None
+
+            if use_real_robot:
                 images = cameras.get_next_frames() 
                 beadframes = cameras.bead_buffer
             
@@ -415,23 +432,6 @@ if __name__ == '__main__':
 
             # print("get_pose:",fa.get_pose().translation)
             # input("Press enter to continue")
-
-            if use_real_robot:
-                robo_data = fa.get_robot_state()
-                current_pose = robo_data['pose']*fa._tool_delta_pose
-                
-                # cur_joints = robo_data['joints']
-                # cur_vel = robo_data['joint_velocities']
-                finger_width = fa.get_gripper_width()
-                # if grip_closed:
-                #     finger_width = 0.0
-                qpos = np.zeros(4)
-                qpos[:3] = current_pose.translation
-                qpos[3] = finger_width
-                print("qpos", qpos)
-            else:
-                qpos = all_qpos[i]
-                current_pose = None
 
             image_data, qpos_data = preprocess.process_data(images, beadframes, qpos)
 

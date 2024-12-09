@@ -31,48 +31,49 @@ import matplotlib.pyplot as plt
 #                                                "vision": {"pretrained": "/home/aigeorge/research/TactileACT/data/Final Trained Policies/Rectangle_stacking/Diffusion/pretrain_vision", 
 #                                                           "non-pretrained": "/home/aigeorge/research/TactileACT/data/Final Trained Policies/Rectangle_stacking/Diffusion/no_pretrain_vision"}}}}
 
-paths = {"drawer":{"diffusion":{"vision":{"non-pretrained":"/home/selamg/beadsight/data/ssd/experiment_results"}}}}
+paths = {"drawer":{"diffusion":{"vision": {"non-pretrained":"/home/selamg/beadsight/data/ssd/experiment_results/vision_only",
+                                          "pretrained":"/home/selamg/beadsight/data/ssd/experiment_results/pretrained",
+                                          "usb-pretrained":"/home/selamg/beadsight/data/ssd/experiment_results/pretrained_usb"}}}}
 
 
-success_rates = {"plugging": {"act": {"both": {"pretrained": 0.95, 
-                                               "non-pretrained": 0.9},
-                                      "vision": {"pretrained": 0.85, 
-                                                 "non-pretrained": 0.20},
-                                      "tactile": {"pretrained": 0.45, 
-                                                  "non-pretrained": 0.70}},
+# success_rates = {"plugging": {"act": {"both": {"pretrained": 0.95, 
+#                                                "non-pretrained": 0.9},
+#                                       "vision": {"pretrained": 0.85, 
+#                                                  "non-pretrained": 0.20},
+#                                       "tactile": {"pretrained": 0.45, 
+#                                                   "non-pretrained": 0.70}},
 
-                              "diffusion": {"both": {"pretrained": 0.75, 
-                                                     "non-pretrained": 0.70},
-                                            "vision": {"pretrained": 0.75, 
-                                                       "non-pretrained": 0.45}}},
+#                               "diffusion": {"both": {"pretrained": 0.75, 
+#                                                      "non-pretrained": 0.70},
+#                                             "vision": {"pretrained": 0.75, 
+#                                                        "non-pretrained": 0.45}}},
 
-                "cube_stacking": {"act": {"both": {"pretrained": 0.95, 
-                                                   "non-pretrained": 0.30},
-                                          "vision": {"pretrained": 1.00, 
-                                                     "non-pretrained": 0.95}},
+#                 "cube_stacking": {"act": {"both": {"pretrained": 0.95, 
+#                                                    "non-pretrained": 0.30},
+#                                           "vision": {"pretrained": 1.00, 
+#                                                      "non-pretrained": 0.95}},
         
-                                  "diffusion": {"both": {"pretrained": 0.7, 
-                                                         "non-pretrained": 0.55},
-                                                "vision": {"pretrained": 0.95, 
-                                                           "non-pretrained": 0.75}}},
+#                                   "diffusion": {"both": {"pretrained": 0.7, 
+#                                                          "non-pretrained": 0.55},
+#                                                 "vision": {"pretrained": 0.95, 
+#                                                            "non-pretrained": 0.75}}},
 
-                "rectangle_stacking": {"act": {"both": {"pretrained": 0.80, 
-                                                        "non-pretrained": 0.70},
-                                               "vision": {"pretrained": 0.75, 
-                                                          "non-pretrained": 0.10}},
+#                 "rectangle_stacking": {"act": {"both": {"pretrained": 0.80, 
+#                                                         "non-pretrained": 0.70},
+#                                                "vision": {"pretrained": 0.75, 
+#                                                           "non-pretrained": 0.10}},
         
-                                       "diffusion": {"both": {"pretrained": 0.55, 
-                                                              "non-pretrained": 0.35},
-                                                     "vision": {"pretrained": 0.60, 
-                                                                "non-pretrained": 0.35}}}}
+#                                        "diffusion": {"both": {"pretrained": 0.55, 
+#                                                               "non-pretrained": 0.35},
+#                                                      "vision": {"pretrained": 0.60, 
+#                                                                 "non-pretrained": 0.35}}}}
 
 
 
 def print_final_results():
     # print the results of the final trained policies for the fixed dataset using the ACT model:
-    num_runs = 5
+    num_runs = 20
     for task in paths:
-        print()
         for model in paths[task]:
             for camera_type in paths[task][model]:
                 for pretrain in paths[task][model][camera_type]:
@@ -86,6 +87,7 @@ def print_final_results():
                         if run_stats["was_successful"] == "y":
                             success += 1
                         elif run_stats["was_successful"] == "n":
+                            
                             pass
                         else:
                             raise ValueError(f"Unexpected value for was_successful: {run_stats['was_successful']}")
