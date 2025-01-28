@@ -115,7 +115,6 @@ def get_beadsight_clip(features_per_group=16):
 
 
 
-#TODO: hardcoded
 BEADSIGHT_SIZE = (480,480) 
 class ClipDataset(torch.utils.data.Dataset):
     """
@@ -131,7 +130,7 @@ class ClipDataset(torch.utils.data.Dataset):
                  image_size: Tuple[int, int] = None, 
                  beadsight_size: Tuple[int, int] = BEADSIGHT_SIZE,
                  beadsight_horizon = 5,
-                 min_distance = 10,
+                 min_distance = 10, 
                  n_images = 7,
                  image_transforms = None):
         
@@ -171,7 +170,7 @@ class ClipDataset(torch.utils.data.Dataset):
         # check that the episode lengths are long enough for the number of images and min_distance
         # i=0
         for length in self.episode_lengths:
-            # print(i, length)
+            # print(i, length, n_images*min_distance*1.5)
             assert length >= n_images*min_distance*1.5, "To small of an episode length for the number of images and min_distance"
             # i+=1
 
@@ -589,17 +588,17 @@ def clip_pretraining(train_loader: DataLoader,
 
 def run_clip_pretraining(n_epochs, device):
     from utils import get_norm_stats
-    num_episodes = 100 #TODO: Change
-    # dataset_dir = "/media/selamg/DATA/beadsight/data/beadsight_data/processed_drawer/"
-    dataset_dir = "/home/selam/processed_drawer"
-    save_dir = "/home/selam/clipmodels/drawer"
-    # save_dir = "/media/selamg/DATA/beadsight/data/clipmodels/drawer"
+    num_episodes = 100 #TODO: Check
+    dataset_dir = "/media/selamg/ssd/beadsight_data/processed_drawer_supporting"
+    # dataset_dir = "/home/selam/processed_drawer"
+    # save_dir = "/home/selam/clipmodels/drawer"
+    save_dir = "/media/selamg/DATA/beadsight/data/clipmodels/drawer_supporting"
     camera_names = ['1', '2', '3', '4', '5', '6', 'beadsight']
     norm_stats = get_norm_stats(dataset_dir, num_episodes, use_existing=True)
     batch_size_train = 2 
     batch_size_test = 2  
     n_clip_images = 7
-    min_distance = 10
+    min_distance = 8 #TODO: was 10 for other tasks, changed for short supporting task eps
     # device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
     # obtain train test split
@@ -617,8 +616,8 @@ def run_clip_pretraining(n_epochs, device):
     train_dataset = ClipDataset(train_indices, dataset_dir, camera_names, norm_stats, n_images=n_clip_images, min_distance=min_distance, image_transforms=t)
     test_dataset = ClipDataset(val_indices, dataset_dir, camera_names, norm_stats, n_images=n_clip_images, min_distance=min_distance)
 
-    train_dataloader = DataLoader(train_dataset, batch_size=batch_size_train, shuffle=True, pin_memory=False, num_workers=8, prefetch_factor=8)
-    test_dataloader = DataLoader(test_dataset, batch_size=batch_size_test, shuffle=True, pin_memory=False, num_workers=8, prefetch_factor=8)
+    train_dataloader = DataLoader(train_dataset, batch_size=batch_size_train, shuffle=True, pin_memory=False, num_workers=4, prefetch_factor=4)
+    test_dataloader = DataLoader(test_dataset, batch_size=batch_size_test, shuffle=True, pin_memory=False, num_workers=4, prefetch_factor=4)
 
     # import pdb; pdb.set_trace()
 
