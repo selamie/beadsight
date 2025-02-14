@@ -58,8 +58,9 @@ def create_nets(enc_type,data_dir,norm_stats,camera_names,pred_horizon,
         image_encoders = []
         for i in range(len(camera_names)-1): #subtract 1 to account for beadsight. if eef it gets ablated
             if i == 0:
+
                 eef_encoder = modified_resnet18()
-                eef_encoder = eef_encoder.load_state_dict(eef_weights)
+                eef_encoder.load_state_dict(eef_weights)
                 eef_encoder = nn.Sequential(eef_encoder,nn.AdaptiveAvgPool2d(output_size=1), nn.Flatten())
                 image_encoders += [eef_encoder]
                 continue
