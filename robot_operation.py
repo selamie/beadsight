@@ -222,15 +222,15 @@ if __name__ == '__main__':
 
     # weights_dir = '/home/selamg/beadsight/data/weights/clip_epoch3500_01-17-53_2024-11-16_drawer_ablate'
     # weights_dir = "/home/selamg/beadsight/data/weights/clip_epoch3500_01-36-52_2024-11-16_drawer_fromUSB_ablate"
-    weights_dir = '/home/selamg/beadsight/data/weights/resnet18_epoch3500_20-32-49_2024-11-07_drawer_ablate'
-    save_path = "/home/selamg/beadsight/data/ssd/experiment_results/vision_only/run_data"
+    # weights_dir = '/home/selamg/beadsight/data/weights/clip_epoch3500_22-36-39_2025-01-30_drawer_withSupporting_freeze'
+    weights_dir = '/home/selamg/beadsight/data/weights/clip_epoch3500_22-35-02_2025-01-30_drawer_withSupporting_ablate'
+    save_path = "/home/selamg/beadsight/data/ssd/experiment_results/pretrained_supporting/run_data"
     
     norm_stats_dir = "/home/selamg/beadsight/drawer_norm_stats.json"
+    # norm_stats_dir = "/home/selamg/beadsight/drawer_supporting_norm_stats.json"
 
     # EXPECTED_CAMERA_NAMES = ['1','2','3','4','5','6','beadsight'] 
     EXPECTED_CAMERA_NAMES = ['1','2','3','4','5','6']
-
-
 
     SAVE_VIDEO = True  #TODO
 
@@ -268,9 +268,9 @@ if __name__ == '__main__':
         device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
         print(f"Using device {device}")
         
-        camera_nums = [1, 2, 3, 4, 5, 6]
-        camera_sizes = [(1080, 1920), (1080, 1920), (1080, 1920), (1080, 1920), (1080, 1920), (800, 1280)]
-        cameras = CamerasAndBeadSight(device=6,bead_horizon=BEAD_HORIZON) #check cam test to find devicenum
+        camera_nums = [1, 2, 3, 4, 5, 6, "beadsight"]
+        camera_sizes = [(1080, 1920), (1080, 1920), (1080, 1920), (1080, 1920), (1080, 1920), (800, 1280),(400,480)]
+        cameras = CamerasAndBeadSight(device=36,bead_horizon=BEAD_HORIZON) #check cam test to find devicenum
         min_gripper_width = 0.029 #for blocks
 
     else:
