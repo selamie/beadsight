@@ -22,7 +22,7 @@ DEVICE_STR = 'cuda:0'
 PRED_HORIZON = 20
 ABLATE_BEAD = True
 FREEZE_BEAD = False
-PRETRAINED_VISION = True
+PRETRAINED_VISION = False
 EEF_WEIGHTS_PATH = '/home/selam/model_weights/TEST_EEF_drawer_epoch_1499_vision_encoder.pth'
 
 BEAD_ONLY = False #not gonna mess with this
