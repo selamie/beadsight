@@ -10,7 +10,7 @@ START_TIME = datetime.now()
 DATA_TYPE = "drawer" # only put dataset type here, the rest is handled below
 CKPT_DIR = '/home/selam/beadsight_data/drawer_eef_checkpoints/'
 #for pretrained clip head
-BEADSIGHT_WEIGHTS_PATH = '/home/selam/model_weights/eef/epoch_1499_eef_encoder.pth'
+BEADSIGHT_WEIGHTS_PATH = '/home/selam/model_weights/drawer_epoch_1499_beadsight_encoder.pth'
 IMAGE_WEIGHTS_PATH = '/home/selam/model_weights/eef/epoch_1499_vision_encoder.pth'
 # BEADSIGHT_WEIGHTS_PATH = '/home/selam/model_weights/original_usb_wts/epoch_1499_beadsight_encoder.pth'
 # IMAGE_WEIGHTS_PATH = '/home/selam/model_weights/original_usb_wts/epoch_1499_vision_encoder.pth'
@@ -20,7 +20,7 @@ CODE_START_DIR = '/home/selam/beadsight'
 ENC_TYPE = 'clip' 
 DEVICE_STR = 'cuda:0'
 PRED_HORIZON = 20
-ABLATE_BEAD = True
+ABLATE_BEAD = False
 FREEZE_BEAD = False
 PRETRAINED_VISION = True
 EEF_WEIGHTS_PATH = '/home/selam/model_weights/eef/epoch_1499_eef_encoder.pth'
