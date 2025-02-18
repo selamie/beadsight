@@ -7,7 +7,7 @@ START_TIME = datetime.now()
 
 
 #NODE 3 clip:
-DATA_TYPE = "drawer" # only put dataset type here, the rest is handled below
+DATA_TYPE = "drawer_usbPretrained" # only put dataset type here, the rest is handled below
 CKPT_DIR = '/home/selam/beadsight_data/drawer_notFrozen_checkpoints/'
 #for pretrained clip head
 BEADSIGHT_WEIGHTS_PATH = '/home/selam/model_weights/usb_epoch_1499_beadsight_encoder.pth'
