@@ -25,7 +25,8 @@ from visualize_waypts import predict_diff_actions
 
 from train_args import CKPT_DIR, BEADSIGHT_WEIGHTS_PATH, \
 IMAGE_WEIGHTS_PATH, DEVICE_STR, ABLATE_BEAD,\
-START_TIME, VAL_EVERY, FREEZE_BEAD, DATA_TYPE
+START_TIME, VAL_EVERY, FREEZE_BEAD, DATA_TYPE,\
+EEF_WEIGHTS_PATH
 
 
 #CKPT_DIR = '/media/selamg/DATA/diffusion_plugging_checkpoints/'
@@ -48,13 +49,21 @@ def create_nets(enc_type,data_dir,norm_stats,camera_names,pred_horizon,
 
         beadsight_weights = torch.load(BEADSIGHT_WEIGHTS_PATH)
         image_weights = torch.load(IMAGE_WEIGHTS_PATH)
+        eef_weights = torch.load(EEF_WEIGHTS_PATH)
 
         beadsight_encoder = get_beadsight_clip()
         beadsight_encoder.load_state_dict(beadsight_weights)
         beadsight_encoder = nn.Sequential(beadsight_encoder,nn.AdaptiveAvgPool2d(output_size=1), nn.Flatten())
 
         image_encoders = []
-        for i in range(len(camera_names)-1): #subtract one to account for beadsight
+        for i in range(len(camera_names)-1): #subtract 1 to account for beadsight. if eef it gets ablated
+            if i == 0:
+
+                eef_encoder = modified_resnet18()
+                eef_encoder.load_state_dict(eef_weights)
+                eef_encoder = nn.Sequential(eef_encoder,nn.AdaptiveAvgPool2d(output_size=1), nn.Flatten())
+                image_encoders += [eef_encoder]
+                continue
             image_encoders += [modified_resnet18()]
             image_encoders[i].load_state_dict(image_weights)
             image_encoders[i] = nn.Sequential(image_encoders[i],nn.AdaptiveAvgPool2d(output_size=1), nn.Flatten())
