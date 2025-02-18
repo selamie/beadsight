@@ -15,7 +15,7 @@ IMAGE_WEIGHTS_PATH = '/home/selam/model_weights/usb_epoch_1499_vision_encoder.pt
 #not used for resnet, beadsight wts not used for eef pretraining
 DATA_DIR = "/home/selam/processed_drawer/"
 CODE_START_DIR = '/home/selam/beadsight' 
-ENC_TYPE = 'resnet' 
+ENC_TYPE = 'resnet18' 
 DEVICE_STR = 'cuda:0'
 PRED_HORIZON = 20
 ABLATE_BEAD = False
