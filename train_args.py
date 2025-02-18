@@ -8,7 +8,7 @@ START_TIME = datetime.now()
 
 #NODE 3 clip:
 DATA_TYPE = "drawer" # only put dataset type here, the rest is handled below
-CKPT_DIR = '/home/selam/beadsight_data/drawer_notFrozen_checkpoints/'
+CKPT_DIR = '/home/selam/beadsight_data/drawer_checkpoints/'
 #for pretrained clip head
 BEADSIGHT_WEIGHTS_PATH = '/home/selam/model_weights/usb_epoch_1499_beadsight_encoder.pth'
 IMAGE_WEIGHTS_PATH = '/home/selam/model_weights/usb_epoch_1499_vision_encoder.pth'
@@ -19,7 +19,7 @@ ENC_TYPE = 'resnet18'
 DEVICE_STR = 'cuda:0'
 PRED_HORIZON = 20
 ABLATE_BEAD = False
-FREEZE_BEAD = False
+FREEZE_BEAD = True
 PRETRAINED_VISION = False
 EEF_WEIGHTS_PATH = '/home/selam/model_weights/eef/epoch_1499_eef_encoder.pth'
 
