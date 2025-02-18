@@ -227,7 +227,6 @@ if __name__ == '__main__':
     save_path = "/home/selamg/beadsight/data/ssd/experiment_results/pretrained_supporting/run_data"
     
     norm_stats_dir = "/home/selamg/beadsight/drawer_norm_stats.json"
-    # norm_stats_dir = "/home/selamg/beadsight/drawer_supporting_norm_stats.json"
 
     # EXPECTED_CAMERA_NAMES = ['1','2','3','4','5','6','beadsight'] 
     EXPECTED_CAMERA_NAMES = ['1','2','3','4','5','6']
