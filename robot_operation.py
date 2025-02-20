@@ -217,14 +217,14 @@ if __name__ == '__main__':
     ADD_NOISE = True #TODO
     noise_std = 0.0025
     noise_mean = 0
-    replan_horizon = 14
+    replan_horizon = 8 #14
     timeout_steps = 750
 
+    # weights_dir = '/home/selamg/beadsight/data/weights/resnet18_epoch3500_20-32-49_2024-11-07_drawer_ablate'
     # weights_dir = '/home/selamg/beadsight/data/weights/clip_epoch3500_01-17-53_2024-11-16_drawer_ablate'
-    # weights_dir = "/home/selamg/beadsight/data/weights/clip_epoch3500_01-36-52_2024-11-16_drawer_fromUSB_ablate"
-    # weights_dir = '/home/selamg/beadsight/data/weights/clip_epoch3500_22-36-39_2025-01-30_drawer_withSupporting_freeze'
-    weights_dir = '/home/selamg/beadsight/data/weights/clip_epoch3500_22-35-02_2025-01-30_drawer_withSupporting_ablate'
-    save_path = "/home/selamg/beadsight/data/ssd/experiment_results/pretrained_supporting/run_data"
+    weights_dir = "/home/selamg/beadsight/data/weights/clip_epoch3500_01-36-52_2024-11-16_drawer_fromUSB_ablate"
+    # weights_dir = '/home/selamg/beadsight/data/weights/clip_epoch3500_22-35-02_2025-01-30_drawer_withSupporting_ablate'
+    save_path = "/home/selamg/beadsight/data/ssd/experiment_results/throwaway/"
     
     norm_stats_dir = "/home/selamg/beadsight/drawer_norm_stats.json"
 
