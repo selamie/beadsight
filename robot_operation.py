@@ -232,9 +232,9 @@ if __name__ == '__main__':
 
     # weights_dir = "/home/selamg/beadsight/data/weights/clip_epoch3500_04-56-03_2024-11-18_drawer_fromUSB_freeze"
     # weights_dir = "/home/selamg/beadsight/data/weights/clip_epoch3500_22-36-39_2025-01-30_drawer_withSupporting_freeze"
-    weights_dir = "/home/selamg/beadsight/data/weights/clip_epoch3500_01-51-54_2024-11-16_drawer_freeze"
+    weights_dir = "/home/selamg/beadsight/data/weights/notfrozen/clip_epoch3500_07-53-46_2025-02-21_drawer"
 
-    save_path = "/home/selamg/beadsight/data/ssd/experiment_results/frozen/pretrained_frozen"
+    save_path = "/home/selamg/beadsight/data/ssd/experiment_results/notFrozen/pretrained_notfrozen"
     
     norm_stats_dir = "/home/selamg/beadsight/drawer_norm_stats.json"
 
