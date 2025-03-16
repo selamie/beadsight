@@ -59,6 +59,7 @@ class DiffusionEpisodicDataset(EpisodicDataset):
             if camera_names[i] == 'beadsight':
                 self.bead_idx = i
         if self.bead_idx == None: 
+            print("no beadsight")
             self.ablate_bead = True
 
     def __getitem__(self, index):        
