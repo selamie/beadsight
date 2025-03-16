@@ -29,9 +29,10 @@ def uncompress_data(source_folder):
         # open the new hdf5 files
         for i in range(len(h5py_files)):
             with h5py.File(os.path.join(source_folder, h5py_files[0]), 'r') as root:
+                # print("REALTIMES LEN:",len(root.attrs['realtimes']))
 
                 qpos = root['/observations/qpos'][()]
-                # print
+                # print("QPOS len:",len(qpos))
                 all_qpos.append(qpos[0])
                     
 
@@ -62,7 +63,7 @@ def process_folder(source_folders):
     return all_qpos
 
 if __name__ == "__main__":
-    source_folders = '/media/selamg/Crucial/selam/processed_drawer'
+    source_folders = '/media/selamg/DATA/beadsight/data/beadsight_data/processed_drawer'
 
     all_qpos = uncompress_data(source_folders)
     print(all_qpos)
