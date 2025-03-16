@@ -13,7 +13,7 @@ CKPT_DIR = '/home/selam/flowarts_data/checkpoints'
 BEADSIGHT_WEIGHTS_PATH = "" #'/home/selam/model_weights/usb_epoch_1499_beadsight_encoder.pth'
 IMAGE_WEIGHTS_PATH = "" #'/home/selam/model_weights/usb_epoch_1499_vision_encoder.pth'
 #not used for resnet, beadsight wts not used for eef pretraining
-DATA_DIR = "/home/selam/processed_drawer/"
+DATA_DIR = "/home/selam/processed_flowarts/"
 CODE_START_DIR = '/home/selam/beadsight' 
 ENC_TYPE = 'resnet18' 
 DEVICE_STR = 'cuda:0'
