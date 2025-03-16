@@ -3,14 +3,14 @@ import json
 
 
 # dataset_dir = '/home/selamg/beadsight/data/ssd/processed_ishape'
-dataset_dir = '/media/selamg/Crucial/selam/processed_drawer_supporting'
-norm_stats = get_norm_stats(dataset_dir,num_episodes=100)
+dataset_dir = '/media/selamg/Crucial/selam/processed_flowarts'
+norm_stats = get_norm_stats(dataset_dir,num_episodes=43)
 print(norm_stats)
 
 for i in norm_stats.keys():
     norm_stats[i] = norm_stats[i].tolist()
 
-with open('drawer_supporting_norm_stats.json','w') as f:
+with open('flowarts_norm_stats.json','w') as f:
     json.dump(norm_stats,f,indent=4)
 
 
