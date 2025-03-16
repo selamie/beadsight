@@ -54,18 +54,18 @@ class DiffusionEpisodicDataset(EpisodicDataset):
         super().__init__(episode_ids,dataset_dir,camera_names,norm_stats, pred_horizon,image_size,image_transforms=image_transforms)
         self.action_qpos_normalize = NormalizeDiffusionActionQpos(norm_stats)
         self.camera_names = camera_names
-        self.ablate_bead = False
+        self.use_beadsight = True
         for i in range(len(camera_names)):
             if camera_names[i] == 'beadsight':
                 self.bead_idx = i
         if self.bead_idx == None: 
-            print("no beadsight")
-            self.ablate_bead = True
+            self.use_beadsight = False
+            # raise ValueError("camera names must include beadsight")
 
     def __getitem__(self, index):        
-
-        if self.bead_idx == None:
-            return super().__getitem__(index)
+        if self.use_beadsight:
+            if self.bead_idx == None:
+                return super().__getitem__(index)
         
         all_cam_images, qpos_data, action_data, is_pad = super().__getitem__(index)
         # because we used the super init, everything is already normalized
@@ -84,9 +84,46 @@ class DiffusionEpisodicDataset(EpisodicDataset):
             if i == self.bead_idx:
                 continue
             nsample[self.camera_names[i]] = torch.stack([all_cam_images[i],]) 
-
-        if not self.ablate_bead:
+        
+        if self.use_beadsight:
             nsample['beadsight'] = torch.stack([all_cam_images[self.bead_idx],])
+        nsample['agent_pos'] = torch.stack([qpos_data,])
+        nsample['action'] = action_data
+
+        return nsample
+    
+
+class VisionOnlyDiffusionDataset(EpisodicDataset):
+
+    def __init__(self, episode_ids, dataset_dir, pred_horizon, camera_names,norm_stats,image_size=None, image_transforms = None):
+        super().__init__(episode_ids,dataset_dir,camera_names,norm_stats, pred_horizon,image_size,image_transforms=image_transforms)
+        self.action_qpos_normalize = NormalizeDiffusionActionQpos(norm_stats)
+        self.camera_names = camera_names
+
+        for i in range(len(camera_names)):
+            if camera_names[i] == 'beadsight':
+                 raise ValueError("This is a VisionOnly Dataloader. Use DiffusionEpisodicDataset for Beadsight")
+
+    def __getitem__(self, index):        
+        
+        all_cam_images, qpos_data, action_data, is_pad = super().__getitem__(index)
+        # because we used the super init, everything is already normalized
+
+        nsample = dict()
+
+        # change the padding behavior so the robot stays in the same position at the end
+        if any(is_pad): 
+            last_idx = torch.where(is_pad==0)[0][-1]
+            last_action = action_data[last_idx]
+
+            action_data[last_idx+1:] = last_action
+        
+        # add all cameras
+        for i in range(len(self.camera_names)):
+            if i == self.bead_idx:
+                continue
+            nsample[self.camera_names[i]] = torch.stack([all_cam_images[i],]) 
+        
         nsample['agent_pos'] = torch.stack([qpos_data,])
         nsample['action'] = action_data
 

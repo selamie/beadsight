@@ -16,6 +16,7 @@ from diffusers.schedulers.scheduling_ddpm import DDPMScheduler
 from clip_pretraining import modified_resnet18, get_beadsight_clip
 
 from dataset import DiffusionEpisodicDataset 
+# from dataset import VisionOnlyDiffusionDataset
 #from utils import get_norm_stats
 
 from datetime import datetime
