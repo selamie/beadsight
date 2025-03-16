@@ -10,12 +10,12 @@ video_paths = [
     # "/home/selamg/beadsight/data/stonehenge_examples/episode_0/cam-4.avi",
     # "/home/selamg/beadsight/data/stonehenge_examples/episode_0/cam-5.avi",
     # "/home/selamg/beadsight/data/stonehenge_examples/episode_0/cam-6.avi"
-    "/home/selamg/beadsight/data/ssd/drawer_dataset/run/episode_1/cam-1.avi",
-    "/home/selamg/beadsight/data/ssd/drawer_dataset/run/episode_1/cam-2.avi",
-    "/home/selamg/beadsight/data/ssd/drawer_dataset/run/episode_1/cam-3.avi",
-    "/home/selamg/beadsight/data/ssd/drawer_dataset/run/episode_1/cam-4.avi",
-    "/home/selamg/beadsight/data/ssd/drawer_dataset/run/episode_1/cam-5.avi",
-    "/home/selamg/beadsight/data/ssd/drawer_dataset/run/episode_1/cam-6.avi"
+    "/home/selamg/beadsight/data/ssd/drawer_dataset/run_4/episode_2/cam-1.avi",
+    "/home/selamg/beadsight/data/ssd/drawer_dataset/run_4/episode_2/cam-2.avi",
+    "/home/selamg/beadsight/data/ssd/drawer_dataset/run_4/episode_2/cam-3.avi",
+    "/home/selamg/beadsight/data/ssd/drawer_dataset/run_4/episode_2/cam-4.avi",
+    "/home/selamg/beadsight/data/ssd/drawer_dataset/run_4/episode_2/cam-5.avi",
+    "/home/selamg/beadsight/data/ssd/drawer_dataset/run_4/episode_2/cam-6.avi",
 
 ]
 
