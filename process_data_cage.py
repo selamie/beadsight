@@ -147,12 +147,13 @@ def process_folder(source_folders, save_folder, image_size = [400, 480], masks =
         episode_folders.append(os.path.dirname(h5py_file)) # the episode folder will be the parent of the h5py file
     
     # uncompress the data, multiprocessed
-    with Pool(processes=12) as p:
-        p.starmap(uncompress_data, zip(episode_folders, save_paths, [image_size]*len(save_paths), [masks]*len(save_paths)))
+    # with Pool(processes=12) as p:
+    #     p.starmap(uncompress_data, zip(episode_folders, save_paths, [image_size]*len(save_paths), [masks]*len(save_paths)))
 
-    # for i in range(len(episode_folders)):
-    #     print(i, episode_folders[i], save_paths[i])
-    #     uncompress_data(episode_folders[i], save_paths[i], image_size, masks)
+    #uncompress data, sequential. Uncomment sequential OR multiprocessed
+    for i in range(len(episode_folders)):
+        print(i, episode_folders[i], save_paths[i])
+        uncompress_data(episode_folders[i], save_paths[i], image_size, masks)
 
             
 if __name__ == "__main__":
@@ -162,8 +163,8 @@ if __name__ == "__main__":
     # source_folders = ['/media/selamg/DATA/beadsight/data/full_dataset/']
     # save_folder = '/media/selamg/DATA/beadsight/data/processed_data_test/' 
 
-    source_folders = ['/home/selamg/beadsight/data/ssd/drawer_supporting']
-    save_folder = '/media/selamg/Crucial/selam/processed_drawer_supporting'
+    source_folders = ['/home/selamg/beadsight/data/ssd/flowarts']
+    save_folder = '/media/selamg/Crucial/selam/processed_flowarts_1'
     # save_folder = '/home/selamg/beadsight/data/ssd/processed_drawer_supporting'
 
     process_folder(source_folders, save_folder, image_size, masks)
