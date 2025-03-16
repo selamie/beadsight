@@ -121,6 +121,8 @@ class PreprocessData:
         return all_images, qpos_data        
 
 def visualize(images, qpos, actions, ground_truth=None):
+    if len(images) > 6:
+        images = images[:6]
     print("LEN IMAGES", len(images))
     import matplotlib.pyplot as plt
     # Create a figure and axes
@@ -218,19 +220,26 @@ if __name__ == '__main__':
     noise_std = 0.0025
     noise_mean = 0
     replan_horizon = 14
-    timeout_steps = 750
+    timeout_steps = 650
 
+    # weights_dir = '/home/selamg/beadsight/data/weights/resnet18_epoch3500_20-32-49_2024-11-07_drawer_ablate'
     # weights_dir = '/home/selamg/beadsight/data/weights/clip_epoch3500_01-17-53_2024-11-16_drawer_ablate'
     # weights_dir = "/home/selamg/beadsight/data/weights/clip_epoch3500_01-36-52_2024-11-16_drawer_fromUSB_ablate"
-    # weights_dir = '/home/selamg/beadsight/data/weights/clip_epoch3500_22-36-39_2025-01-30_drawer_withSupporting_freeze'
-    weights_dir = '/home/selamg/beadsight/data/weights/clip_epoch3500_22-35-02_2025-01-30_drawer_withSupporting_ablate'
-    save_path = "/home/selamg/beadsight/data/ssd/experiment_results/pretrained_supporting/run_data"
+    # weights_dir = '/home/selamg/beadsight/data/weights/clip_epoch3500_22-35-02_2025-01-30_drawer_withSupporting_ablate'
+    # weights_dir = "/home/selamg/beadsight/data/weights/clip_epoch3500_02-46-40_2025-02-19_drawer_eef_pretrained"
+
+    # weights_dir = "/home/selamg/beadsight/data/weights/clip_epoch3500_02-46-40_2025-02-19_drawer_eef_pretrained"
+
+    # weights_dir = "/home/selamg/beadsight/data/weights/clip_epoch3500_04-56-03_2024-11-18_drawer_fromUSB_freeze"
+    # weights_dir = "/home/selamg/beadsight/data/weights/clip_epoch3500_22-36-39_2025-01-30_drawer_withSupporting_freeze"
+    weights_dir = "/home/selamg/beadsight/data/weights/notfrozen/clip_epoch3500_07-53-46_2025-02-21_drawer"
+
+    save_path = "/home/selamg/beadsight/data/ssd/experiment_results/notFrozen/pretrained_notfrozen"
     
     norm_stats_dir = "/home/selamg/beadsight/drawer_norm_stats.json"
-    # norm_stats_dir = "/home/selamg/beadsight/drawer_supporting_norm_stats.json"
 
-    # EXPECTED_CAMERA_NAMES = ['1','2','3','4','5','6','beadsight'] 
-    EXPECTED_CAMERA_NAMES = ['1','2','3','4','5','6']
+    EXPECTED_CAMERA_NAMES = ['1','2','3','4','5','6','beadsight'] 
+    # EXPECTED_CAMERA_NAMES = ['1','2','3','4','5','6']
 
     SAVE_VIDEO = True  #TODO
 
@@ -268,10 +277,10 @@ if __name__ == '__main__':
         device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
         print(f"Using device {device}")
         
-        camera_nums = [1, 2, 3, 4, 5, 6, "beadsight"]
-        camera_sizes = [(1080, 1920), (1080, 1920), (1080, 1920), (1080, 1920), (1080, 1920), (800, 1280),(400,480)]
-        cameras = CamerasAndBeadSight(device=36,bead_horizon=BEAD_HORIZON) #check cam test to find devicenum
-        min_gripper_width = 0.029 #for blocks
+        camera_nums = [1, 2, 3, 4, 5, 6]        
+        camera_sizes = [(1080, 1920), (1080, 1920), (1080, 1920), (1080, 1920), (1080, 1920), (800, 1280)]
+        cameras = CamerasAndBeadSight(device=10,bead_horizon=BEAD_HORIZON) #check cam test to find devicenum
+        min_gripper_width = 0.02875 #for blocks
 
     else:
         assert not SAVE_VIDEO, "Save video doesn't work with the fake robot"
@@ -448,9 +457,9 @@ if __name__ == '__main__':
             norm_actions = diffuse_robot(qpos_data,image_data,EXPECTED_CAMERA_NAMES,model_dict,
                          pred_horizon=20,device=device)
 
-            print('norm_actions', norm_actions)
+            # print('norm_actions', norm_actions)
             end = time.time()
-            print('inference time', end-start)
+            # print('inference time', end-start)
             _, actions = preprocess.normalizer.unnormalize(qpos, norm_actions)
 
             actions = actions.squeeze().detach().cpu().numpy()
@@ -485,7 +494,7 @@ if __name__ == '__main__':
             print('current pose', current_pose.translation)
             for action_idx, move_action in enumerate(actions[:replan_horizon]):
                 total_timesteps += 1
-                print("move_action", move_action)
+                # print("move_action", move_action)
                 if action_idx != 0: # don't need to run the first time, because we got it above.
                     beadsight_buffer = cameras.get_and_update_bead_buffer() #update the buffer at rate of action execution
                     save_beadsight_images[total_timesteps] = beadsight_buffer[-1] # last item is the most recent picture.
@@ -498,7 +507,7 @@ if __name__ == '__main__':
 
                 # integral_term = np.zeros(3)
                 integral_term[2] = min(0, integral_term[2]) # don't wind up donwards
-                print("integral_term", integral_term)
+                # print("integral_term", integral_term)
                 last_position = np.copy(current_pose.translation)
 
                 move_pose = FC.HOME_POSE
@@ -525,7 +534,7 @@ if __name__ == '__main__':
                     fa.goto_gripper(grip_command, block=False, speed=0.15, force = 10)
                     moved_gripper = True
                 
-                print("moving to", move_pose.translation, grip_command)
+                # print("moving to", move_pose.translation, grip_command)
 
                 rate.sleep()
 
