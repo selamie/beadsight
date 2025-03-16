@@ -31,9 +31,10 @@ import matplotlib.pyplot as plt
 #                                                "vision": {"pretrained": "/home/aigeorge/research/TactileACT/data/Final Trained Policies/Rectangle_stacking/Diffusion/pretrain_vision", 
 #                                                           "non-pretrained": "/home/aigeorge/research/TactileACT/data/Final Trained Policies/Rectangle_stacking/Diffusion/no_pretrain_vision"}}}}
 
-paths = {"drawer":{"diffusion":{"vision": {"non-pretrained":"/home/selamg/beadsight/data/ssd/experiment_results/vision_only",
-                                          "pretrained":"/home/selamg/beadsight/data/ssd/experiment_results/pretrained",
-                                          "usb-pretrained":"/home/selamg/beadsight/data/ssd/experiment_results/pretrained_usb"}}}}
+paths = {"drawer":{"diffusion":{"vision": {"non-pretrained":"/home/selamg/beadsight/data/ssd/experiment_results/final/no_pretraining",
+                                          "pretrained":"/home/selamg/beadsight/data/ssd/experiment_results/final/pretrained",
+                                          "usb-pretrained":"/home/selamg/beadsight/data/ssd/experiment_results/final/usb_pretrained",
+                                          "supporting-pretrained":"/home/selamg/beadsight/data/ssd/experiment_results/final/supporting_pretrained"}}}}
 
 
 # success_rates = {"plugging": {"act": {"both": {"pretrained": 0.95, 
