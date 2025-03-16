@@ -4,24 +4,24 @@ import os
 
 START_TIME = datetime.now()
 
-
+#recently modified for gpu-node-6
 
 #NODE 3 clip:
 DATA_TYPE = "flowarts" # only put dataset type here, the rest is handled below
-CKPT_DIR = '/home/selam/flowarts_data/checkpoints'
+CKPT_DIR = '/home/selamg/flowarts_data/checkpoints'
 #for pretrained clip head
-BEADSIGHT_WEIGHTS_PATH = "" #'/home/selam/model_weights/usb_epoch_1499_beadsight_encoder.pth'
-IMAGE_WEIGHTS_PATH = "" #'/home/selam/model_weights/usb_epoch_1499_vision_encoder.pth'
+BEADSIGHT_WEIGHTS_PATH = '/home/selam/model_weights/usb_epoch_1499_beadsight_encoder.pth'
+IMAGE_WEIGHTS_PATH = '/home/selam/model_weights/usb_epoch_1499_vision_encoder.pth'
 #not used for resnet, beadsight wts not used for eef pretraining
-DATA_DIR = "/home/selam/processed_flowarts/"
-CODE_START_DIR = '/home/selam/beadsight' 
+DATA_DIR = "/home/selamg/processed_flowarts/"
+CODE_START_DIR = '/home/selamg/beadsight' 
 ENC_TYPE = 'resnet18' 
 DEVICE_STR = 'cuda:0'
 PRED_HORIZON = 20
 ABLATE_BEAD = True
 FREEZE_BEAD = False
 PRETRAINED_VISION = False
-EEF_WEIGHTS_PATH = "" #'/home/selam/model_weights/eef/epoch_1499_eef_encoder.pth'
+EEF_WEIGHTS_PATH = '/home/selam/model_weights/eef/epoch_1499_eef_encoder.pth'
 
 BEAD_ONLY = False #not gonna mess with this
 
