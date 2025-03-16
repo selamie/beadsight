@@ -54,12 +54,12 @@ class DiffusionEpisodicDataset(EpisodicDataset):
         super().__init__(episode_ids,dataset_dir,camera_names,norm_stats, pred_horizon,image_size,image_transforms=image_transforms)
         self.action_qpos_normalize = NormalizeDiffusionActionQpos(norm_stats)
         self.camera_names = camera_names
-
+        self.ablate_bead = False
         for i in range(len(camera_names)):
             if camera_names[i] == 'beadsight':
                 self.bead_idx = i
         if self.bead_idx == None: 
-            raise ValueError("camera names must include beadsight")
+            self.ablate_bead = True
 
     def __getitem__(self, index):        
 
@@ -83,8 +83,9 @@ class DiffusionEpisodicDataset(EpisodicDataset):
             if i == self.bead_idx:
                 continue
             nsample[self.camera_names[i]] = torch.stack([all_cam_images[i],]) 
-        
-        nsample['beadsight'] = torch.stack([all_cam_images[self.bead_idx],])
+
+        if not self.ablate_bead:
+            nsample['beadsight'] = torch.stack([all_cam_images[self.bead_idx],])
         nsample['agent_pos'] = torch.stack([qpos_data,])
         nsample['action'] = action_data
 
