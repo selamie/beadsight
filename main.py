@@ -30,7 +30,7 @@ shutil.copyfile(thisfile, CODE_DIR+'/'+thisfile_name)
 
 num_episodes = 42
 
-cams = [1,2,3,4,5,6]
+cams = [1,2,3,4,5,6,"beadsight"]
 
 if BEAD_ONLY:
     cams = ['beadsight']
