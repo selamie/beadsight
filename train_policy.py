@@ -97,7 +97,10 @@ def create_nets(enc_type,data_dir,norm_stats,camera_names,pred_horizon,
     # observation feature has [  ] dims in total per step
     #7 cameras including beadsight
     if ABLATE_BEAD:
-        obs_dim = vision_feature_dim*(len(camera_names)-1) + lowdim_obs_dim
+        if 'beadsight' in camera_names:
+            obs_dim = vision_feature_dim*(len(camera_names)-1) + lowdim_obs_dim
+        else:
+            obs_dim = vision_feature_dim*len(camera_names) + lowdim_obs_dim
     else:
         obs_dim = vision_feature_dim*len(camera_names) + lowdim_obs_dim
 
