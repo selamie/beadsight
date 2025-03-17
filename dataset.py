@@ -51,10 +51,10 @@ class DiffusionEpisodicDataset(EpisodicDataset):
 
     def __init__(self, episode_ids, dataset_dir, pred_horizon, camera_names,norm_stats,image_size=None, image_transforms = None):
         self.bead_idx = None
+        self.use_beadsight = True
         super().__init__(episode_ids,dataset_dir,camera_names,norm_stats, pred_horizon,image_size,image_transforms=image_transforms)
         self.action_qpos_normalize = NormalizeDiffusionActionQpos(norm_stats)
         self.camera_names = camera_names
-        self.use_beadsight = True
         for i in range(len(camera_names)):
             if camera_names[i] == 'beadsight':
                 self.bead_idx = i
