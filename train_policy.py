@@ -493,7 +493,7 @@ def train(num_epochs,camera_names,nets:nn.ModuleDict,train_dataloader,val_datalo
 
             # exit()
 
-            if epoch_idx % 1 == 0: #500 #TODO: change back to every 500ish
+            if epoch_idx % 500 == 0: 
                 _save_ckpt(START_TIME,epoch_idx,enc_type,nets,train_losses,val_losses)
    
     _save_ckpt(START_TIME,num_epochs,enc_type,nets,train_losses,val_losses) #final save
