@@ -309,7 +309,8 @@ def train(num_epochs,camera_names,nets:nn.ModuleDict,train_dataloader,val_datalo
                     # data normalized in dataset
                     # device transfer          
                     if ABLATE_BEAD: 
-                        del nbatch['beadsight']              
+                        if 'beadsight' in nbatch.keys():
+                            del nbatch['beadsight']              
                     
                     image_features = torch.Tensor().to(device)
                     for cam_name in camera_names:
