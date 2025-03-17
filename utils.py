@@ -215,7 +215,6 @@ def get_norm_stats(dataset_dir, num_episodes, use_existing=True, chunk_size = 0)
     use_gelsight = False
 
     for episode_idx in tqdm(range(num_episodes), desc="Get Norm Stats"):
-        print(episode_idx)
         dataset_path = os.path.join(dataset_dir, f'episode_{episode_idx}.hdf5')
         with h5py.File(dataset_path, 'r') as root:
             qpos = root['/observations/qpos'][()]
