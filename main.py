@@ -30,11 +30,7 @@ shutil.copyfile(thisfile, CODE_DIR+'/'+thisfile_name)
 
 num_episodes = 42
 
-cams = [1,2,3,4,5,6,"beadsight"]
-
-if BEAD_ONLY:
-    cams = ['beadsight']
-
+cams = [1,2,3,4,5,6] #determines whether to use beadsight in dataset
 
 norm_stats = get_norm_stats(DATA_DIR, num_episodes)
 
