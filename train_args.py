@@ -8,7 +8,7 @@ START_TIME = datetime.now()
 
 #NODE 3 clip:
 DATA_TYPE = "flowarts" # only put dataset type here, the rest is handled below
-CKPT_DIR = '/home/selam/flowarts_data/checkpoints'
+CKPT_DIR = '/home/selam/flowarts_data/checkpoints/'
 #for pretrained clip head
 BEADSIGHT_WEIGHTS_PATH = '/home/selam/model_weights/usb_epoch_1499_beadsight_encoder.pth'
 IMAGE_WEIGHTS_PATH = '/home/selam/model_weights/usb_epoch_1499_vision_encoder.pth'
