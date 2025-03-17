@@ -9,7 +9,6 @@ from dataset import NormalizeDiffusionActionQpos
 from HardwareTeleop.multiprocessed_cameras import SaveVideosMultiprocessed
 import shutil
 
-BEAD_HORIZON = 5
 #from rospy import Rate
 from copy import deepcopy
 import time
@@ -32,9 +31,8 @@ def monitor_cameras(frames: Dict[str, np.ndarray]): #, gelsight_frame: np.ndarra
 
     running_idx = 0
     for i, (name, frame) in enumerate(frames.items()):
-        if not 'beadsight' in name:
-            frame = frame[CROP_PARAMS[name]['i']:CROP_PARAMS[name]['i']+CROP_PARAMS[name]['h'], 
-                        CROP_PARAMS[name]['j']:CROP_PARAMS[name]['j']+CROP_PARAMS[name]['w']]
+        frame = frame[CROP_PARAMS[name]['i']:CROP_PARAMS[name]['i']+CROP_PARAMS[name]['h'], 
+                    CROP_PARAMS[name]['j']:CROP_PARAMS[name]['j']+CROP_PARAMS[name]['w']]
         if name == '6': # rotate the 6th camera
             frame = np.rot90(frame).copy()
         row = i // n_col
@@ -68,29 +66,29 @@ class PreprocessData:
 
     def process_data(self, 
                      images: Dict[str, np.ndarray], 
-                     beadsight_frames: List[np.ndarray], 
+                    #  beadsight_frames: List[np.ndarray], 
                      qpos: np.ndarray) -> Tuple[Dict[str, torch.Tensor], torch.Tensor, torch.Tensor]:
-        
-        normed_bead = []
-        for image in beadsight_frames:
-            image = torch.tensor(image, dtype=torch.float32)/255.0
-            image = torch.einsum('h w c -> c h w', image) # change to c h w
-            image = self.image_normalize(image)
-            normed_bead.append(image)
+        # if "beadsight" in EXPECTED_CAMERA_NAMES:
+        # normed_bead = []
+        # for image in beadsight_frames:
+        #     image = torch.tensor(image, dtype=torch.float32)/255.0
+        #     image = torch.einsum('h w c -> c h w', image) # change to c h w
+        #     image = self.image_normalize(image)
+        #     normed_bead.append(image)
 
-        if normed_bead != []:
-            beadcat = torch.concat(normed_bead,axis=0)
-            beadcat = beadcat.unsqueeze(0)
-        else:
-            beadcat = None
+        # if normed_bead != []:
+        #     beadcat = torch.concat(normed_bead,axis=0)
+        #     beadcat = beadcat.unsqueeze(0)
+        # else:
+        #     beadcat = None
 
         all_images = []
         for cam_name in self.camera_names:
 
-            if cam_name == "beadsight" and beadcat != None:
-                all_images.append(beadcat)
+            # if cam_name == "beadsight" and beadcat != None:
+            #     all_images.append(beadcat)
 
-            elif cam_name in images.keys():
+            if cam_name in images.keys():
                 # crop the images
                 crop = CROP_PARAMS[cam_name]
 
@@ -192,18 +190,18 @@ def reset_scene(pose_controller):
     #         break
 
     # drawer
-    block1_location = CENTER + (1 - 2*np.random.rand(2))*RADIUS
+    # block1_location = CENTER + (1 - 2*np.random.rand(2))*RADIUS
 
     move_to_pose = FC.HOME_POSE.copy()
-    # pose_controller.set_goal_pose(move_to_pose)
+    pose_controller.set_goal_pose(move_to_pose)
     # while np.linalg.norm(pose_controller.fa.get_pose().translation - move_to_pose.translation) > 0.05:
     #     pose_controller.step()
         
-    move_to_pose.translation = np.array([block1_location[0], block1_location[1], 0.15])
-    pose_controller.set_goal_pose(move_to_pose)
-    while np.linalg.norm(pose_controller.fa.get_pose().translation - move_to_pose.translation) > 0.05:
-        pose_controller.step()
-    input("Place Block One here, then press enter")
+    # move_to_pose.translation = np.array([block1_location[0], block1_location[1], 0.15])
+    # pose_controller.set_goal_pose(move_to_pose)
+    # while np.linalg.norm(pose_controller.fa.get_pose().translation - move_to_pose.translation) > 0.05:
+    #     pose_controller.step()
+    # input("Place Block One here, then press enter")
 
     # move_to_pose.translation = np.array([block2_location[0], block2_location[1], 0.15])
     # pose_controller.set_goal_pose(move_to_pose)
@@ -216,30 +214,19 @@ if __name__ == '__main__':
     num_episodes = 1100
     grip_closed = False
 
-    ADD_NOISE = True #TODO
+    ADD_NOISE = False #TODO
     noise_std = 0.0025
     noise_mean = 0
-    replan_horizon = 14
+    replan_horizon = 10
     timeout_steps = 650
 
-    # weights_dir = '/home/selamg/beadsight/data/weights/resnet18_epoch3500_20-32-49_2024-11-07_drawer_ablate'
-    # weights_dir = '/home/selamg/beadsight/data/weights/clip_epoch3500_01-17-53_2024-11-16_drawer_ablate'
-    # weights_dir = "/home/selamg/beadsight/data/weights/clip_epoch3500_01-36-52_2024-11-16_drawer_fromUSB_ablate"
-    # weights_dir = '/home/selamg/beadsight/data/weights/clip_epoch3500_22-35-02_2025-01-30_drawer_withSupporting_ablate'
-    # weights_dir = "/home/selamg/beadsight/data/weights/clip_epoch3500_02-46-40_2025-02-19_drawer_eef_pretrained"
+    weights_dir = "/home/selamg/beadsight/data/weights/resnet18_epoch3500_02-41-40_2025-03-17_flowarts_ablate"
 
-    # weights_dir = "/home/selamg/beadsight/data/weights/clip_epoch3500_02-46-40_2025-02-19_drawer_eef_pretrained"
-
-    # weights_dir = "/home/selamg/beadsight/data/weights/clip_epoch3500_04-56-03_2024-11-18_drawer_fromUSB_freeze"
-    # weights_dir = "/home/selamg/beadsight/data/weights/clip_epoch3500_22-36-39_2025-01-30_drawer_withSupporting_freeze"
-    weights_dir = "/home/selamg/beadsight/data/weights/notfrozen/clip_epoch3500_07-53-46_2025-02-21_drawer"
-
-    save_path = "/home/selamg/beadsight/data/ssd/experiment_results/notFrozen/pretrained_notfrozen"
+    save_path = "/home/selamg/beadsight/data/ssd/experiment_results/flowarts/"
     
-    norm_stats_dir = "/home/selamg/beadsight/drawer_norm_stats.json"
+    norm_stats_dir = "/home/selamg/beadsight/flowarts_norm_stats.json"
 
-    EXPECTED_CAMERA_NAMES = ['1','2','3','4','5','6','beadsight'] 
-    # EXPECTED_CAMERA_NAMES = ['1','2','3','4','5','6']
+    EXPECTED_CAMERA_NAMES = ['1','2','3','4','5','6']
 
     SAVE_VIDEO = True  #TODO
 
@@ -251,8 +238,7 @@ if __name__ == '__main__':
         from robomail.motion import GotoPoseLive
         from rospy import Rate
 
-        # from simple_gelsight import GelSightMultiprocessed, get_camera_id
-        from cameras_and_beadsight import CamerasAndBeadSight        
+        from multiprocessed_cameras import Cameras
         print("starting")
         import time
         fa = FrankaArm()
@@ -267,8 +253,8 @@ if __name__ == '__main__':
         new_impedances = np.copy(default_impedances)
         # new_impedances[3:] = np.array([0.5, 2, 0.5])*new_impedances[3:] # reduce the rotational stiffnesses, default in gotopose live
         # new_impedances[:3] = np.array([0.5, 0.5, 1])*default_impedances[:3] # reduce the translational stiffnesse
-        new_impedances[3:] = np.array([0.5, 2, 0.5])*new_impedances[3:] # reduce the rotational stiffnesses, default in gotopose live
-        new_impedances[:3] = np.array([1, 1, 1])*default_impedances[:3] # reduce the translational stiffnesse
+        new_impedances[3:] = np.array([0.5, 0.5, 0.5])*new_impedances[3:] # reduce the rotational stiffnesses, default in gotopose live
+        new_impedances[:3] = np.array([0.5, 0.5, 0.5])*default_impedances[:3] # reduce the translational stiffnesse
 
         pose_controller = GotoPoseLive(cartesian_impedances=new_impedances.tolist(), step_size=0.05)
         pose_controller.set_goal_pose(move_pose)
@@ -279,14 +265,13 @@ if __name__ == '__main__':
         
         camera_nums = [1, 2, 3, 4, 5, 6]        
         camera_sizes = [(1080, 1920), (1080, 1920), (1080, 1920), (1080, 1920), (1080, 1920), (800, 1280)]
-        cameras = CamerasAndBeadSight(device=10,bead_horizon=BEAD_HORIZON) #check cam test to find devicenum
-        min_gripper_width = 0.02875 #for blocks
+        cameras = Cameras(camera_nums,camera_sizes) #check cam test to find devicenum
+        min_gripper_width = 0.000 #for blocks
 
     else:
         assert not SAVE_VIDEO, "Save video doesn't work with the fake robot"
         import h5py
         data_dir = "/media/selamg/DATA/beadsight/data/beadsight_data/drawer_examples/episode_1/episode_1.hdf5"
-        # data_dir = "/home/selamg/beadsight/data/stonehenge_examples/episode_0/episode_0.hdf5"
         with h5py.File(data_dir, 'r') as root:
             all_qpos_7 = root['/observations/position'][()]
             all_qpos = np.empty([all_qpos_7.shape[0], 4])
@@ -345,8 +330,6 @@ if __name__ == '__main__':
         rate = Rate(10)
     while True:
         # if we want to save the video, create a new folder to save it too.
-        save_beadsight_images = np.zeros([num_episodes, 480, 480, 3], dtype=np.uint8) # hardcoded, but whatever...
-
         existing_folders = [int(f.split('_')[-1]) for f in os.listdir(save_path) if f.startswith('run')]
         new_folder = max(existing_folders, default=0) + 1
         run_save_folder = os.path.join(save_path, f'run_{new_folder}')
@@ -361,16 +344,12 @@ if __name__ == '__main__':
         
         run += 1
         print(f'starting run {run}')
-        # noise = OUNoise(3, theta=0.1, sigma=0.0005)
         if use_real_robot:
             fa.open_gripper()
             reset_scene(pose_controller)
             move_pose = FC.HOME_POSE.copy()
-            # move_pose.translation = np.array([0.51642333, -0.01241467,  0.38239434]) #stonehenge
-            move_pose.translation = np.array([0.48179667, 0.00109848, 0.34917753]) #drawer
-            # move_pose.translation = np.array([0.46060304, -0.03064966, 0.39440889]) #ishape?
-            # move_pose.translation = np.array([0.44, -0.06, 0.3])
-            # move_pose.translation = np.array([0.55, 0, 0.4])
+            move_pose.translation = np.array([0.60, 0.0, 0.40]) #drawer
+
 
             while np.linalg.norm(fa.get_pose().translation - move_pose.translation) > 0.04:
                 pose_controller.step(goal_pose = move_pose)
@@ -389,9 +368,6 @@ if __name__ == '__main__':
         user_input = AsyncInput("Press enter to continue, v to visualize, or q to quit, or s to save", is_async=True)
         for i in range(num_episodes):
             print(i)
-            # images = {key: all_images[key][i] for key in all_images}
-            # gelsight_data = all_gelsight_data[i]
-
             if use_real_robot:
                 robo_data = fa.get_robot_state()
                 current_pose = robo_data['pose']*fa._tool_delta_pose
@@ -411,38 +387,40 @@ if __name__ == '__main__':
 
             if use_real_robot:
                 images = cameras.get_next_frames() 
-                beadframes = cameras.bead_buffer
+                # beadframes = cameras.bead_buffer
             
-            else:
-                images = {key: all_images[key][i] for key in all_images}
-                if 'beadsight' in all_images.keys():
-                    if i < BEAD_HORIZON:
-                        beadframes = [all_images['beadsight'][i]]
-                        for c in range(BEAD_HORIZON-1):
-                            beadframes.append(all_images['beadsight'][i].copy())  
-                    elif i >= BEAD_HORIZON:
-                        beadframes = []
-                        for c in range(BEAD_HORIZON-1):
-                            beadframes.append(all_images['beadsight'][i-c])  
-                        beadframes.append(all_images['beadsight'][i])
-                else:
-                    beadframes = []
-
-            save_beadsight_images[total_timesteps] = beadframes[-1] # record the most recent beadframe
+            # else:
+            #     images = {key: all_images[key][i] for key in all_images}
+            #     if 'beadsight' in all_images.keys():
+            #         if i < BEAD_HORIZON:
+            #             beadframes = [all_images['beadsight'][i]]
+            #             for c in range(BEAD_HORIZON-1):
+            #                 beadframes.append(all_images['beadsight'][i].copy())  
+            #         elif i >= BEAD_HORIZON:
+            #             beadframes = []
+            #             for c in range(BEAD_HORIZON-1):
+            #                 beadframes.append(all_images['beadsight'][i-c])  
+            #             beadframes.append(all_images['beadsight'][i])
+            #     else:
+            #         beadframes = []
+            # if 'beadsight' in EXPECTED_CAMERA_NAMES:
+            #     save_beadsight_images[total_timesteps] = beadframes[-1] # record the most recent beadframe
 
             # show the images
             disp_images = images.copy() # create a shallow copy of the dictionary
-            disp_images.pop('beadsight') # remove beadsight
+            # if "beadsight" in EXPECTED_CAMERA_NAMES:
+            #     disp_images.pop('beadsight') # remove beadsight
             if SAVE_VIDEO:
                 video_recorder(list(disp_images.values())) # save the recorded images (don't want beadsight)
-            for bead_num, bead_image in enumerate(beadframes):
-                disp_images[f"beadsight{bead_num}"] = bead_image # add all of the beadsight images in
+            # if "beadsight" in EXPECTED_CAMERA_NAMES:
+            #     for bead_num, bead_image in enumerate(beadframes):
+            #         disp_images[f"beadsight{bead_num}"] = bead_image # add all of the beadsight images in
             monitor_cameras(disp_images) 
 
             # print("get_pose:",fa.get_pose().translation)
             # input("Press enter to continue")
 
-            image_data, qpos_data = preprocess.process_data(images, beadframes, qpos)
+            image_data, qpos_data = preprocess.process_data(images, qpos)
 
             print('normalized qpos values:', qpos_data)
 
@@ -495,9 +473,10 @@ if __name__ == '__main__':
             for action_idx, move_action in enumerate(actions[:replan_horizon]):
                 total_timesteps += 1
                 # print("move_action", move_action)
-                if action_idx != 0: # don't need to run the first time, because we got it above.
-                    beadsight_buffer = cameras.get_and_update_bead_buffer() #update the buffer at rate of action execution
-                    save_beadsight_images[total_timesteps] = beadsight_buffer[-1] # last item is the most recent picture.
+                # if action_idx != 0: # don't need to run the first time, because we got it above.
+                #     if "beadsight" in EXPECTED_CAMERA_NAMES:
+                #         beadsight_buffer = cameras.get_and_update_bead_buffer() #update the buffer at rate of action execution
+                #         save_beadsight_images[total_timesteps] = beadsight_buffer[-1] # last item is the most recent picture.
                 # move the robot:
                 if np.linalg.norm(last_position - current_pose.translation) < 0.0025 and not moved_gripper: # if the robot hasn't moved much, add to the integral term (to deal with friction)
                     integral_term += (move_action[:3] - current_pose.translation)*0.25
@@ -542,7 +521,8 @@ if __name__ == '__main__':
 
         if command == 's':
             # save the beadsight data
-            np.save(run_save_folder + "/beadsight_obs.npy", save_beadsight_images[:total_timesteps])
+            # if "beadsight" in EXPECTED_CAMERA_NAMES:
+            #     np.save(run_save_folder + "/beadsight_obs.npy", save_beadsight_images[:total_timesteps])
             video_recorder.close()
             
             while True:
