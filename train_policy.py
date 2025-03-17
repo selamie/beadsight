@@ -57,9 +57,8 @@ def create_nets(enc_type,data_dir,norm_stats,camera_names,pred_horizon,
         beadsight_encoder = nn.Sequential(beadsight_encoder,nn.AdaptiveAvgPool2d(output_size=1), nn.Flatten())
 
         image_encoders = []
-        for i in range(len(camera_names)): #subtract 1 to account for beadsight. if eef it gets ablated
+        for i in range(len(camera_names)-1): #subtract 1 to account for beadsight. if eef it gets ablated
             if i == 0:
-
                 eef_encoder = modified_resnet18()
                 eef_encoder.load_state_dict(eef_weights)
                 eef_encoder = nn.Sequential(eef_encoder,nn.AdaptiveAvgPool2d(output_size=1), nn.Flatten())
@@ -84,9 +83,14 @@ def create_nets(enc_type,data_dir,norm_stats,camera_names,pred_horizon,
         # replace all BatchNorm with GroupNorm to work with EMA
         # performance will tank if you forget to do this!
         image_encoders = []
-        for i in range(len(camera_names)-1):
-            image_encoders += [get_resnet('resnet18')]
-            image_encoders[i] = replace_bn_with_gn(image_encoders[i])
+        if "beadsight" in camera_names:
+            for i in range(len(camera_names)-1):
+                image_encoders += [get_resnet('resnet18')]
+                image_encoders[i] = replace_bn_with_gn(image_encoders[i])
+        else:
+            for i in range(len(camera_names)):
+                image_encoders += [get_resnet('resnet18')]
+                image_encoders[i] = replace_bn_with_gn(image_encoders[i])
 
 
 
