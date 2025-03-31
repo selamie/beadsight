@@ -15,7 +15,49 @@ import time
 import json
 # from rospy import Rate
 
+from autolab_core import RigidTransform, transformations
+
+from threading import Thread
+
 # from robomail.motion import GotoPoseLive
+
+#TODO: threaded execution or calculation
+# def threaded_diffusion(t_list: List[int], run_list: List[bool], actions:np.ndarray, replan_horizon:int = 8, prediction_size:int = 20):
+#     t_last = -100
+    
+#     while run_list[0]:
+#         if t_list[0] < t_last + replan_horizon:
+#             time.sleep(0.1)
+#             continue
+#         t_begin = t_last[0]
+#         # get state:
+#         images = #todo
+#         position = #todo
+        
+#         # processing:
+#         new_actions = diffuse_robot()
+
+#         actions[:, t_begin:t_begin+prediction_size] = new_actions
+#         t_last = t_begin + replan_horizon
+
+# def threaded_execution(t_list: List[int], run_list: List[bool], actions:np.ndarray, t_sleep:float = 0.1):
+#     t_list[0] = 0
+#     while run_list[0]:
+#         t = t_list[0]
+#         if actions[t][0] == -100:
+#             time.sleep(0.1)
+#             continue
+
+#         # execute action acitions[t]
+
+#         t += 1
+#         time.sleep(t_sleep)
+
+# t_list = [0]
+# run_list = [True]
+# actions = np.ones(7, 10000)*-100 # sleep if the action is -100 bc hasn't calcd new yet
+# thread = Thread(target=threaded_diffusion, args=[t_list, run_list])
+# thread.run()
 
 
 def monitor_cameras(frames: Dict[str, np.ndarray]): #, gelsight_frame: np.ndarray = None):
@@ -214,7 +256,7 @@ if __name__ == '__main__':
     num_episodes = 1100
     grip_closed = False
 
-    ADD_NOISE = False #TODO
+    ADD_NOISE = False
     noise_std = 0.0025
     noise_mean = 0
     replan_horizon = 10
@@ -266,7 +308,7 @@ if __name__ == '__main__':
         camera_nums = [1, 2, 3, 4, 5, 6]        
         camera_sizes = [(1080, 1920), (1080, 1920), (1080, 1920), (1080, 1920), (1080, 1920), (800, 1280)]
         cameras = Cameras(camera_nums,camera_sizes) #check cam test to find devicenum
-        min_gripper_width = 0.000 #for blocks
+        min_gripper_width = 0.00001 #for blocks
 
     else:
         assert not SAVE_VIDEO, "Save video doesn't work with the fake robot"
@@ -360,9 +402,7 @@ if __name__ == '__main__':
             print("get_pose:",fa.get_pose().translation)
             input("Press enter to continue")
 
-            integral_term = np.zeros(3)
             moved_gripper = False
-            last_position = np.copy(move_pose.translation)
 
         total_timesteps = 0
         user_input = AsyncInput("Press enter to continue, v to visualize, or q to quit, or s to save", is_async=True)
@@ -478,23 +518,26 @@ if __name__ == '__main__':
                 #         beadsight_buffer = cameras.get_and_update_bead_buffer() #update the buffer at rate of action execution
                 #         save_beadsight_images[total_timesteps] = beadsight_buffer[-1] # last item is the most recent picture.
                 # move the robot:
-                if np.linalg.norm(last_position - current_pose.translation) < 0.0025 and not moved_gripper: # if the robot hasn't moved much, add to the integral term (to deal with friction)
-                    integral_term += (move_action[:3] - current_pose.translation)*0.25
-                else:
-                    integral_term = np.zeros(3)
-                    
-
-                # integral_term = np.zeros(3)
-                integral_term[2] = min(0, integral_term[2]) # don't wind up donwards
-                # print("integral_term", integral_term)
-                last_position = np.copy(current_pose.translation)
 
                 move_pose = FC.HOME_POSE
                 if ADD_NOISE:
-                    move_pose.translation = move_action[:3] + integral_term + np.random.normal(noise_mean, noise_std, 3)
+                    move_pose.translation = move_action[:3] + np.random.normal(noise_mean, noise_std, 3)
                 else:
-                    move_pose.translation = move_action[:3] + integral_term
-                # move_pose.translation = ensembled_action[:3] 
+                    move_pose.translation = move_action[:3]
+                # move_pose.translation = ensembled_action[:3] '
+                    
+                # TODO: add rotation math in order to have free orientation 
+                # remove noise and integral term
+                    
+                # rel_rot_pose = RigidTransform(rotation = transformations.euler_matrix(move_action[3:6]))
+
+                # #relative_rot = cur_pose*FC.HOME_POSE.inverse()
+                # #relative_rot*FC.HOME_POSE = cur_pose*FC.HOME_POSE.inverse()*FC.HOME_POSE
+                # #cur_pose = relative_rot*FC.HOME_POSE 
+                # rot_pose = rel_rot_pose*FC.HOME_POSE
+                # move_pose.rotation = np.copy(rot_pose.rotation)
+
+                
                 
                 current_pose = fa.get_pose()
                 pose_controller.step(move_pose, current_pose)
